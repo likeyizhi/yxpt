@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bbld.yxpt">
+
+
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="false"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <!-- OpenGLES 2.0 -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
+    <application
+        android:name=".app.YXApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="hm3kcIaFSj5mgl6TKBTf5TcrGNSmDz1t" />
+        <activity android:name=".activity.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--更新相关-->
+        <service android:name=".update.UpdateService" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+        <!--个人中心-->
+        <activity android:name=".activity.PersonalActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--个人中心(新)-->
+        <activity android:name=".activity.PersonalNewActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--扫码页-->
+        <activity android:name=".zxing.android.CaptureActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--登录-->
+        <activity android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--注册-->
+        <activity android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--个人信息-->
+        <activity android:name=".activity.PersonalDataActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--店铺详情-->
+        <activity android:name=".activity.ShopDetailsActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--扫码获取店铺信息-->
+        <activity android:name=".activity.PaymentActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--获取用户订单的返还信息-->
+        <activity android:name=".activity.MyOrderActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--消费金额-->
+        <activity android:name=".activity.PayMoneyActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--已到账-->
+        <activity android:name=".activity.HaveToMoneyActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--奖励金额-->
+        <activity android:name=".activity.ReceiveMoneyActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--我的消息-->
+        <activity android:name=".activity.MessageCenterActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--使用指南-->
+        <activity android:name=".activity.GuideActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--修改密码、找回密码-->
+        <activity android:name=".activity.UpdatePasswordActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--宝付支付-->
+        <activity android:name=".baofoo.OrderActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--地址搜索-->
+        <activity android:name=".activity.SearchLocationActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--意见反馈-->
+        <activity android:name=".activity.FeedbackActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--搜索页(新)-->
+        <activity android:name=".activity.SearchMoreActivity"
+            android:screenOrientation="portrait"></activity>
+
+    </application>
+
+</manifest>

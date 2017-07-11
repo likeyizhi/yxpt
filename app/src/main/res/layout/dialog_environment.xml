@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_dialog"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="15dp"
+            android:background="@drawable/select_envirment"
+            android:text="测试环境"/>
+
+        <TextView
+            android:id="@+id/tv_zsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="15dp"
+            android:background="@drawable/select_envirment"
+            android:text="准生产环境"/>
+
+        <TextView
+            android:id="@+id/tv_pro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="15dp"
+            android:background="@drawable/select_envirment"
+            android:text="生产环境"/>
+    </LinearLayout>
+</LinearLayout>

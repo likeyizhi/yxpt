@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#eeeeee"
+    android:layout_height="match_parent"
+    tools:context="com.bbld.yxpt.activity.MainActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/ll_mapView"
+        android:layout_height="match_parent">
+        <com.baidu.mapapi.map.MapView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/mapView">
+        </com.baidu.mapapi.map.MapView>
+        <!--第一页-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_alignTop="@+id/imageView3"
+                android:layout_alignParentStart="true" />
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_above="@+id/imageView"
+                android:layout_alignStart="@+id/imageView" />
+
+            <ImageView
+
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="115dp"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp" />
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/relativeLayout"
+                android:background="#ffffff"
+                android:layout_alignParentBottom="true"
+                >
+
+
+
+
+            </RelativeLayout>
+            <com.bbld.yxpt.widget.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/circleImageView"
+                android:layout_alignTop="@+id/relativeLayout"
+                android:layout_marginTop="-30dp"
+                android:layout_centerHorizontal="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginRight="10dp"
+                android:id="@+id/imageView2"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/circleImageView" />
+        </RelativeLayout>
+        <!--第三页-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="-30dp"
+                android:layout_height="200dp"
+                android:id="@+id/scrollView2">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="#ffffff"
+                        android:id="@+id/linearLayout2">
+                        <ListView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/listView">
+                        </ListView>
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+            </ScrollView>
+            <com.bbld.yxpt.widget.CircleImageView
+                android:id="@+id/circleImageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginRight="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_above="@+id/scrollView2"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+        <!--第二页-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/imageView6"
+                android:layout_above="@+id/imageView8"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_above="@+id/imageView7"
+                android:layout_alignParentEnd="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_marginRight="10dp"
+                android:layout_above="@+id/ll_2"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/imageView7" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_above="@+id/ll_2"
+                android:layout_marginLeft="10dp"
+
+                android:id="@+id/imageView8" />
+            <LinearLayout
+                android:id="@+id/ll_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="{何大智养猪场(大智路店)}"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="{999m}"/>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="20dp"
+                        android:background="#333333"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="{何大智省何大智市何大智路250号}"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+
+                    android:layout_marginTop="10dp"
+                    android:layout_height="1dp"
+                    android:background="#eeeeee"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#0bd28a"
+                        android:gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:drawableLeft="@mipmap/cha"
+                        android:textSize="16sp"
+                        android:text="电话"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:drawableLeft="@mipmap/cha"
+                        android:textColor="#0bd28a"
+                        android:text="导航"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
+                        android:textSize="16sp"
+                        android:text="营业时间:{06:00-18:00}"/>
+                </LinearLayout>
+            </LinearLayout>
+            <com.bbld.yxpt.widget.CircleImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:layout_gravity="center"
+                android:layout_marginBottom="-20dp"
+                android:layout_above="@+id/ll_2"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/circleImageView2" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <!--搜索栏-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_borderyuan5_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="搜索"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/bg_borderyuan5_white"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
