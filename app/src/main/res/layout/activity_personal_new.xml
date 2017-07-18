@@ -17,15 +17,15 @@
 
             <ImageView
                 android:padding="10dp"
-                android:id="@+id/iv_XXZX"
+                android:id="@+id/ivBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:src="@mipmap/back"
+                android:src="@mipmap/backwhite"
                 />
 
             <ImageView
-                android:id="@+id/ivSetting"
+                android:id="@+id/ivRing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -41,14 +41,13 @@
         android:background="#0bd28a"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="horizontal">
         <com.bbld.yxpt.widget.CircleImageView
             android:id="@+id/ivShopImg"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/head"
             android:layout_marginBottom="20dp"
             />
 
@@ -60,22 +59,23 @@
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:textSize="16sp"
-
             android:layout_marginTop="20dp"
-            android:text="{13838383888}"/>
+            android:text="您还未登录"/>
         <TextView
+            android:id="@+id/tvTiXian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:text="提现"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
+        android:background="#0bd28a"
         android:layout_height="wrap_content">
         <View
             android:layout_width="match_parent"
@@ -90,27 +90,33 @@
         android:layout_height="wrap_content"
         android:background="#0bd28a"
         android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
                 android:layout_marginTop="20dp"
-                android:text="消费金额"/>
+                android:text="消费金额"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
+
             <TextView
+                android:id="@+id/tvXF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:text=""
                 android:textColor="#ffffff"
-                android:layout_marginTop="20dp"
-                android:textSize="18sp"
-                android:layout_marginBottom="20dp"
-                android:text="{900}"/>
+                android:textSize="18sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,47 +127,63 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#ffffff"
+                android:textSize="13sp"
                 android:layout_marginTop="20dp"
                 android:text="奖励金额"/>
             <TextView
+                android:id="@+id/tvJL"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#ffffff"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:textSize="18sp"
-                android:layout_marginBottom="20dp"
-                android:text="{900}"/>
+                android:layout_marginBottom="15dp"
+                android:text=""/>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
                 android:layout_marginTop="20dp"
-                android:text="到账订单"/>
+                android:text="到账订单"
+                android:textSize="13sp"
+                android:textColor="#ffffff" />
+
             <TextView
+                android:id="@+id/tvMyOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:text=""
                 android:textColor="#ffffff"
-                android:layout_marginTop="20dp"
-                android:textSize="18sp"
-                android:layout_marginBottom="20dp"
-                android:text="{4}"/>
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_member"
+        android:id="@+id/srl"
         android:scrollbars="none"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <ListView
-            android:id="@+id/lv_list"
+            android:id="@+id/lvOrder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content">
+        </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <TextView
+        android:id="@+id/tvUseCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        />
 </LinearLayout>

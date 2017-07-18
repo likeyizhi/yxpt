@@ -2,6 +2,7 @@ package com.bbld.yxpt.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -112,7 +113,13 @@ public class LoginActivity extends BaseActivity{
             }
         });
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            finish();
+        }
+        return false;
+    }
     @Override
     protected void getBundleExtras(Bundle extras) {
 

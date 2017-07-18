@@ -156,6 +156,15 @@ public class RegisterActivity extends BaseActivity{
                 }
             }
         });
+        tvHave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isOnTimer){
+                    timer.cancel();
+                }
+                ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
+            }
+        });
     }
 
     @Override

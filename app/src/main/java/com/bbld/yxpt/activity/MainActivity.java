@@ -2,6 +2,7 @@ package com.bbld.yxpt.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,10 +22,12 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -61,10 +64,13 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.Login;
+import com.bbld.yxpt.bean.OrderReturnInfo;
 import com.bbld.yxpt.bean.ShopList;
 import com.bbld.yxpt.bean.ShopListPage;
+import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.update.UpdateService;
+import com.bbld.yxpt.utils.MyToken;
 import com.bbld.yxpt.zxing.android.CaptureActivity;
 import com.bumptech.glide.Glide;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
@@ -207,6 +213,7 @@ public class MainActivity extends BaseActivity {
     private String backX;
     private String backY;
     private ArrayList<BitmapDescriptor> bdImgs;
+    private Dialog mWeiboDialog;
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
@@ -306,6 +313,29 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+        /**触摸显示带有店铺列表的布局**/
+        llBottom.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (rlBottomWhite.getVisibility()==View.VISIBLE){
+                    TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
+                    animation.setDuration(500);//设置动画持续时间
+                    animation.setRepeatCount(0);//设置重复次数
+                    rlFirst.setAnimation(animation);
+                    animation.startNow();
+                    rlFirst.setVisibility(View.GONE);
+
+                    TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
+                    animation02.setDuration(200);//设置动画持续时间
+                    animation02.setRepeatCount(0);//设置重复次数
+                    rlSecond.setAnimation(animation02);
+                    animation.startNow();
+                    rlSecond.setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+        });
+        /**点击显示带有店铺列表的布局**/
         llBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -379,7 +409,7 @@ public class MainActivity extends BaseActivity {
         rlRight01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readyGo(PersonalActivity.class);
+                readyGo(PersonalNewActivity.class);
             }
         });
 
@@ -432,16 +462,21 @@ public class MainActivity extends BaseActivity {
             public void onClick(View view) {
                 switch (isWhat){
                     case IS_SCAN:
-                        if (Build.VERSION.SDK_INT >= 23){
-                            int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
-                            if (cameraPermission != PackageManager.PERMISSION_GRANTED){
-                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 123);
-                                return;
+                        String token = new MyToken(MainActivity.this).getToken();
+                        if(token==null || token.equals("")){
+                            showToast("请先登录");
+                        }else{
+                            if (Build.VERSION.SDK_INT >= 23){
+                                int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+                                if (cameraPermission != PackageManager.PERMISSION_GRANTED){
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 123);
+                                    return;
+                                }else{
+                                    readyGo(CaptureActivity.class);
+                                }
                             }else{
                                 readyGo(CaptureActivity.class);
                             }
-                        }else{
-                            readyGo(CaptureActivity.class);
                         }
                         break;
                     case IS_GO:
@@ -453,32 +488,42 @@ public class MainActivity extends BaseActivity {
         ivRight02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= 23){
-                    int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
-                    if (cameraPermission != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 123);
-                        return;
+                String token = new MyToken(MainActivity.this).getToken();
+                if(token==null || token.equals("")){
+                    showToast("请先登录");
+                }else{
+                    if (Build.VERSION.SDK_INT >= 23){
+                        int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+                        if (cameraPermission != PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 123);
+                            return;
+                        }else{
+                            readyGo(CaptureActivity.class);
+                        }
                     }else{
                         readyGo(CaptureActivity.class);
                     }
-                }else{
-                    readyGo(CaptureActivity.class);
                 }
             }
         });
         ivScanCode02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= 23){
-                    int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
-                    if (cameraPermission != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 123);
-                        return;
+                String token = new MyToken(MainActivity.this).getToken();
+                if(token==null || token.equals("")){
+                    showToast("请先登录");
+                }else{
+                    if (Build.VERSION.SDK_INT >= 23){
+                        int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+                        if (cameraPermission != PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, 123);
+                            return;
+                        }else{
+                            readyGo(CaptureActivity.class);
+                        }
                     }else{
                         readyGo(CaptureActivity.class);
                     }
-                }else{
-                    readyGo(CaptureActivity.class);
                 }
             }
         });
@@ -497,12 +542,92 @@ public class MainActivity extends BaseActivity {
         ivLeft02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readyGo(MyOrderActivity.class);
+                String token = new MyToken(MainActivity.this).getToken();
+                if (token==null || token.equals("")){
+                    showToast("请先登录");
+                }else {
+                    Call<OrderReturnInfo> call= RetrofitService.getInstance().getOrderReturnInfo(token);
+                    call.enqueue(new Callback<OrderReturnInfo>() {
+                        @Override
+                        public void onResponse(Response<OrderReturnInfo> response, Retrofit retrofit) {
+                            if (response==null){
+                                showToast(responseFail());
+                                return;
+                            }
+                            if (response.body().getStatus()==0){
+                                readyGo(MyOrderActivity.class);
+                            }else{
+                                showToast(response.body().getMes());
+                            }
+                        }
+                        @Override
+                        public void onFailure(Throwable throwable) {
+
+                        }
+                    });
+                }
+            }
+        });
+        lvShopListPage.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private boolean isBottom;
+            private boolean isTop;
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                switch (i) {
+                    case SCROLL_STATE_FLING:
+                        //Log.i("info", "SCROLL_STATE_FLING");
+                        break;
+                    case SCROLL_STATE_IDLE:
+                        if (isBottom) {
+                            //到最底部
+//                            showToast("bottom");
+                        }
+                        if (isTop){
+                            //到最顶部
+                            TranslateAnimation animation = new TranslateAnimation(0,0,500,0);
+                            animation.setDuration(200);//设置动画持续时间
+                            animation.setRepeatCount(0);//设置重复次数
+                            rlFirst.setAnimation(animation);
+                            animation.startNow();
+                            rlFirst.setVisibility(View.VISIBLE);
+
+                            TranslateAnimation animation02 = new TranslateAnimation(0,0,0,500);
+                            animation02.setDuration(200);//设置动画持续时间
+                            animation02.setRepeatCount(0);//设置重复次数
+                            rlSecond.setAnimation(animation02);
+                            animation.startNow();
+                            rlSecond.setVisibility(View.GONE);
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(firstVisibleItem+visibleItemCount == totalItemCount){
+                    //Log.i("info", "到底了....");
+                    isBottom = true;
+                }else{
+                    isBottom = false;
+                }
+                if (firstVisibleItem == 0) {
+                    View firstVisibleItemView = lvShopListPage.getChildAt(0);
+                    if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
+//                        Log.d("ListView", "##### 滚动到顶部 ######");
+                        isTop = true;
+                    }else{
+                        isTop = false;
+                    }
+                }else{
+                    isTop = false;
+                }
             }
         });
     }
 
     private void initMap() {
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(MainActivity.this, "加载中...");
+
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);//获取传感器管理服务
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         // 地图初始化
@@ -538,7 +663,7 @@ public class MainActivity extends BaseActivity {
         bdImgs=new ArrayList<BitmapDescriptor>();
         for (int l=0;l<latLngs.size();l++){
             BitmapDescriptor bdGcoding = BitmapDescriptorFactory
-                    .fromResource(R.drawable.icon_gcoding);
+                    .fromResource(R.mipmap.yule);
             MarkerOptions oo = new MarkerOptions().position(latLngs.get(l)).icon(bdGcoding)
                     .zIndex(5);
             bdImgs.add(bdGcoding);
@@ -605,7 +730,7 @@ public class MainActivity extends BaseActivity {
                 LatLng ll = new LatLng(location.getLatitude(),
                         location.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(16.0f);
+                builder.target(ll).zoom(14.5f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
         }
@@ -624,6 +749,7 @@ public class MainActivity extends BaseActivity {
                 readyGoForResult(SearchMoreActivity.class, 6065, bundle);
             }
         });
+        WeiboDialogUtils.closeDialog(mWeiboDialog);
     }
 
     @Override

@@ -64,6 +64,7 @@ public class UpdatePasswordActivity extends BaseActivity{
     private int            time            = 60;
     private TimerTask timerTask;
     private boolean isOnTimer;
+    private String bandPhone;
 
     @Override
     protected void initViewsAndEvents() {
@@ -74,7 +75,7 @@ public class UpdatePasswordActivity extends BaseActivity{
 
         if (sacc.equals("")||spwd.equals("")){
         }else{
-            etPhone.setText(sacc);
+            etPhone.setText(bandPhone);
             etPhone.setFocusable(false);
         }
         setListeners();
@@ -104,11 +105,15 @@ public class UpdatePasswordActivity extends BaseActivity{
                         }
                     }
                 }else if (ll_2.getVisibility()==View.VISIBLE){
-                    ll_1.setVisibility(View.GONE);
-                    ll_2.setVisibility(View.GONE);
-                    ll_3.setVisibility(View.VISIBLE);
-                    iv123.setImageResource(R.mipmap.pwd03);
-                    btnOK.setText("完成");
+                    if (etCode.getText().toString().trim().equals("")){
+                        showToast("请输入验证码");
+                    }else{
+                        ll_1.setVisibility(View.GONE);
+                        ll_2.setVisibility(View.GONE);
+                        ll_3.setVisibility(View.VISIBLE);
+                        iv123.setImageResource(R.mipmap.pwd03);
+                        btnOK.setText("完成");
+                    }
                 }else {
                     newPwd1 = etNewPwd1.getText().toString().trim();
                     newPwd2 = etNewPwd2.getText().toString().trim();
@@ -215,10 +220,12 @@ public class UpdatePasswordActivity extends BaseActivity{
                 ll_2.setVisibility(View.GONE);
                 ll_1.setVisibility(View.VISIBLE);
                 iv123.setImageResource(R.mipmap.pwd01);
+                btnOK.setText("下一步");
             }else{
                 ll_2.setVisibility(View.VISIBLE);
                 ll_3.setVisibility(View.GONE);
                 iv123.setImageResource(R.mipmap.pwd02);
+                btnOK.setText("下一步");
             }
         }
         return false;
@@ -226,6 +233,7 @@ public class UpdatePasswordActivity extends BaseActivity{
 
     @Override
     protected void getBundleExtras(Bundle extras) {
+        bandPhone=extras.getString("bandPhone");
     }
 
     @Override

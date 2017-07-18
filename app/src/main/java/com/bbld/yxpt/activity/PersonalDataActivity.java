@@ -1,5 +1,6 @@
 package com.bbld.yxpt.activity;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.UserInfo;
+import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
@@ -44,6 +46,7 @@ public class PersonalDataActivity extends BaseActivity{
     ImageView ivBack;
 
     private UserInfo.UserInfoUserInfo userInfo;
+    private Dialog loadDialog;
 
     @Override
     protected void initViewsAndEvents() {
@@ -70,9 +73,18 @@ public class PersonalDataActivity extends BaseActivity{
                 ActivityManagerUtil.getInstance().finishActivity(PersonalDataActivity.this);
             }
         });
+        llChangePwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle=new Bundle();
+                bundle.putString("bandPhone", userInfo.getMobile());
+                readyGo(UpdatePasswordActivity.class,bundle);
+            }
+        });
     }
 
     private void loadData() {
+        loadDialog= WeiboDialogUtils.createLoadingDialog(PersonalDataActivity.this, "加载中...");
         Call<UserInfo> call= RetrofitService.getInstance().getUserInfo(new MyToken(PersonalDataActivity.this).getToken());
         call.enqueue(new Callback<UserInfo>() {
             @Override
@@ -97,10 +109,11 @@ public class PersonalDataActivity extends BaseActivity{
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).into(ivHead);
+        Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivHead);
         tvName.setText(userInfo.getNickName()+"");
         tvPhone.setText(userInfo.getMobile()+"");
         tvSex.setText(userInfo.getSex()+"");
+        WeiboDialogUtils.closeDialog(loadDialog);
     }
 
     @Override

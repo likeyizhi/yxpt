@@ -16,6 +16,7 @@ import com.bbld.yxpt.bean.MessageList;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
+import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import java.util.List;
 
@@ -33,6 +34,8 @@ import retrofit.Retrofit;
 public class MessageCenterActivity extends BaseActivity{
     @BindView(R.id.lvMessage)
     ListView lvMessage;
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
 
     private String token;
     private int count;
@@ -44,6 +47,16 @@ public class MessageCenterActivity extends BaseActivity{
     protected void initViewsAndEvents() {
         token=new MyToken(this).getToken();
         loadData();
+        setListeners();
+    }
+
+    private void setListeners() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(MessageCenterActivity.this);
+            }
+        });
     }
 
     private void loadData() {

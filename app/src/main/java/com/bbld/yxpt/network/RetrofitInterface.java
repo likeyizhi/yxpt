@@ -1,8 +1,13 @@
 package com.bbld.yxpt.network;
 
+import com.bbld.yxpt.bean.AddBankCard;
 import com.bbld.yxpt.bean.AddPayOrder;
+import com.bbld.yxpt.bean.AddWithdrawa;
+import com.bbld.yxpt.bean.BankCardRecognition;
+import com.bbld.yxpt.bean.BankList;
 import com.bbld.yxpt.bean.CityList;
 import com.bbld.yxpt.bean.Feedback;
+import com.bbld.yxpt.bean.GetBankCardList;
 import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
 import com.bbld.yxpt.bean.Login;
@@ -20,6 +25,7 @@ import com.bbld.yxpt.bean.UserInfo;
 import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.bean.VersionAndroid;
+import com.bbld.yxpt.bean.WithdrawaAccountInfo;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -130,4 +136,34 @@ public interface RetrofitInterface {
      */
     @GET("api/User/GetHotSearchList")
     Call<HotSearchList> getHotSearchList();
+    /**
+     * 银行卡列表
+     */
+    @GET("api/User/GetBankCardList")
+    Call<GetBankCardList> getBankCardList(@Query("token") String token);
+    /**
+     * 添加银行卡
+     */
+    @GET("api/User/AddBankCard")
+    Call<AddBankCard> addBankCard(@Query("token") String token, @Query("bankId") int bankId, @Query("name") String name, @Query("cardno") String cardno, @Query("openbank") String openbank);
+    /**
+     * 卡号识别银行
+     */
+    @GET("api/User/BankCardRecognition")
+    Call<BankCardRecognition> BankCardRecognition(@Query("cardno") String cardno);
+    /**
+     * 获取银行字典
+     */
+    @GET("api/User/GetBankList")
+    Call<BankList> getBankList();
+    /**
+     * 默认提现银行卡
+     */
+    @GET("api/User/GetWithdrawaAccountInfo")
+    Call<WithdrawaAccountInfo> getWithdrawaAccountInfo(@Query("token") String token);
+    /**
+     * 提现
+     */
+    @GET("api/User/AddWithdrawa")
+    Call<AddWithdrawa> addWithdrawa(@Query("token") String token, @Query("BankCardId") int BankCardId, @Query("price") String price);
 }

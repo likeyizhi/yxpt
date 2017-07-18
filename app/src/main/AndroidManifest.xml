@@ -125,7 +125,15 @@
         <!--搜索页(新)-->
         <activity android:name=".activity.SearchMoreActivity"
             android:screenOrientation="portrait"></activity>
-
+        <!--提现-->
+        <activity android:name=".activity.WithdrawscashActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--银行卡列表-->
+        <activity android:name=".activity.BankCardActivity"
+            android:screenOrientation="portrait"></activity>
+        <!--添加银行卡-->
+        <activity android:name=".activity.AddBankCardActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -40,6 +40,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:text="回馈"
+                    android:textSize="13sp"
                     android:textColor="#ffffff" />
             </LinearLayout>
 
@@ -56,14 +57,14 @@
                     android:layout_height="wrap_content"
                     android:text="ShopName"
                     android:textColor="#ffffff"
-                    android:textSize="16sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
@@ -74,51 +75,56 @@
                     android:layout_weight="1"
                     android:text="Tag"
                     android:textColor="#ffffff"
-                    android:textSize="16sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tvDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Distance"
+                    android:layout_marginRight="10dp"
                     android:textColor="#ffffff"
-                    android:textSize="16sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <com.bbld.yxpt.widget.CircleImageView
+        <ImageView
             android:id="@+id/ivHead"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="-2dp"
+            android:src="@mipmap/gozlbai"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/linearLayout"
-            android:layout_marginTop="-40dp"
-            android:src="@mipmap/saoma"
-             />
+            android:layout_marginBottom="80dp" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tvAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="20dp"
         android:text="Address"
-        android:drawablePadding="20dp"
+        android:textColor="#333333"
+        android:drawablePadding="10dp"
         android:drawableLeft="@mipmap/dw"/>
+
     <TextView
         android:id="@+id/tvPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
-        android:drawablePadding="20dp"
-        android:text="PhoneNumber"
-        android:drawableLeft="@mipmap/dh"/>
+        android:textColor="#333333"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@mipmap/dh"
+        android:drawablePadding="10dp"
+        android:text="PhoneNumber" />
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="10dp"
         android:background="#eeeeee"
         />
     <TextView
@@ -126,6 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:textColor="#333333"
         android:text="店铺详情"/>
     <ListView
         android:layout_width="match_parent"

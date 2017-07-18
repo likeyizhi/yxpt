@@ -1,9 +1,15 @@
 package com.bbld.yxpt.network;
 
+import com.baidu.platform.comapi.map.B;
 import com.bbld.yxpt.base.Constants;
+import com.bbld.yxpt.bean.AddBankCard;
 import com.bbld.yxpt.bean.AddPayOrder;
+import com.bbld.yxpt.bean.AddWithdrawa;
+import com.bbld.yxpt.bean.BankCardRecognition;
+import com.bbld.yxpt.bean.BankList;
 import com.bbld.yxpt.bean.CityList;
 import com.bbld.yxpt.bean.Feedback;
+import com.bbld.yxpt.bean.GetBankCardList;
 import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
 import com.bbld.yxpt.bean.Login;
@@ -21,6 +27,7 @@ import com.bbld.yxpt.bean.UserInfo;
 import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.bean.VersionAndroid;
+import com.bbld.yxpt.bean.WithdrawaAccountInfo;
 
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
@@ -172,5 +179,41 @@ public class RetrofitService {
      */
     public Call<HotSearchList> getHotSearchList(){
         return retrofitInterface.getHotSearchList();
+    }
+    /**
+     * 银行卡列表
+     */
+    public Call<GetBankCardList> getBankCardList(String token){
+        return retrofitInterface.getBankCardList(token);
+    }
+    /**
+     * 添加银行卡
+     */
+    public Call<AddBankCard> addBankCard(String token, int bankId, String name, String cardno, String openbank){
+        return retrofitInterface.addBankCard(token, bankId, name, cardno, openbank);
+    }
+    /**
+     * 卡号识别银行
+     */
+    public Call<BankCardRecognition> BankCardRecognition(String cardno){
+        return retrofitInterface.BankCardRecognition(cardno);
+    }
+    /**
+     * 获取银行字典
+     */
+    public Call<BankList> getBankList(){
+        return retrofitInterface.getBankList();
+    }
+    /**
+     * 默认提现银行卡
+     */
+    public Call<WithdrawaAccountInfo> getWithdrawaAccountInfo(String token){
+        return retrofitInterface.getWithdrawaAccountInfo(token);
+    }
+    /**
+     * 提现
+     */
+    public Call<AddWithdrawa> addWithdrawa(String token, int BankCardId, String price){
+        return retrofitInterface.addWithdrawa(token, BankCardId, price);
     }
 }

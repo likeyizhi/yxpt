@@ -45,6 +45,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     private BaofooJuHeAliPayTask baofooJuHeAliPayTask;
 
+    private ImageView ivBack;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -87,7 +88,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.activity_gopay);
         initView();
         initData();
     }
@@ -99,11 +100,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         llZhifubaoPay = (LinearLayout) findViewById(R.id.ll_zhifubao_pay);
         imgWeixinChecked = (ImageView) findViewById(R.id.img_weixin_checked);
         imgZhifubaoChecked = (ImageView) findViewById(R.id.img_zhifubao_checked);
+        ivBack = (ImageView) findViewById(R.id.ivBack);
         iv_logo = (ImageView) findViewById(R.id.iv_logo);
         llWeixinPay.setOnClickListener(this);
         llZhifubaoPay.setOnClickListener(this);
         mSubmitBtn.setOnClickListener(this);
         iv_logo.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
     }
 
     private void initData() {
@@ -195,6 +198,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         this.dismiss();
                     }
                 }.show();
+                break;
+            case R.id.ivBack:
+                finish();
                 break;
             default:
                 break;

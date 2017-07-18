@@ -49,6 +49,8 @@ public class MyOrderActivity extends BaseActivity{
     ListView lvMyorder;
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
 
     private int whichList;
     private String token;
@@ -74,9 +76,13 @@ public class MyOrderActivity extends BaseActivity{
     @Override
     protected void initViewsAndEvents() {
         token=new MyToken(this).getToken();
-        whichList=2;
-        loadData();
-        setListeners();
+        if (token==null||token.equals("")){
+            ActivityManagerUtil.getInstance().finishActivity(MyOrderActivity.class);
+        }else {
+            whichList=2;
+            loadData();
+            setListeners();
+        }
     }
 
     private void setListeners() {
@@ -150,6 +156,12 @@ public class MyOrderActivity extends BaseActivity{
                 setAdapter();
             }
         });
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(MyOrderActivity.this);
+            }
+        });
     }
 
     private void loadData() {
@@ -170,7 +182,7 @@ public class MyOrderActivity extends BaseActivity{
                     setData();
                 }else{
                     showToast(response.body().getMes());
-                    ActivityManagerUtil.getInstance().finishActivity(MyOrderActivity.class);
+
                 }
             }
 
@@ -190,21 +202,24 @@ public class MyOrderActivity extends BaseActivity{
 
     private void setAdapter() {
         if (whichList==1){
-            if (ReturnList==null){
-                return;
+            if (ReturnList!=null){
+                adapter=new OrderAdapter();
+                lvMyorder.setAdapter(adapter);
             }
         }else if (whichList==2){
-            if (NextList==null){
-                return;
+            if (NextList!=null){
+                adapter=new OrderAdapter();
+                lvMyorder.setAdapter(adapter);
             }
         }else if (whichList==3){
-            if (MyList==null){
-                return;
+            if (MyList!=null){
+                adapter=new OrderAdapter();
+                lvMyorder.setAdapter(adapter);
             }
         }else{
-            adapter=new OrderAdapter();
-            lvMyorder.setAdapter(adapter);
         }
+//        adapter=new OrderAdapter();
+//        lvMyorder.setAdapter(adapter);
     }
 
     class OrderAdapter extends BaseAdapter{

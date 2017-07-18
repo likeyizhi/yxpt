@@ -1,5 +1,6 @@
 package com.bbld.yxpt.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +24,7 @@ import com.bbld.yxpt.bean.ShopListPage;
 import com.bbld.yxpt.dbSearch.SearchDBBean;
 import com.bbld.yxpt.dbSearch.UserDataBaseOperate;
 import com.bbld.yxpt.dbSearch.UserSQLiteOpenHelper;
+import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
@@ -67,9 +69,11 @@ public class SearchMoreActivity extends BaseActivity {
     private UserDataBaseOperate mUserDataBaseOperate;
     private List<SearchDBBean> searchDBs;
     private DBAdapter dbAdapter;
+    private Dialog mWeiboDialog;
 
     @Override
     protected void initViewsAndEvents() {
+        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(SearchMoreActivity.this, "处理中...");
         mUserSQLiteOpenHelper = UserSQLiteOpenHelper.getInstance(this);
         mUserDataBaseOperate = new UserDataBaseOperate(mUserSQLiteOpenHelper.getWritableDatabase());
         setListFromDB();
@@ -146,6 +150,7 @@ public class SearchMoreActivity extends BaseActivity {
                 }else{
                     showToast(response.body().getMes());
                 }
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
             }
 
             @Override

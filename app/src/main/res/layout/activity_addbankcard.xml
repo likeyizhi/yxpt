@@ -47,14 +47,21 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="持卡人"/>
-    <EditText
-        android:id="@+id/et_acc"
-android:layout_marginLeft="20dp"
-        android:textColorHint="#999999"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="何大智"/>
+        <EditText
+            android:id="@+id/etName"
+            android:layout_marginLeft="20dp"
+            android:textColorHint="#999999"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColor="#333333"
+            android:text=""/>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eeeeee"
+        android:layout_marginTop="10dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,25 +74,69 @@ android:layout_marginLeft="20dp"
             android:textSize="18sp"
             android:layout_height="wrap_content"
             android:text="卡号    "/>
-    <EditText
-        android:id="@+id/et_pwd"
-        android:layout_marginLeft="20dp"
-
-        android:textColorHint="#999999"
+        <EditText
+            android:id="@+id/etNumber"
+            android:layout_marginLeft="20dp"
+            android:textColorHint="#999999"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColor="#333333"
+            android:maxLength="19"
+            android:hint="银行卡号"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eeeeee"
+        android:layout_marginTop="10dp"/>
+    <LinearLayout
+        android:id="@+id/llMoreBank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="银行卡号"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:text="银行    "/>
+        <TextView
+            android:id="@+id/tvBank"
+            android:layout_marginLeft="20dp"
+            android:textColorHint="#999999"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="#333333"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请选择银行"
+            />
+        <ImageView
+            android:id="@+id/ivMoreBank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/xia"/>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eeeeee"
+        android:layout_marginTop="10dp"/>
     <Button
-        android:id="@+id/btn_go"
+        android:id="@+id/btnAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="30dp"
         android:textSize="18sp"
-        android:background="@drawable/bg_borderyuan0bd28a"
+        android:background="@drawable/bg_feedback0bd28a"
         android:text="下一步"
         android:textColor="#ffffff" />
 </LinearLayout>

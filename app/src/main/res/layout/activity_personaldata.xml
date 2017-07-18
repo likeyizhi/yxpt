@@ -14,23 +14,26 @@
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="@mipmap/back"/>
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/back" />
+
         <View
             android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#A0A0A0"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="6dp"
+            android:layout_height="18dp"
+            android:background="#999999"
             android:layout_marginLeft="10dp"
             />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textSize="16sp"
-            android:textColor="#A0A0A0"
-            android:layout_gravity="center_vertical"
+            android:layout_height="30dp"
+            android:layout_marginLeft="12dp"
+            android:gravity="center|left"
+            android:textSize="15sp"
+            android:layout_weight="1"
+
+            android:textColor="#666666"
             android:text="个人资料"/>
     </LinearLayout>
     <View
@@ -57,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
+            android:textColor="#333333"
             android:text="姓名" />
 
         <TextView
@@ -65,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:text="{}"
+            android:textSize="12sp"
             android:textColor="#0bd28a" />
     </LinearLayout>
 
@@ -84,6 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#333333"
             android:layout_marginLeft="20dp"
             android:text="性别"/>
         <TextView
@@ -91,6 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:textColor="#666666"
+            android:textSize="12sp"
             android:text="{}"/>
     </LinearLayout>
     <View
@@ -109,13 +117,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#333333"
             android:layout_marginLeft="20dp"
             android:text="绑定手机号"/>
         <TextView
             android:id="@+id/tvPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#0bd28a"
+            android:textColor="#666666"
+            android:textSize="12sp"
             android:layout_marginRight="20dp"
             android:text="{}"/>
     </LinearLayout>
@@ -136,13 +146,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#333333"
             android:layout_marginLeft="20dp"
             android:text="修改密码"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#0bd28a"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="15dp"
             android:drawableRight="@mipmap/cha"
             android:text=""/>
     </LinearLayout>
@@ -154,13 +165,15 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"/>
     <Button
-        android:id="@+id/btnOut"
         android:layout_marginTop="30dp"
+        android:id="@+id/btnOut"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FF7372"
+        android:layout_height="38dp"
         android:textColor="#ffffff"
+        android:textSize="16sp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/bg_borderyuanff7372"
         android:text="退出登录"/>
 </LinearLayout>
