@@ -157,13 +157,19 @@ public class BankCardActivity extends BaseActivity {
                 holder=new BankCardListHolder();
                 holder.tvCardNo=(TextView)view.findViewById(R.id.tv_CardNo);
                 holder.tvBankName=(TextView)view.findViewById(R.id.tv_BankName);
-                holder.ivBankLogo=(CircleImageView)view.findViewById(R.id.iv_BankLogo);
+                holder.ivBankLogo=(ImageView)view.findViewById(R.id.iv_BankLogo);
+                holder.ivLast=(ImageView)view.findViewById(R.id.ivLast);
                 view.setTag(holder);
             }
             holder= (BankCardListHolder) view.getTag();
             final GetBankCardList.GetBankCardListRes list = getItem(i);
-            holder.tvCardNo.setText(list.getCardNo()+"");
+            holder.tvCardNo.setText("尾号"+list.getCardNo().substring(list.getCardNo().length()-4,list.getCardNo().length())+"("+list.getBankName()+")");
             holder.tvBankName.setText(list.getBankName()+"");
+            if (i==0){
+                holder.ivLast.setVisibility(View.VISIBLE);
+            }else{
+                holder.ivLast.setVisibility(View.INVISIBLE);
+            }
             Glide.with(getApplicationContext()).load(list.getBankLogo()).error(R.drawable.zwt).into(holder.ivBankLogo);
             if (view!=null){
                 view.setOnClickListener(new View.OnClickListener() {
@@ -183,8 +189,9 @@ public class BankCardActivity extends BaseActivity {
         }
         class  BankCardListHolder{
             TextView tvCardNo;
-            CircleImageView ivBankLogo;
+            ImageView ivBankLogo;
             TextView tvBankName;
+            ImageView ivLast;
 
         }
     }

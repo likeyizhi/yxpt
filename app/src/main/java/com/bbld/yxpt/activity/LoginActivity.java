@@ -28,6 +28,8 @@ import retrofit.Retrofit;
  */
 
 public class LoginActivity extends BaseActivity{
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
     @BindView(R.id.etAcc)
     EditText etAcc;
     @BindView(R.id.etPwd)
@@ -110,6 +112,12 @@ public class LoginActivity extends BaseActivity{
                 Bundle bundle=new Bundle();
                 bundle.putString("isForget","Forget");
                 readyGo(UpdatePasswordActivity.class, bundle);
+            }
+        });
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(LoginActivity.this);
             }
         });
     }

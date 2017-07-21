@@ -297,18 +297,18 @@ public class MainActivity extends BaseActivity {
         ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
-                animation.setDuration(500);//设置动画持续时间
-                animation.setRepeatCount(0);//设置重复次数
-                rlFirst.setAnimation(animation);
-                animation.startNow();
+//                TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
+//                animation.setDuration(500);//设置动画持续时间
+//                animation.setRepeatCount(0);//设置重复次数
+//                rlFirst.setAnimation(animation);
+//                animation.startNow();
                 rlFirst.setVisibility(View.GONE);
 
                 TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
                 animation02.setDuration(200);//设置动画持续时间
                 animation02.setRepeatCount(0);//设置重复次数
                 rlSecond.setAnimation(animation02);
-                animation.startNow();
+                animation02.startNow();
                 rlSecond.setVisibility(View.VISIBLE);
 
             }
@@ -318,18 +318,18 @@ public class MainActivity extends BaseActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (rlBottomWhite.getVisibility()==View.VISIBLE){
-                    TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
-                    animation.setDuration(500);//设置动画持续时间
-                    animation.setRepeatCount(0);//设置重复次数
-                    rlFirst.setAnimation(animation);
-                    animation.startNow();
+//                    TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
+//                    animation.setDuration(500);//设置动画持续时间
+//                    animation.setRepeatCount(0);//设置重复次数
+//                    rlFirst.setAnimation(animation);
+//                    animation.startNow();
                     rlFirst.setVisibility(View.GONE);
 
                     TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
                     animation02.setDuration(200);//设置动画持续时间
                     animation02.setRepeatCount(0);//设置重复次数
                     rlSecond.setAnimation(animation02);
-                    animation.startNow();
+                    animation02.startNow();
                     rlSecond.setVisibility(View.VISIBLE);
                 }
                 return true;

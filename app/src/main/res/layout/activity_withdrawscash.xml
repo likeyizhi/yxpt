@@ -14,24 +14,25 @@
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:src="@mipmap/back" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:background="#A0A0A0" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#666666" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="8dp"
             android:text="提现"
-            android:textColor="#A0A0A0"
+            android:textColor="#666666"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -48,14 +49,13 @@
         android:orientation="horizontal"
         android:background="@drawable/bg_borderyuan5_eeeeee">
 
-        <com.bbld.yxpt.widget.CircleImageView
+        <ImageView
             android:id="@+id/ivBankLogo"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_margin="10dp"
             android:padding="1dp"
             android:src="@mipmap/head"/>
-
         <LinearLayout
 
             android:layout_width="wrap_content"
@@ -126,6 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30sp"
+            android:textColor="#333333"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:text="￥"/>

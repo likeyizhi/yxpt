@@ -39,7 +39,7 @@
                 android:layout_marginTop="10dp"
                 android:lines="3"
                 android:lineSpacingExtra="7dp"
-                android:textColor="#000000"
+                android:textColor="#999999"
                 android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"/>
             <TextView
                 android:id="@+id/tvDate"

@@ -356,7 +356,7 @@ public class PersonalNewActivity extends BaseActivity{
         tvXF.setText(""+userInfo.getTotialSale());
         tvJL.setText(""+userInfo.getReturnTotialSale());
         tvMyOrder.setText(userInfo.getRewardOrderCount()+"");
-        tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用言闻享购物平台");
+        tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用利惠客购物平台");
     }
 
     @Override

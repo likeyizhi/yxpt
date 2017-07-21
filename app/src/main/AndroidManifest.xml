@@ -134,6 +134,15 @@
         <!--添加银行卡-->
         <activity android:name=".activity.AddBankCardActivity"
             android:screenOrientation="portrait"></activity>
+        <!--我的订单01-->
+        <activity android:name=".activity.MyOrder01Activity"
+            android:screenOrientation="portrait"></activity>
+        <!--我的订单02-->
+        <activity android:name=".activity.MyOrder02Activity"
+            android:screenOrientation="portrait"></activity>
+        <!--我的订单03-->
+        <activity android:name=".activity.MyOrder03Activity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

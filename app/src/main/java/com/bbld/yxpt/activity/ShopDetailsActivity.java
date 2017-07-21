@@ -1,6 +1,7 @@
 package com.bbld.yxpt.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import com.bbld.yxpt.bean.ShopInfo;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
+import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import butterknife.BindView;
 import retrofit.Call;
@@ -23,6 +25,8 @@ import retrofit.Retrofit;
  */
 
 public class ShopDetailsActivity extends BaseActivity{
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
     @BindView(R.id.ivBackground)
     ImageView ivBackground;
     @BindView(R.id.ivHead)
@@ -52,8 +56,16 @@ public class ShopDetailsActivity extends BaseActivity{
     protected void initViewsAndEvents() {
         token=new MyToken(ShopDetailsActivity.this).getToken();
         loadData();
+        setListeners();
     }
-
+    private void setListeners() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(ShopDetailsActivity.this);
+            }
+        });
+    }
     private void loadData() {
         if (token==null || token.equals("")){
             call= RetrofitService.getInstance().getShopInfo("",shopId,shopX,shopY);

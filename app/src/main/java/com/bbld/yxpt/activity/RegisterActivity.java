@@ -5,6 +5,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bbld.yxpt.R;
@@ -29,6 +31,8 @@ import retrofit.Retrofit;
  */
 
 public class RegisterActivity extends BaseActivity{
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
     @BindView(R.id.etPhone)
     EditText etPhone;
     @BindView(R.id.etCode)
@@ -162,6 +166,12 @@ public class RegisterActivity extends BaseActivity{
                 if (isOnTimer){
                     timer.cancel();
                 }
+                ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
+            }
+        });
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
             }
         });

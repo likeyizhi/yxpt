@@ -16,5 +16,5 @@
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:textColor="#ffffff"
-        android:background="@drawable/bg_borderyuan5aaaaaa"/>
+        android:background="@drawable/bg_borderyuan50bd28a"/>
 </LinearLayout>

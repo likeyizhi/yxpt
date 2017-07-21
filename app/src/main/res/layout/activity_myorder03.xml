@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#ffffff"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@mipmap/search"
+        android:padding="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="活动名称"
+        android:textSize="20sp"
+        android:textColor="#0BD28A"
+        android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我的订单"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_gravity="center_horizontal"/>
+    <ListView
+        android:id="@+id/lvMyOrder03"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+</LinearLayout>

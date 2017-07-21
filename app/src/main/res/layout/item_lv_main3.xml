@@ -32,15 +32,16 @@
             <View
                 android:layout_width="1dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_height="13dp"
-                android:background="#cccccc"
+                android:background="#eeeeee"
                 />
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="4dp"
+                android:lines="1"
                 android:textSize="13sp"
                 android:textColor="#666666"
                 android:text="{}"/>

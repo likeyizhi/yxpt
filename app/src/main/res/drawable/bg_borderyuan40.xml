@@ -7,7 +7,7 @@
      描边
     <stroke
         android:width="1dp"
-        android:color="#999999" /> <!-- 定义描边的宽度和描边的颜色值 -->
+        android:color="#eeeeee" /> <!-- 定义描边的宽度和描边的颜色值 -->
 
     <!-- 圆角 -->
     <corners

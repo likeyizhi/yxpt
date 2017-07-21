@@ -33,6 +33,8 @@ import retrofit.Retrofit;
  */
 
 public class UpdatePasswordActivity extends BaseActivity{
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
     @BindView(R.id.ll_1)
     LinearLayout ll_1;
     @BindView(R.id.ll_2)
@@ -131,6 +133,12 @@ public class UpdatePasswordActivity extends BaseActivity{
                         }
                     }
                 }
+            }
+        });
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(UpdatePasswordActivity.this);
             }
         });
     }

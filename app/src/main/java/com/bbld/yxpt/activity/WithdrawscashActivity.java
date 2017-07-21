@@ -78,7 +78,7 @@ public class WithdrawscashActivity extends BaseActivity{
                     cardinfo=response.body().getCardinfo();
                     Glide.with(getApplicationContext()).load(cardinfo.getBankLogo()).into(ivBankLogo);
                     tvBankName.setText(cardinfo.getBankName()+"");
-                    tvBankNo.setText(cardinfo.getCardNo()+"");
+                    tvBankNo.setText("尾号"+cardinfo.getCardNo().substring(cardinfo.getCardNo().length()-4,cardinfo.getCardNo().length())+"("+cardinfo.getBankName()+")");
                     tvCanMoney.setText("可提现金额"+accountMoney+"元");
                     bankCardId=cardinfo.getBankCardID();
                 }else{
@@ -116,7 +116,7 @@ public class WithdrawscashActivity extends BaseActivity{
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(WithdrawscashActivity.class);
+                finish();
             }
         });
     }
@@ -131,7 +131,7 @@ public class WithdrawscashActivity extends BaseActivity{
                 String bankLogo = data.getExtras().getString("bankLogo");
                 bankCardId=data.getExtras().getInt("bankCardId");
                 tvBankName.setText(bankName);
-                tvBankNo.setText(bankNo);
+                tvBankNo.setText("尾号"+bankNo.substring(bankNo.length()-4,bankNo.length())+"("+bankName+")");
                 Glide.with(getApplicationContext()).load(bankLogo).into(ivBankLogo);
                 break;
         }
