@@ -134,6 +134,8 @@ public class MainActivity extends BaseActivity {
     LinearLayout llSearchLoc;
     @BindView(R.id.tvNearShopCount)
     TextView tvNearShopCount;
+    @BindView(R.id.tvGoHere)
+    TextView tvGoHere;
 
 
     // 定位相关
@@ -636,6 +638,25 @@ public class MainActivity extends BaseActivity {
                 }else{
                     isTop = false;
                 }
+            }
+        });
+        tvPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("电话");
+            }
+        });
+        tvGoHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showToast("导航");
+                Bundle bundle=new Bundle();
+                bundle.putDouble("shopX",Double.parseDouble(shopX));
+                bundle.putDouble("shopY",Double.parseDouble(shopY));
+                bundle.putDouble("mCurrentLat",mCurrentLat);
+                bundle.putDouble("mCurrentLon",mCurrentLon);
+                bundle.putString("mCurrentCity",mCurrentCity);
+                readyGo(RoutePlanActivity.class,bundle);
             }
         });
     }

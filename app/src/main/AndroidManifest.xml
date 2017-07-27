@@ -26,6 +26,21 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <uses-permission android:name="android.permission.ACCES_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <!-- SDK1.5需要android.permission.GET_TASKS权限判断本程序是否为当前运行的应用? -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 来电消音 -->
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -44,9 +59,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--导航service-->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="hm3kcIaFSj5mgl6TKBTf5TcrGNSmDz1t" />
+            android:value="Mo0RW2ac3KLGfPFDcPznG7vdDHiMv2w3" />
         <activity android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -142,6 +162,15 @@
             android:screenOrientation="portrait"></activity>
         <!--我的订单03-->
         <activity android:name=".activity.MyOrder03Activity"
+            android:screenOrientation="portrait"></activity>
+        <!--路径规划-->
+        <activity android:name=".activity.RoutePlanActivity"
+            android:screenOrientation="portrait"></activity>
+        <!---->
+        <activity android:name=".navi.MapActivity"
+            android:screenOrientation="portrait"></activity>
+        <!---->
+        <activity android:name=".navi.BNDemoGuideActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

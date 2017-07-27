@@ -97,6 +97,7 @@
                     android:layout_alignParentBottom="true"
                     android:text="附近共有0家店铺"/>
             </RelativeLayout>
+            <!--点击店铺，弹出的电话、导航、营业时间-->
             <LinearLayout
                 android:id="@+id/llBottomIn"
                 android:orientation="vertical"
@@ -153,6 +154,7 @@
                         android:gravity="center_vertical"
                         android:layout_margin="5dp"/>
                     <TextView
+                        android:id="@+id/tvGoHere"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/go_home"

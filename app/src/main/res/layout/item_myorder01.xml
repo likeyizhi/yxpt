@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/s1s"
+                android:drawableLeft="@mipmap/qz"
                 android:textColor="#0bd28a" />
             <TextView
                 android:id="@+id/tvOrderCount"
@@ -55,7 +55,7 @@
                 android:text="0"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:drawableLeft="@mipmap/s1s"
+                android:drawableLeft="@mipmap/zd"
                 android:textColor="#ff7273" />
         </LinearLayout>
     </LinearLayout>
