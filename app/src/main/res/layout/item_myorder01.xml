@@ -2,80 +2,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.bbld.yxpt_sh.widget.CircleImageView
-        android:id="@+id/iv_HeadPortrait"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:src="@drawable/zwt"/>
+
+    <ImageView
+        android:id="@+id/ivShopImg"
+        android:layout_width="75dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="75dp"
+        />
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/tvShopName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/tv_NickName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="#333333"
-                android:text="{何大智}"/>
-            <TextView
-                android:id="@+id/tv_EnterAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="{￥0.00}"/>
-        </LinearLayout>
+            android:layout_marginRight="10dp"
+            android:textColor="#333333"
+            android:text="shopName"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvShopAddr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="shopAddress"
+            android:textColor="#999999" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvActivityCount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/tv_AddDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="12sp"
-                    android:textColor="#999999"
-                    android:text="订单时间：{2017-06-28}"/>
-
-                <TextView
-                    android:id="@+id/tv_ReturnStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:textSize="12sp"
-                    android:textColor="#333333"
-                    android:text="{已返还}"/>
-            </LinearLayout>
+                android:text="0"
+                android:gravity="center_vertical"
+                android:drawableLeft="@mipmap/s1s"
+                android:textColor="#0bd28a" />
+            <TextView
+                android:id="@+id/tvOrderCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@mipmap/s1s"
+                android:textColor="#ff7273" />
         </LinearLayout>
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ll_fanhuan"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp">
-        <TextView
-            android:id="@+id/tv_qian"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#e14258"
-            android:layout_marginRight="10dp"
-            android:gravity="center|end"
-            android:lines="1"
-            android:textSize="14sp"
-            android:text="{￥0.00}"/>
     </LinearLayout>
 </LinearLayout>

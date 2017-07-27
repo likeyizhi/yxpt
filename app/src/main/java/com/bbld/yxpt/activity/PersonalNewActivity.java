@@ -230,6 +230,7 @@ public class PersonalNewActivity extends BaseActivity{
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
                     showToast("暂未登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     readyGo(WithdrawscashActivity.class);
                 }
@@ -247,27 +248,10 @@ public class PersonalNewActivity extends BaseActivity{
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
                     showToast("暂未登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     readyGo(MessageCenterActivity.class);
                 }
-            }
-        });
-    }
-
-    private void loadToken() {
-        Call<Login> call= RetrofitService.getInstance().login(sacc, spwd);
-        call.enqueue(new Callback<Login>() {
-            @Override
-            public void onResponse(Response<Login> response, Retrofit retrofit) {
-                //保存Token
-                SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
-                SharedPreferences.Editor editor=shared.edit();
-                editor.putString(TOKEN,response.body().getToken());
-                editor.commit();
-            }
-            @Override
-            public void onFailure(Throwable throwable) {
-
             }
         });
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -313,6 +297,24 @@ public class PersonalNewActivity extends BaseActivity{
                 }else{
                     isBottom = false;
                 }
+            }
+        });
+    }
+
+    private void loadToken() {
+        Call<Login> call= RetrofitService.getInstance().login(sacc, spwd);
+        call.enqueue(new Callback<Login>() {
+            @Override
+            public void onResponse(Response<Login> response, Retrofit retrofit) {
+                //保存Token
+                SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                SharedPreferences.Editor editor=shared.edit();
+                editor.putString(TOKEN,response.body().getToken());
+                editor.commit();
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
+
             }
         });
     }

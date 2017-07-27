@@ -77,10 +77,12 @@ public class WithdrawscashActivity extends BaseActivity{
                     accountMoney=response.body().getAccountMoney();
                     cardinfo=response.body().getCardinfo();
                     Glide.with(getApplicationContext()).load(cardinfo.getBankLogo()).into(ivBankLogo);
-                    tvBankName.setText(cardinfo.getBankName()+"");
-                    tvBankNo.setText("尾号"+cardinfo.getCardNo().substring(cardinfo.getCardNo().length()-4,cardinfo.getCardNo().length())+"("+cardinfo.getBankName()+")");
-                    tvCanMoney.setText("可提现金额"+accountMoney+"元");
                     bankCardId=cardinfo.getBankCardID();
+                    if (bankCardId!=0){
+                        tvBankName.setText(cardinfo.getBankName()+"");
+                        tvBankNo.setText("尾号"+cardinfo.getCardNo().substring(cardinfo.getCardNo().length()-4,cardinfo.getCardNo().length())+"("+cardinfo.getBankName()+")");
+                    }
+                    tvCanMoney.setText("可提现金额"+accountMoney+"元");
                 }else{
                     showToast(response.body().getMes());
                 }

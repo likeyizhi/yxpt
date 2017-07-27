@@ -132,6 +132,8 @@ public class MainActivity extends BaseActivity {
     RelativeLayout rlRight01;
     @BindView(R.id.llSearchLoc)
     LinearLayout llSearchLoc;
+    @BindView(R.id.tvNearShopCount)
+    TextView tvNearShopCount;
 
 
     // 定位相关
@@ -187,19 +189,6 @@ public class MainActivity extends BaseActivity {
     // 获取反地理编码对象
     private GeoCoder mGeoCoder = GeoCoder.newInstance();
     private String currentAddr;
-    private Handler mHandler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case 20:
-                    tvCurrentAddress.setText(currentAddr);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
     private static final int IS_SCAN=1;
     private static final int IS_GO=2;
     private int isWhat=IS_SCAN;
@@ -214,6 +203,7 @@ public class MainActivity extends BaseActivity {
     private String backY;
     private ArrayList<BitmapDescriptor> bdImgs;
     private Dialog mWeiboDialog;
+    private String isBack="noback";
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
@@ -297,32 +287,12 @@ public class MainActivity extends BaseActivity {
         ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (shopListPage.size()!=0 || (!shopListPage.isEmpty())){
 //                TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
 //                animation.setDuration(500);//设置动画持续时间
 //                animation.setRepeatCount(0);//设置重复次数
 //                rlFirst.setAnimation(animation);
 //                animation.startNow();
-                rlFirst.setVisibility(View.GONE);
-
-                TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
-                animation02.setDuration(200);//设置动画持续时间
-                animation02.setRepeatCount(0);//设置重复次数
-                rlSecond.setAnimation(animation02);
-                animation02.startNow();
-                rlSecond.setVisibility(View.VISIBLE);
-
-            }
-        });
-        /**触摸显示带有店铺列表的布局**/
-        llBottom.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (rlBottomWhite.getVisibility()==View.VISIBLE){
-//                    TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
-//                    animation.setDuration(500);//设置动画持续时间
-//                    animation.setRepeatCount(0);//设置重复次数
-//                    rlFirst.setAnimation(animation);
-//                    animation.startNow();
                     rlFirst.setVisibility(View.GONE);
 
                     TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
@@ -332,6 +302,29 @@ public class MainActivity extends BaseActivity {
                     animation02.startNow();
                     rlSecond.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+        /**触摸显示带有店铺列表的布局**/
+        llBottom.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (shopListPage.size()!=0 || (!shopListPage.isEmpty())){
+                    if (rlBottomWhite.getVisibility()==View.VISIBLE){
+//                    TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
+//                    animation.setDuration(500);//设置动画持续时间
+//                    animation.setRepeatCount(0);//设置重复次数
+//                    rlFirst.setAnimation(animation);
+//                    animation.startNow();
+                        rlFirst.setVisibility(View.GONE);
+
+                        TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
+                        animation02.setDuration(200);//设置动画持续时间
+                        animation02.setRepeatCount(0);//设置重复次数
+                        rlSecond.setAnimation(animation02);
+                        animation02.startNow();
+                        rlSecond.setVisibility(View.VISIBLE);
+                    }
+                }
                 return true;
             }
         });
@@ -339,20 +332,22 @@ public class MainActivity extends BaseActivity {
         llBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (rlBottomWhite.getVisibility()==View.VISIBLE){
-                    TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
-                    animation.setDuration(500);//设置动画持续时间
-                    animation.setRepeatCount(0);//设置重复次数
-                    rlFirst.setAnimation(animation);
-                    animation.startNow();
-                    rlFirst.setVisibility(View.GONE);
+                if (shopListPage.size()!=0 || (!shopListPage.isEmpty())){
+                    if (rlBottomWhite.getVisibility()==View.VISIBLE){
+                        TranslateAnimation animation = new TranslateAnimation(0,0,0,500);
+                        animation.setDuration(500);//设置动画持续时间
+                        animation.setRepeatCount(0);//设置重复次数
+                        rlFirst.setAnimation(animation);
+                        animation.startNow();
+                        rlFirst.setVisibility(View.GONE);
 
-                    TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
-                    animation02.setDuration(200);//设置动画持续时间
-                    animation02.setRepeatCount(0);//设置重复次数
-                    rlSecond.setAnimation(animation02);
-                    animation.startNow();
-                    rlSecond.setVisibility(View.VISIBLE);
+                        TranslateAnimation animation02 = new TranslateAnimation(0,0,500,0);
+                        animation02.setDuration(200);//设置动画持续时间
+                        animation02.setRepeatCount(0);//设置重复次数
+                        rlSecond.setAnimation(animation02);
+                        animation.startNow();
+                        rlSecond.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -403,7 +398,11 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onMapStatusChangeFinish(MapStatus mapStatus) {
-
+                if (isBack.equals("back")){
+                    isBack = "noback";
+                }else{
+                    updateMapState(mapStatus);
+                }
             }
         });
         rlRight01.setOnClickListener(new View.OnClickListener() {
@@ -465,6 +464,7 @@ public class MainActivity extends BaseActivity {
                         String token = new MyToken(MainActivity.this).getToken();
                         if(token==null || token.equals("")){
                             showToast("请先登录");
+                            readyGo(LoginActivity.class);
                         }else{
                             if (Build.VERSION.SDK_INT >= 23){
                                 int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
@@ -491,6 +491,7 @@ public class MainActivity extends BaseActivity {
                 String token = new MyToken(MainActivity.this).getToken();
                 if(token==null || token.equals("")){
                     showToast("请先登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     if (Build.VERSION.SDK_INT >= 23){
                         int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
@@ -512,6 +513,7 @@ public class MainActivity extends BaseActivity {
                 String token = new MyToken(MainActivity.this).getToken();
                 if(token==null || token.equals("")){
                     showToast("请先登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     if (Build.VERSION.SDK_INT >= 23){
                         int cameraPermission= ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
@@ -531,11 +533,16 @@ public class MainActivity extends BaseActivity {
         llBottomIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle=new Bundle();
-                bundle.putString("shopId",shopId);
-                bundle.putString("shopX",shopX);
-                bundle.putString("shopY",shopY);
-                readyGo(ShopDetailsActivity.class, bundle);
+                String token = new MyToken(MainActivity.this).getToken();
+                if (token==null || token.equals("")){
+                    readyGo(LoginActivity.class);
+                }else{
+                    Bundle bundle=new Bundle();
+                    bundle.putString("shopId",shopId);
+                    bundle.putString("shopX",shopX);
+                    bundle.putString("shopY",shopY);
+                    readyGo(ShopDetailsActivity.class, bundle);
+                }
             }
         });
         //跳转到用户订单的返还信息
@@ -545,27 +552,35 @@ public class MainActivity extends BaseActivity {
                 String token = new MyToken(MainActivity.this).getToken();
                 if (token==null || token.equals("")){
                     showToast("请先登录");
+                    readyGo(LoginActivity.class);
                 }else {
-                    Call<OrderReturnInfo> call= RetrofitService.getInstance().getOrderReturnInfo(token);
-                    call.enqueue(new Callback<OrderReturnInfo>() {
-                        @Override
-                        public void onResponse(Response<OrderReturnInfo> response, Retrofit retrofit) {
-                            if (response==null){
-                                showToast(responseFail());
-                                return;
-                            }
-                            if (response.body().getStatus()==0){
-                                readyGo(MyOrderActivity.class);
-                            }else{
-                                showToast(response.body().getMes());
-                            }
-                        }
-                        @Override
-                        public void onFailure(Throwable throwable) {
-
-                        }
-                    });
+                    readyGo(MyOrder01Activity.class);
                 }
+//                String token = new MyToken(MainActivity.this).getToken();
+//                if (token==null || token.equals("")){
+//                    showToast("请先登录");
+//                    readyGo(LoginActivity.class);
+//                }else {
+//                    Call<OrderReturnInfo> call= RetrofitService.getInstance().getOrderReturnInfo(token);
+//                    call.enqueue(new Callback<OrderReturnInfo>() {
+//                        @Override
+//                        public void onResponse(Response<OrderReturnInfo> response, Retrofit retrofit) {
+//                            if (response==null){
+//                                showToast(responseFail());
+//                                return;
+//                            }
+//                            if (response.body().getStatus()==0){
+//                                readyGo(MyOrderActivity.class);
+//                            }else{
+//                                showToast(response.body().getMes());
+//                            }
+//                        }
+//                        @Override
+//                        public void onFailure(Throwable throwable) {
+//
+//                        }
+//                    });
+//                }
             }
         });
         lvShopListPage.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -624,7 +639,13 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
+    private void updateMapState(MapStatus status) {
+        LatLng mCenterLatLng = status.target;
+        /**获取经纬度*/
+        double lat = mCenterLatLng.latitude;
+        double lng = mCenterLatLng.longitude;
+        loadData(lat,lng);
+    }
     private void initMap() {
         mWeiboDialog = WeiboDialogUtils.createLoadingDialog(MainActivity.this, "加载中...");
 
@@ -711,7 +732,7 @@ public class MainActivity extends BaseActivity {
             mCurrentLat = location.getLatitude();
             mCurrentLon = location.getLongitude();
             //加载数据
-            loadData();
+            loadData(mCurrentLat, mCurrentLon);
             //设置地址信息街道等
             setLocationAddr();
             //登录验证
@@ -758,8 +779,8 @@ public class MainActivity extends BaseActivity {
         switch (resultCode){
             case 6065:
                 backKey = data.getExtras().getString("key");
-                loadData();
-                location(Double.parseDouble(backY),Double.parseDouble(backX));
+                isBack = data.getExtras().getString("isBack");
+                loadData(mCurrentLat, mCurrentLon);
                 break;
         }
     }
@@ -795,51 +816,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void getLocationAddr() {
-        getAddress(mCurrentLat, mCurrentLon);
-    }
-    /**
-     * 进行反地理编码
-     *
-     * @param Lat
-     *            纬度信息
-     * @param Lon
-     *            经度信息
-     */
-    private void getAddress(double Lat, double Lon) {
-        LatLng mLatLng = new LatLng(Lat, Lon);
-        // 反地理编码请求参数对象
-        ReverseGeoCodeOption mReverseGeoCodeOption = new ReverseGeoCodeOption();
-        // 设置请求参数
-        mReverseGeoCodeOption.location(mLatLng);
-        // 发起反地理编码请求(经纬度->地址信息)
-        mGeoCoder.reverseGeoCode(mReverseGeoCodeOption);
-
-        // 设置查询结果监听者
-        mGeoCoder.setOnGetGeoCodeResultListener(mOnGetGeoCoderResultListener);
-    }
-
-    /**
-     * 编码查询结果监听者
-     */
-    private OnGetGeoCoderResultListener mOnGetGeoCoderResultListener = new OnGetGeoCoderResultListener() {
-
-        @Override
-        public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-            // 反地理编码查询结果回调函数
-            // 将地理位置信息载入到集合中
-            currentAddr=result.getAddress();
-            Message message=new Message();
-            message.what=20;
-            mHandler.sendMessage(message);
-        }
-
-        @Override
-        public void onGetGeoCodeResult(GeoCodeResult result) {
-            // 地理编码查询结果回调函数
-        }
-    };
-    private void loadData() {
+    private void loadData(double mLat, double mLon) {
         if (NetConnectUtil.isNetConnected(getApplicationContext())){
             //检查版本更新
 //            runOnUiThread(new Runnable() {
@@ -849,7 +826,8 @@ public class MainActivity extends BaseActivity {
 //                }
 //            });
             //获取附近店铺列表（不分页）
-            Call<ShopList> call= RetrofitService.getInstance().getShopList(mCurrentLon+"",mCurrentLat+""/*"116.512672","39.92334"*/, backKey);
+//            showToast(mLon+","+mLat+","+backKey);
+            Call<ShopList> call= RetrofitService.getInstance().getShopList(mLon+"",mLat+""/*"116.512672","39.92334"*/, backKey);
             call.enqueue(new Callback<ShopList>() {
                 @Override
                 public void onResponse(Response<ShopList> response, Retrofit retrofit) {
@@ -861,7 +839,12 @@ public class MainActivity extends BaseActivity {
                         shopList=response.body().getShopList();
                         backX=response.body().getX();
                         backY=response.body().getY();
+                        if (isBack.equals("back")){
+                            location(Double.parseDouble(backY),Double.parseDouble(backX));
+                            isBack="noback";
+                        }
                         initOverlay();
+                        tvNearShopCount.setText("附近共有"+shopList.size()+"家店铺");
                     }else{
                         showToast(response.body().getMes());
                     }
@@ -873,7 +856,7 @@ public class MainActivity extends BaseActivity {
                 }
             });
             //获取附近店铺列表（分页）
-            Call<ShopListPage> pageCall=RetrofitService.getInstance().getShopListPage(mCurrentLon+"",mCurrentLat+"",pageIndex,pageSize, backKey);
+            Call<ShopListPage> pageCall=RetrofitService.getInstance().getShopListPage(mLon+"",mLat+"",pageIndex,pageSize, backKey);
             pageCall.enqueue(new Callback<ShopListPage>() {
                 @Override
                 public void onResponse(Response<ShopListPage> response, Retrofit retrofit) {
@@ -895,7 +878,8 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }else{
-            setNetworkMethod();
+            showToast("请打开网络,并重启APP");
+//            setNetworkMethod();
         }
     }
 
@@ -945,11 +929,16 @@ public class MainActivity extends BaseActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Bundle bundle=new Bundle();
-                        bundle.putString("shopId",shop.getShopID()+"");
-                        bundle.putString("shopX",shop.getLongitude()+"");
-                        bundle.putString("shopY",shop.getLatitude()+"");
-                        readyGo(ShopDetailsActivity.class, bundle);
+                        String token = new MyToken(MainActivity.this).getToken();
+                        if (token==null || token.equals("")){
+                            readyGo(LoginActivity.class);
+                        }else{
+                            Bundle bundle=new Bundle();
+                            bundle.putString("shopId",shop.getShopID()+"");
+                            bundle.putString("shopX",shop.getLongitude()+"");
+                            bundle.putString("shopY",shop.getLatitude()+"");
+                            readyGo(ShopDetailsActivity.class, bundle);
+                        }
                     }
                 });
             }
@@ -1011,7 +1000,7 @@ public class MainActivity extends BaseActivity {
         }).setNegativeButton("已开启", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                loadData();
+                loadData(mCurrentLat,mCurrentLon);
                 dialog.dismiss();
             }
         }).show();
@@ -1025,7 +1014,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        loadData();
+        loadData(mCurrentLat, mCurrentLon);
     }
     @Override
     protected void onPause() {

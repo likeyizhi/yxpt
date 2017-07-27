@@ -214,5 +214,17 @@
         style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/bg_borderyuanff7372"
         android:text="支付"/>
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/bg_borderyuanff7372"
+        android:text="支付测试按钮"/>
 </LinearLayout>
 

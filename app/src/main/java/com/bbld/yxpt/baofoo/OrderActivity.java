@@ -1,5 +1,6 @@
 package com.bbld.yxpt.baofoo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,17 +11,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baofoo.juhepaysdk.BaofooJuHeAliPayTask;
 import com.baofoo.juhepaysdk.BaofooJuHeWeiXinPayTask;
 import com.baofoo.juhepaysdk.Constants;
 import com.bbld.yxpt.R;
+import com.bbld.yxpt.bean.AddWithdrawa;
+import com.bbld.yxpt.network.RetrofitService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * 下单界面
@@ -84,11 +93,16 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         }
     };
+    private Button btnTest;
+    private String orderNo;
+    private String money;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gopay);
+        orderNo=getIntent().getExtras().getString("orderNo");
+        money=getIntent().getExtras().getString("money");
         initView();
         initData();
     }
@@ -102,16 +116,18 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         imgZhifubaoChecked = (ImageView) findViewById(R.id.img_zhifubao_checked);
         ivBack = (ImageView) findViewById(R.id.ivBack);
         iv_logo = (ImageView) findViewById(R.id.iv_logo);
+        btnTest=(Button) findViewById(R.id.btnTest);
         llWeixinPay.setOnClickListener(this);
         llZhifubaoPay.setOnClickListener(this);
         mSubmitBtn.setOnClickListener(this);
         iv_logo.setOnClickListener(this);
         ivBack.setOnClickListener(this);
+        btnTest.setOnClickListener(this);
     }
 
     private void initData() {
         amg = getIntent().getIntExtra("INPUTAMOUNT", 1);
-        tvAmount.setText(amg + "");
+        tvAmount.setText(money);
     }
 
     @Override
@@ -201,6 +217,21 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.ivBack:
                 finish();
+                break;
+            case R.id.btnTest:
+                //支付测试
+                Call<AddWithdrawa> call= RetrofitService.getInstance().payNotify(orderNo);
+                call.enqueue(new Callback<AddWithdrawa>() {
+                    @Override
+                    public void onResponse(Response<AddWithdrawa> response, Retrofit retrofit) {
+                        Toast.makeText(OrderActivity.this,"支付成功",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                    }
+                });
                 break;
             default:
                 break;

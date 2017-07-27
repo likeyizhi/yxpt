@@ -51,6 +51,7 @@ public class ShopInfo {
          "Distance": "0m"*/
         private String ShopName;
         private String ShopImg;
+        private String ShopBigImg;
         private String LinkName;
         private String LinkPhone;
         private String Contact;
@@ -60,6 +61,14 @@ public class ShopInfo {
         private String Describe;
         private String Tag;
         private String Distance;
+
+        public String getShopBigImg() {
+            return ShopBigImg;
+        }
+
+        public void setShopBigImg(String shopBigImg) {
+            ShopBigImg = shopBigImg;
+        }
 
         public String getShopName() {
             return ShopName;

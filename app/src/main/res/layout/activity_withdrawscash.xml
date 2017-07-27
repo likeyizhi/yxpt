@@ -75,7 +75,7 @@
                     android:textSize="12sp"
                     android:layout_marginLeft="10dp"
                     android:textColor="#333333"
-                    android:text="默认银行"/>
+                    android:text="请添加银行卡"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                         android:textSize="12sp"
                         android:layout_marginLeft="10dp"
                         android:textColor="#999999"
-                        android:text="卡号"/>
+                        android:text=""/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

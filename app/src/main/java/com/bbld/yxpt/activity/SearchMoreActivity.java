@@ -122,6 +122,7 @@ public class SearchMoreActivity extends BaseActivity {
                     public void onClick(View view) {
                         Intent intent=new Intent();
                         intent.putExtra("key", bean.getName());
+                        intent.putExtra("isBack","back");
                         setResult(6065,intent);
                         finish();
                     }
@@ -206,6 +207,7 @@ public class SearchMoreActivity extends BaseActivity {
                     }
                     Intent intent=new Intent();
                     intent.putExtra("key", tag.getText());
+                    intent.putExtra("isBack","back");
                     setResult(6065,intent);
                     finish();
                 }
@@ -340,6 +342,7 @@ public class SearchMoreActivity extends BaseActivity {
                         }
                         Intent intent=new Intent();
                         intent.putExtra("key",shop.getShopName());
+                        intent.putExtra("isBack","back");
                         setResult(6065,intent);
                         finish();
                     }

@@ -63,28 +63,34 @@ public class PaymentActivity extends BaseActivity{
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<AddPayOrder> payOrderCall=RetrofitService.getInstance().addPayOrder(token,codedContent,etMoney.getText()+"");
-                payOrderCall.enqueue(new Callback<AddPayOrder>() {
-                    @Override
-                    public void onResponse(Response<AddPayOrder> response, Retrofit retrofit) {
-                        if (response==null){
-                            showToast(responseFail());
-                            return;
+                if (etMoney.getText().toString().trim().equals("")){
+                    showToast("请输入金额");
+                }else{
+                    Call<AddPayOrder> payOrderCall=RetrofitService.getInstance().addPayOrder(token,codedContent,etMoney.getText()+"");
+                    payOrderCall.enqueue(new Callback<AddPayOrder>() {
+                        @Override
+                        public void onResponse(Response<AddPayOrder> response, Retrofit retrofit) {
+                            if (response==null){
+                                showToast(responseFail());
+                                return;
+                            }
+                            if (response.body().getStatus()==0){
+                                Bundle bundle=new Bundle();
+                                bundle.putString("orderNo" , response.body().getOrderNo()+"");
+                                bundle.putString("money", etMoney.getText()+"");
+                                ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
+                                readyGo(OrderActivity.class, bundle);
+                            }else{
+                                showToast(response.body().getMes());
+                            }
                         }
-                        if (response.body().getStatus()==0){
-                            showToast(response.body().getMes());
-                            ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
-                            readyGo(OrderActivity.class);
-                        }else{
-                            showToast(response.body().getMes());
+
+                        @Override
+                        public void onFailure(Throwable throwable) {
+
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-
-                    }
-                });
+                    });
+                }
             }
         });
     }

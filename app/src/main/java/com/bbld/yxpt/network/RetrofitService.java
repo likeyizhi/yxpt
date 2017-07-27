@@ -7,6 +7,8 @@ import com.bbld.yxpt.bean.AddPayOrder;
 import com.bbld.yxpt.bean.AddWithdrawa;
 import com.bbld.yxpt.bean.BankCardRecognition;
 import com.bbld.yxpt.bean.BankList;
+import com.bbld.yxpt.bean.BuyShopInfo;
+import com.bbld.yxpt.bean.BuyShopList;
 import com.bbld.yxpt.bean.CityList;
 import com.bbld.yxpt.bean.Feedback;
 import com.bbld.yxpt.bean.GetBankCardList;
@@ -14,12 +16,16 @@ import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
 import com.bbld.yxpt.bean.Login;
 import com.bbld.yxpt.bean.MessageList;
+import com.bbld.yxpt.bean.MyOrderReturnInfo;
+import com.bbld.yxpt.bean.NickName;
 import com.bbld.yxpt.bean.OrderReturnInfo;
 import com.bbld.yxpt.bean.Register;
 import com.bbld.yxpt.bean.RegisterMessage;
 import com.bbld.yxpt.bean.Retrieve;
 import com.bbld.yxpt.bean.RetrieveMessage;
 import com.bbld.yxpt.bean.ScanShop;
+import com.bbld.yxpt.bean.ShopActivityMyOrderList;
+import com.bbld.yxpt.bean.ShopActivityOrderList;
 import com.bbld.yxpt.bean.ShopInfo;
 import com.bbld.yxpt.bean.ShopList;
 import com.bbld.yxpt.bean.ShopListPage;
@@ -215,5 +221,53 @@ public class RetrofitService {
      */
     public Call<AddWithdrawa> addWithdrawa(String token, int BankCardId, String price){
         return retrofitInterface.addWithdrawa(token, BankCardId, price);
+    }
+    /**
+     * 支付测试
+     */
+    public Call<AddWithdrawa> payNotify(String orderNo){
+        return retrofitInterface.payNotify(orderNo);
+    }
+    /**
+     * 修改昵称
+     */
+    public Call<NickName> updateUserNickName(String token, String NickName){
+        return retrofitInterface.updateUserNickName(token, NickName);
+    }
+    /**
+     * 修改昵称
+     */
+    public Call<NickName> updateUserSex(String token, String sex){
+        return retrofitInterface.updateUserSex(token, sex);
+    }
+    /**
+     * 获取购买过的店铺
+     */
+    public Call<BuyShopList> getBuyShopList(String token){
+        return retrofitInterface.getBuyShopList(token);
+    }
+    /**
+     * 获取店铺订单信息
+     */
+    public Call<BuyShopInfo> getBuyShopInfo(String token, String shopId){
+        return retrofitInterface.getBuyShopInfo(token, shopId);
+    }
+    /**
+     * 获取店铺活动订单的待返、已返列表
+     */
+    public Call<ShopActivityOrderList> getShopActivityOrderList(String token, String shopActivityID){
+        return retrofitInterface.getShopActivityOrderList(token, shopActivityID);
+    }
+    /**
+     * 获取活动中我的订单列表
+     */
+    public Call<ShopActivityMyOrderList> getShopActivityMyOrderList(String token, String shopActivityID){
+        return retrofitInterface.getShopActivityMyOrderList(token, shopActivityID);
+    }
+    /**
+     * 获取我的订单相关排队订单
+     */
+    public Call<MyOrderReturnInfo> getMyOrderReturnInfo(String token, String OrderID){
+        return retrofitInterface.getMyOrderReturnInfo(token, OrderID);
     }
 }

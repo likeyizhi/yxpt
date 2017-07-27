@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bbld.yxpt.R;
@@ -27,7 +26,7 @@ import retrofit.Retrofit;
 
 /**
  * 注册
- * Created by likey on 2017/7/1.
+ * Created by likey on 2017/7/
  */
 
 public class RegisterActivity extends BaseActivity{

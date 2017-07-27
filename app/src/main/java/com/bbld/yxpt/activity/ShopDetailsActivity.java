@@ -95,7 +95,7 @@ public class ShopDetailsActivity extends BaseActivity{
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(shopInfo.getShopImg()).into(ivBackground);
+        Glide.with(getApplicationContext()).load(shopInfo.getShopBigImg()).into(ivBackground);
 //        Glide.with(getApplicationContext()).load(shopInfo.getShopImg()).into(ivHead);
         tvShopName.setText(shopInfo.getShopName());
         tvTag.setText(shopInfo.getTag());
