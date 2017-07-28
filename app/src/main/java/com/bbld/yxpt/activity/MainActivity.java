@@ -391,6 +391,21 @@ public class MainActivity extends BaseActivity {
                     ivScanCode.setImageResource(R.mipmap.saoma);
                     isWhat=IS_SCAN;
                 }
+                if (rlSecond.getVisibility()==View.VISIBLE){
+                    TranslateAnimation animation = new TranslateAnimation(0,0,500,0);
+                    animation.setDuration(200);//设置动画持续时间
+                    animation.setRepeatCount(0);//设置重复次数
+                    rlFirst.setAnimation(animation);
+                    animation.startNow();
+                    rlFirst.setVisibility(View.VISIBLE);
+
+                    TranslateAnimation animation02 = new TranslateAnimation(0,0,0,500);
+                    animation02.setDuration(200);//设置动画持续时间
+                    animation02.setRepeatCount(0);//设置重复次数
+                    rlSecond.setAnimation(animation02);
+                    animation02.startNow();
+                    rlSecond.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -451,9 +466,8 @@ public class MainActivity extends BaseActivity {
                     animation02.setDuration(200);//设置动画持续时间
                     animation02.setRepeatCount(0);//设置重复次数
                     rlSecond.setAnimation(animation02);
-                    animation.startNow();
+                    animation02.startNow();
                     rlSecond.setVisibility(View.GONE);
-
                 }
                 return true;
             }
@@ -482,7 +496,14 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case IS_GO:
-                        showToast("去这里");
+//                        showToast("去这里");
+                        Bundle bundle=new Bundle();
+                        bundle.putDouble("shopX",Double.parseDouble(shopX));
+                        bundle.putDouble("shopY",Double.parseDouble(shopY));
+                        bundle.putDouble("mCurrentLat",mCurrentLat);
+                        bundle.putDouble("mCurrentLon",mCurrentLon);
+                        bundle.putString("mCurrentCity",mCurrentCity);
+                        readyGo(RoutePlanActivity.class,bundle);
                         break;
                 }
             }
@@ -541,8 +562,11 @@ public class MainActivity extends BaseActivity {
                 }else{
                     Bundle bundle=new Bundle();
                     bundle.putString("shopId",shopId);
-                    bundle.putString("shopX",shopX);
-                    bundle.putString("shopY",shopY);
+                    bundle.putDouble("shopX",Double.parseDouble(shopX));
+                    bundle.putDouble("shopY",Double.parseDouble(shopY));
+                    bundle.putDouble("mCurrentLat",mCurrentLat);
+                    bundle.putDouble("mCurrentLon",mCurrentLon);
+                    bundle.putString("mCurrentCity",mCurrentCity);
                     readyGo(ShopDetailsActivity.class, bundle);
                 }
             }
@@ -612,7 +636,7 @@ public class MainActivity extends BaseActivity {
                             animation02.setDuration(200);//设置动画持续时间
                             animation02.setRepeatCount(0);//设置重复次数
                             rlSecond.setAnimation(animation02);
-                            animation.startNow();
+                            animation02.startNow();
                             rlSecond.setVisibility(View.GONE);
                         }
                         break;
@@ -649,7 +673,6 @@ public class MainActivity extends BaseActivity {
         tvGoHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showToast("导航");
                 Bundle bundle=new Bundle();
                 bundle.putDouble("shopX",Double.parseDouble(shopX));
                 bundle.putDouble("shopY",Double.parseDouble(shopY));
@@ -956,8 +979,11 @@ public class MainActivity extends BaseActivity {
                         }else{
                             Bundle bundle=new Bundle();
                             bundle.putString("shopId",shop.getShopID()+"");
-                            bundle.putString("shopX",shop.getLongitude()+"");
-                            bundle.putString("shopY",shop.getLatitude()+"");
+                            bundle.putDouble("shopX",Double.parseDouble(shop.getLongitude()+""));
+                            bundle.putDouble("shopY",Double.parseDouble(shop.getLatitude()+""));
+                            bundle.putDouble("mCurrentLat",mCurrentLat);
+                            bundle.putDouble("mCurrentLon",mCurrentLon);
+                            bundle.putString("mCurrentCity",mCurrentCity);
                             readyGo(ShopDetailsActivity.class, bundle);
                         }
                     }

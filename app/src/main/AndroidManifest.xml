@@ -166,10 +166,11 @@
         <!--路径规划-->
         <activity android:name=".activity.RoutePlanActivity"
             android:screenOrientation="portrait"></activity>
-        <!---->
+
         <activity android:name=".navi.MapActivity"
+            android:theme="@style/myTransparent"
             android:screenOrientation="portrait"></activity>
-        <!---->
+
         <activity android:name=".navi.BNDemoGuideActivity"
             android:screenOrientation="portrait"></activity>
     </application>

@@ -46,11 +46,14 @@ public class ShopDetailsActivity extends BaseActivity{
 
 
     private String shopId;
-    private String shopX;
-    private String shopY;
+    private double shopX;
+    private double shopY;
     private String token;
     private Call<ShopInfo> call;
     private ShopInfo.ShopInfoShopInfo shopInfo;
+    private double mCurrentLat;
+    private double mCurrentLon;
+    private String mCurrentCity;
 
     @Override
     protected void initViewsAndEvents() {
@@ -65,13 +68,25 @@ public class ShopDetailsActivity extends BaseActivity{
                 ActivityManagerUtil.getInstance().finishActivity(ShopDetailsActivity.this);
             }
         });
+        ivHead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle=new Bundle();
+                bundle.putDouble("shopX",shopX);
+                bundle.putDouble("shopY",shopY);
+                bundle.putDouble("mCurrentLat",mCurrentLat);
+                bundle.putDouble("mCurrentLon",mCurrentLon);
+                bundle.putString("mCurrentCity",mCurrentCity);
+                readyGo(RoutePlanActivity.class,bundle);
+            }
+        });
     }
     private void loadData() {
         if (token==null || token.equals("")){
-            call= RetrofitService.getInstance().getShopInfo("",shopId,shopX,shopY);
+            call= RetrofitService.getInstance().getShopInfo("",shopId+"",shopX+"",shopY+"");
             showToast("请先登录");
         }else{
-            call= RetrofitService.getInstance().getShopInfo(token,shopId,shopX,shopY);
+            call= RetrofitService.getInstance().getShopInfo(token,shopId+"",shopX+"",shopY+"");
             call.enqueue(new Callback<ShopInfo>() {
                 @Override
                 public void onResponse(Response<ShopInfo> response, Retrofit retrofit) {
@@ -107,8 +122,11 @@ public class ShopDetailsActivity extends BaseActivity{
     @Override
     protected void getBundleExtras(Bundle extras) {
         shopId=extras.getString("shopId");
-        shopX=extras.getString("shopX");
-        shopY=extras.getString("shopY");
+        shopX=extras.getDouble("shopX");
+        shopY=extras.getDouble("shopY");
+        mCurrentLat=extras.getDouble("mCurrentLat");
+        mCurrentLon=extras.getDouble("mCurrentLon");
+        mCurrentCity=extras.getString("mCurrentCity");
     }
 
     @Override

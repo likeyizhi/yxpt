@@ -127,17 +127,24 @@
         </LinearLayout>
         <Button
             android:id="@+id/navigation"
-            android:layout_width="61dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dip"
             android:layout_marginRight="2dip"
             android:layout_alignParentBottom="true"
             android:onClick="searchButtonProcess"
             android:layout_centerHorizontal="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:background="@drawable/bg_borderyuan0bd28a_2200"
             android:text="导航" />
-        <Button
-            android:layout_width="61dp"
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@mipmap/gback"
+            android:onClick="searchButtonProcess"
             android:text="返回"/>
     </RelativeLayout>
 

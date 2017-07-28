@@ -26,6 +26,7 @@ public class BNDemoGuideActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapActivity.mapActivity.finish();
         createHandler();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {}
         View view = BNRouteGuideManager.getInstance().onCreate(this, new OnNavigationListener() {

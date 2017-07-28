@@ -3,13 +3,20 @@
  */
 package com.bbld.yxpt.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -51,7 +58,10 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.adapter.RouteLineAdapter;
 import com.bbld.yxpt.navi.MapActivity;
+import com.bbld.yxpt.utils.ApkTool;
+import com.bbld.yxpt.utils.MyAppInfo;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import mapapi.overlayutil.BikingRouteOverlay;
@@ -104,6 +114,43 @@ public class RoutePlanActivity extends Activity implements BaiduMap.OnMapClickLi
     private String mCurrentCity;
     private PlanNode stNode;
     private PlanNode enNode;
+    private static final int BAIDU_READ_PHONE_STATE =100;
+    private List<MyAppInfo> appInfos;
+
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1101:
+                    for (int i=0;i<appInfos.size();i++){
+                        if (appInfos.get(i).getAppName().equals("com.baidu.BaiduMap")){
+                            try {
+                                Intent intent = Intent.getIntent("intent://map/direction?origin=latlng:"+mCurrentLat+","+mCurrentLon+"|name:"+""+"&destination=latlng:"+shopY+","+shopX+"|name:"+""+"&mode=driving&src=利惠客#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
+                                startActivity(intent); //启动调用
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }else if (appInfos.get(i).getAppName().equals("com.autonavi.minimap")){
+                            try
+                            {
+                                Intent intent = new Intent("android.intent.action.VIEW",
+                                        android.net.Uri.parse("androidamap://navi?sourceApplication=利惠客&poiname=利惠客&lat="+shopY+"&lon="+shopX+"&dev=1&style=2"));
+                                intent.setPackage("com.autonavi.minimap");
+                                startActivity(intent);
+                            } catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+                    }
+                    Toast.makeText(RoutePlanActivity.this,"请先安装百度地图或高德地图",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,10 +248,44 @@ public class RoutePlanActivity extends Activity implements BaiduMap.OnMapClickLi
                     .from(stNode).to(enNode));
             nowSearchType = 4;
         } else if (v.getId() == R.id.navigation){
-            Toast.makeText(RoutePlanActivity.this,"导航",Toast.LENGTH_SHORT).show();
-            Intent intent=new Intent(RoutePlanActivity.this, MapActivity.class);
-            startActivity(intent);
+            // 版本判断。当手机系统大于 23 时，才有必要去判断权限是否获取
+            // 百度地图和安卓6.0以上不兼容，如果6.0+，调用本机高德地图或百度地图
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                initAppList();
+//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+//                        != PackageManager.PERMISSION_GRANTED
+//                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                        != PackageManager.PERMISSION_GRANTED
+//                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(getApplicationContext(), "没有权限,请手动开启定位权限", Toast.LENGTH_SHORT).show();
+//                    // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+//                    ActivityCompat.requestPermissions(RoutePlanActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE}, BAIDU_READ_PHONE_STATE);
+//                }else{
+//
+//                }
+            }else{
+                Intent intent=new Intent(RoutePlanActivity.this, MapActivity.class);
+                intent.putExtra("mCurrentLat",mCurrentLat);
+                intent.putExtra("mCurrentLon",mCurrentLon);
+                intent.putExtra("shopX",shopX);
+                intent.putExtra("shopY",shopY);
+                startActivity(intent);
+            }
+        }else if (v.getId() == R.id.back){
+            finish();
         }
+    }
+    private void initAppList(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                //扫描得到APP列表
+                appInfos = ApkTool.scanLocalInstallAppList(RoutePlanActivity.this.getPackageManager());
+                handler.sendEmptyMessage(1101);
+            }
+        }.start();
     }
 
     /**
