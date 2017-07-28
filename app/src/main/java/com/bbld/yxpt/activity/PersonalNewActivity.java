@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -63,6 +64,12 @@ public class PersonalNewActivity extends BaseActivity{
     SwipeRefreshLayout srl;
     @BindView(R.id.ivBack)
     ImageView ivBack;
+    @BindView(R.id.llPerson01)
+    LinearLayout llPerson01;
+    @BindView(R.id.llPerson02)
+    LinearLayout llPerson02;
+    @BindView(R.id.llPerson03)
+    LinearLayout llPerson03;
 
 
     private String sacc;
@@ -181,12 +188,13 @@ public class PersonalNewActivity extends BaseActivity{
                 orderHolder.tvDate=(TextView) view.findViewById(R.id.tvDate);
                 orderHolder.tvEnterAmount=(TextView) view.findViewById(R.id.tvEnterAmount);
                 orderHolder.ivReturnStatus=(ImageView) view.findViewById(R.id.ivReturnStatus);
+                orderHolder.ivHead=(ImageView) view.findViewById(R.id.ivHead);
                 view.setTag(orderHolder);
             }
             UserOrderList.UserOrderListlist order = getItem(i);
             orderHolder= (OrderHolder) view.getTag();
-            orderHolder.tvShopName.setText(order.getNickName()+"");
-            orderHolder.tvDate.setText(order.getAddDate()+"");
+            orderHolder.tvShopName.setText(order.getActivityTitle()+"");
+            orderHolder.tvDate.setText("消费时间："+order.getAddDate()+"");
             orderHolder.tvEnterAmount.setText("￥"+order.getEnterAmount()+"");
             if (order.getReturnStatus().equals("已返还")){
                 orderHolder.ivReturnStatus.setVisibility(View.VISIBLE);
@@ -195,12 +203,13 @@ public class PersonalNewActivity extends BaseActivity{
                 orderHolder.ivReturnStatus.setVisibility(View.GONE);
                 orderHolder.tvEnterAmount.setTextColor(Color.rgb(11,210,138));
             }
+            Glide.with(getApplicationContext()).load(order.getHeadPortrait()).into(orderHolder.ivHead);
             return view;
         }
 
         class OrderHolder{
             TextView tvShopName,tvDate,tvEnterAmount;
-            ImageView ivReturnStatus;
+            ImageView ivReturnStatus,ivHead;
         }
     }
 
@@ -296,6 +305,36 @@ public class PersonalNewActivity extends BaseActivity{
                     isBottom = true;
                 }else{
                     isBottom = false;
+                }
+            }
+        });
+        llPerson01.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                    showToast("暂未登录");
+                }else{
+                    readyGo(PayMoneyActivity.class);
+                }
+            }
+        });
+        llPerson02.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                    showToast("暂未登录");
+                }else{
+                    readyGo(ReceiveMoneyActivity.class);
+                }
+            }
+        });
+        llPerson03.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                    showToast("暂未登录");
+                }else{
+                    readyGo(HaveToMoneyActivity.class);
                 }
             }
         });

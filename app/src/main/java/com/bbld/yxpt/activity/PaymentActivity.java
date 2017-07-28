@@ -44,7 +44,8 @@ public class PaymentActivity extends BaseActivity{
     TextView tvAllMoney;
     @BindView(R.id.etMoney)
     EditText etMoney;
-
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
 
     private String codedContent;
     Call<ScanShop> call;
@@ -60,6 +61,12 @@ public class PaymentActivity extends BaseActivity{
 
     private void setListeners() {
         etMoney.addTextChangedListener(watcher);
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
+            }
+        });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,11 +150,12 @@ public class PaymentActivity extends BaseActivity{
 
         @Override
         public void afterTextChanged(Editable s) {
-            tvAllMoney.setText(s+"");
+            tvAllMoney.setText("￥"+s);
             if (s.length()!=0){
                 btnSubmit.setBackgroundColor(Color.rgb(21,212,143));
                 btnSubmit.setClickable(true);
             }else{
+                tvAllMoney.setText("￥0.00");
                 btnSubmit.setBackgroundColor(Color.rgb(204,204,204));
                 btnSubmit.setClickable(false);
             }

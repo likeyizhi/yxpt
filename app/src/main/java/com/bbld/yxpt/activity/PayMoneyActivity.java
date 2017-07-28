@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -73,12 +75,12 @@ public class PayMoneyActivity extends BaseActivity{
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                pageIndex=1;
+                loadData(false);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            pageIndex=1;
-                            loadData(false);
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -136,8 +138,8 @@ public class PayMoneyActivity extends BaseActivity{
                         payAdapter.notifyDataSetChanged();
                     }else{
                         list = response.body().getList();
+                        setData();
                     }
-                    setData();
                 }else{
                     showToast(response.body().getMes());
                 }
@@ -186,18 +188,21 @@ public class PayMoneyActivity extends BaseActivity{
                 holder.tvActivityTitle=(TextView)view.findViewById(R.id.tvActivityTitle);
                 holder.tvAddDate=(TextView) view.findViewById(R.id.tvAddDate);
                 holder.tvEnterAmount=(TextView)view.findViewById(R.id.tvEnterAmount);
+                holder.ivHead=(ImageView) view.findViewById(R.id.ivHead);
                 view.setTag(holder);
             }
             UserOrderList.UserOrderListlist item = getItem(i);
             holder= (PayHolder) view.getTag();
             holder.tvActivityTitle.setText(item.getActivityTitle()+"");
-            holder.tvAddDate.setText(item.getAddDate()+"");
+            holder.tvAddDate.setText("消费时间："+item.getAddDate()+"");
             holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
+            Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(holder.ivHead);
             return view;
         }
 
         class PayHolder{
             TextView tvActivityTitle,tvAddDate,tvEnterAmount;
+            ImageView ivHead;
         }
     }
 
