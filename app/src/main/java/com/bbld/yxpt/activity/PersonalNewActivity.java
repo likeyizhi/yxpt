@@ -193,7 +193,7 @@ public class PersonalNewActivity extends BaseActivity{
             }
             UserOrderList.UserOrderListlist order = getItem(i);
             orderHolder= (OrderHolder) view.getTag();
-            orderHolder.tvShopName.setText(order.getActivityTitle()+"");
+            orderHolder.tvShopName.setText(order.getShopName()+"");
             orderHolder.tvDate.setText("消费时间："+order.getAddDate()+"");
             orderHolder.tvEnterAmount.setText("￥"+order.getEnterAmount()+"");
             if (order.getReturnStatus().equals("已返还")){
@@ -203,7 +203,7 @@ public class PersonalNewActivity extends BaseActivity{
                 orderHolder.ivReturnStatus.setVisibility(View.GONE);
                 orderHolder.tvEnterAmount.setTextColor(Color.rgb(11,210,138));
             }
-            Glide.with(getApplicationContext()).load(order.getHeadPortrait()).into(orderHolder.ivHead);
+            Glide.with(getApplicationContext()).load(order.getShopImg()).into(orderHolder.ivHead);
             return view;
         }
 

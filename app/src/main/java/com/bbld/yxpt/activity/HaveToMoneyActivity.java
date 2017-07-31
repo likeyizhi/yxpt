@@ -19,6 +19,7 @@ import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
+import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class HaveToMoneyActivity extends BaseActivity{
     SwipeRefreshLayout srl;
     @BindView(R.id.lvOrder)
     ListView lvOrder;
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
 
     private String token;
     private int pageIndex=1;
@@ -54,6 +57,8 @@ public class HaveToMoneyActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
+                    pageIndex=1;
+                    loadData(false);
                     srl.setRefreshing(false);
                     break;
                 default:
@@ -72,8 +77,6 @@ public class HaveToMoneyActivity extends BaseActivity{
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                pageIndex=1;
-                loadData(false);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -112,6 +115,12 @@ public class HaveToMoneyActivity extends BaseActivity{
                 }else{
                     isBottom = false;
                 }
+            }
+        });
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(HaveToMoneyActivity.this);
             }
         });
     }
@@ -189,10 +198,10 @@ public class HaveToMoneyActivity extends BaseActivity{
             }
             UserReturnOrderList.UserReturnOrderListlist item = getItem(i);
             holder= (HaveToHolder) view.getTag();
-            holder.tvActivityTitle.setText(item.getActivityTitle()+"");
+            holder.tvActivityTitle.setText(item.getShopName()+"");
             holder.tvAddDate.setText("到账时间："+item.getAddDate()+"");
             holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
-            Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(holder.ivHead);
+            Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
             return view;
         }
 

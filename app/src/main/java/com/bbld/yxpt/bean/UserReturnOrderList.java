@@ -78,8 +78,26 @@ public class UserReturnOrderList {
         private String ActivityDiscount;
         private String EnterAmount;
         private String AddDate;
+        private String ShopName;
+        private String ShopImg;
         private int IsReturn;
         private String ReturnStatus;
+
+        public String getShopName() {
+            return ShopName;
+        }
+
+        public void setShopName(String shopName) {
+            ShopName = shopName;
+        }
+
+        public String getShopImg() {
+            return ShopImg;
+        }
+
+        public void setShopImg(String shopImg) {
+            ShopImg = shopImg;
+        }
 
         public String getNOID() {
             return NOID;

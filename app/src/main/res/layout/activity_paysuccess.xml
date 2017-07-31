@@ -41,17 +41,16 @@
         android:background="#eeeeee"
         />
     <com.bbld.yxpt.widget.CircleImageView
-        android:id="@+id/iv_logo"
-        android:layout_width="wrap_content"
+        android:id="@+id/ivShopImg"
+        android:layout_width="60dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:layout_height="wrap_content"
-
-        android:src="@mipmap/ic_launcher"
+        android:layout_height="60dp"
         />
     <TextView
-        android:layout_gravity="center"
         android:id="@+id/tv_amount"
+        android:layout_gravity="center"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
@@ -61,6 +60,7 @@
         android:text="￥200"
         />
     <TextView
+        android:id="@+id/tvShopName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -70,7 +70,7 @@
         android:textSize="14sp"/>
 
     <TextView
-
+        android:id="@+id/tv_go"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

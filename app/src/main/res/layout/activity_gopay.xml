@@ -42,16 +42,16 @@
         android:layout_height="1dp"
         android:background="#eeeeee"
         />
+
     <com.bbld.yxpt.widget.CircleImageView
-        android:id="@+id/iv_logo"
+        android:id="@+id/ivShopImg"
         android:layout_width="50dp"
-        android:layout_gravity="center"
         android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:src="@mipmap/ic_launcher"
-        />
+        android:layout_gravity="center"
+        android:layout_margin="10dp" />
 
     <TextView
+        android:id="@+id/tvShopName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -61,6 +61,7 @@
         android:textSize="14sp"/>
 
     <TextView
+        android:id="@+id/tvHot"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="#fff"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         android:paddingTop="10dp">
@@ -193,6 +195,7 @@
 
         <ImageView
             android:id="@+id/img_zhifubao_checked"
+            android:visibility="gone"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
@@ -204,6 +207,7 @@
 
     <Button
         android:id="@+id/btn_sure_pay"
+        android:visibility="gone"
         android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="38dp"
@@ -225,6 +229,6 @@
         android:layout_marginRight="10dp"
         style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/bg_borderyuanff7372"
-        android:text="支付测试按钮"/>
+        android:text="支付宝支付"/>
 </LinearLayout>
 

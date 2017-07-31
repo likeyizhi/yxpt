@@ -20,6 +20,7 @@ import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
+import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class PayMoneyActivity extends BaseActivity{
     ListView lvOrder;
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
+    @BindView(R.id.ivBack)
+    ImageView ivBack;
 
     private String token;
     private int count;
@@ -56,6 +59,8 @@ public class PayMoneyActivity extends BaseActivity{
             switch (msg.what){
                 case 1:
                     srl.setRefreshing(false);
+                    pageIndex=1;
+                    loadData(false);
                     break;
                 default:
                     break;
@@ -75,13 +80,11 @@ public class PayMoneyActivity extends BaseActivity{
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                pageIndex=1;
-                loadData(false);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -115,6 +118,12 @@ public class PayMoneyActivity extends BaseActivity{
                 }else{
                     isBottom = false;
                 }
+            }
+        });
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityManagerUtil.getInstance().finishActivity(PayMoneyActivity.this);
             }
         });
     }
@@ -193,10 +202,10 @@ public class PayMoneyActivity extends BaseActivity{
             }
             UserOrderList.UserOrderListlist item = getItem(i);
             holder= (PayHolder) view.getTag();
-            holder.tvActivityTitle.setText(item.getActivityTitle()+"");
+            holder.tvActivityTitle.setText(item.getShopName()+"");
             holder.tvAddDate.setText("消费时间："+item.getAddDate()+"");
             holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
-            Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(holder.ivHead);
+            Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
             return view;
         }
 

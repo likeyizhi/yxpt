@@ -83,10 +83,13 @@ public class PaymentActivity extends BaseActivity{
                             }
                             if (response.body().getStatus()==0){
                                 Bundle bundle=new Bundle();
-                                bundle.putString("orderNo" , response.body().getOrderNo()+"");
+                                bundle.putString("ShopImg",shopInfo.getShopImg()+"");
+                                bundle.putString("ShopName",shopInfo.getShopName());
                                 bundle.putString("money", etMoney.getText()+"");
+                                bundle.putString("Hot",shopInfo.getTag()+"");
+                                bundle.putString("orderNo" , response.body().getOrderNo()+"");
                                 ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
-                                readyGo(OrderActivity.class, bundle);
+                                readyGo(NewOrderActivity.class, bundle);
                             }else{
                                 showToast(response.body().getMes());
                             }

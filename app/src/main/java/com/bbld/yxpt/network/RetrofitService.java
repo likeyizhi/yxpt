@@ -11,6 +11,7 @@ import com.bbld.yxpt.bean.BuyShopInfo;
 import com.bbld.yxpt.bean.BuyShopList;
 import com.bbld.yxpt.bean.CityList;
 import com.bbld.yxpt.bean.Feedback;
+import com.bbld.yxpt.bean.GetAlipayPayParam;
 import com.bbld.yxpt.bean.GetBankCardList;
 import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
@@ -269,5 +270,11 @@ public class RetrofitService {
      */
     public Call<MyOrderReturnInfo> getMyOrderReturnInfo(String token, String OrderID){
         return retrofitInterface.getMyOrderReturnInfo(token, OrderID);
+    }
+    /**
+     * 支付宝
+     */
+    public Call<GetAlipayPayParam> getAlipayPayParam(String token, String orderNo){
+        return retrofitInterface.getAlipayPayParam(token, orderNo);
     }
 }
