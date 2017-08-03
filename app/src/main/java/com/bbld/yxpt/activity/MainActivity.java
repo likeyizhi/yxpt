@@ -221,6 +221,8 @@ public class MainActivity extends BaseActivity {
     private String shopPhone;
     private String rid;
     private BitmapDescriptor bdGcoding;
+    private String token;
+    private String headPortrait;
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
@@ -248,6 +250,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViewsAndEvents() {
+        token=new MyToken(this).getToken();
+        headPortrait=new MyToken(this).getSPHeadPortrait();
+        showToast(token+","+headPortrait);
         // 注册 SDK 广播监听者
 //        IntentFilter iFilter = new IntentFilter();
 //        iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_OK);
@@ -725,7 +730,7 @@ public class MainActivity extends BaseActivity {
         JPushInterface.setPushNotificationBuilder(2, builder);
 
         //登录验证
-        getLogin();
+//        getLogin();
         //检查版本更新
         runOnUiThread(new Runnable() {
             @Override
@@ -769,7 +774,7 @@ public class MainActivity extends BaseActivity {
         for (int l=0;l<latLngs.size();l++){
             switch (shopList.get(l).getShopTypeIdentity()){
                 case "ct":
-                     bdGcoding = BitmapDescriptorFactory
+                    bdGcoding = BitmapDescriptorFactory
                             .fromResource(R.mipmap.chide);
                     break;
                 case "ktv":
@@ -927,8 +932,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadData(double mLat, double mLon) {
+        headPortrait=new MyToken(MainActivity.this).getSPHeadPortrait();
+        Glide.with(getApplicationContext()).load(headPortrait).error(R.mipmap.head).into(ivRight01);
         if (NetConnectUtil.isNetConnected(getApplicationContext())){
-            getLogin();
+//            getLogin();
             //获取附近店铺列表（不分页）
 //            showToast(mLon+","+mLat+","+backKey);
             Call<ShopList> call= RetrofitService.getInstance().getShopList(mLon+"",mLat+""/*"116.512672","39.92334"*/, backKey);

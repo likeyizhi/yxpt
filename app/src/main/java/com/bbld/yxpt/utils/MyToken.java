@@ -29,12 +29,29 @@ public class MyToken {
         return token;
     }
     /**
+     * SharedPreferences保存HeadPortrait
+     * */
+    public String getSPHeadPortrait(){
+        SharedPreferences shared=mContext.getSharedPreferences("YXToken",mContext.MODE_PRIVATE);
+        String headPortrait = shared.getString("HeadPortrait", null);
+        return headPortrait;
+    }
+    /**
      * 删除保存的token
      * */
     public void delToken(){
         SharedPreferences shared=mContext.getSharedPreferences("YXToken",mContext.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.remove(TOKEN);
+        editor.commit();
+    }
+    /**
+     * 删除保存的HeadPortrait
+     * */
+    public void delSPHeadPortrait(){
+        SharedPreferences shared=mContext.getSharedPreferences("YXToken",mContext.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove("HeadPortrait");
         editor.commit();
     }
     /**

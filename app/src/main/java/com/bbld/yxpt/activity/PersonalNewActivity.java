@@ -100,18 +100,6 @@ public class PersonalNewActivity extends BaseActivity{
 
     @Override
     protected void initViewsAndEvents() {
-//        token=new MyToken(PersonalNewActivity.this).getToken();
-//        if (token==null || token.equals("")){
-//            WeiboDialogUtils.closeDialog(mWeiboDialog);
-//        }
-        //读取帐号密码
-        SharedPreferences sharedGetAP=getSharedPreferences("YXAP",MODE_PRIVATE);
-        sacc = sharedGetAP.getString("YXACC", "");
-        spwd = sharedGetAP.getString("YXPWD", "");
-        if (sacc.equals("")||spwd.equals("")){
-        }else{
-            loadToken();
-        }
         loadData();
         loadBottomData(false);
         setListeners();
@@ -365,6 +353,7 @@ public class PersonalNewActivity extends BaseActivity{
 
     private void loadData() {
         mWeiboDialog = WeiboDialogUtils.createLoadingDialog(PersonalNewActivity.this, "加载中...");
+        Glide.with(getApplicationContext()).load(new MyToken(PersonalNewActivity.this).getSPHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
         if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
             showToast("暂未登录");
             Glide.with(getApplicationContext()).load(R.mipmap.head).into(ivShopImg);
@@ -408,14 +397,6 @@ public class PersonalNewActivity extends BaseActivity{
     @Override
     protected void onRestart() {
         super.onRestart();
-        //读取帐号密码
-        SharedPreferences sharedGetAP=getSharedPreferences("YXAP",MODE_PRIVATE);
-        sacc = sharedGetAP.getString("YXACC", "");
-        spwd = sharedGetAP.getString("YXPWD", "");
-        if (sacc.equals("")||spwd.equals("")){
-        }else{
-            loadToken();
-        }
         loadData();
         pageIndex=1;
         loadBottomData(false);

@@ -117,6 +117,7 @@ public class PersonalDataActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 new MyToken(PersonalDataActivity.this).delToken();
+                new MyToken(PersonalDataActivity.this).delSPHeadPortrait();
                 SharedPreferences sharedAP=getSharedPreferences("YXAP",MODE_PRIVATE);
                 SharedPreferences.Editor editorAP = sharedAP.edit();
                 editorAP.putString("YXACC","");
@@ -259,6 +260,10 @@ public class PersonalDataActivity extends BaseActivity{
                 }
                 if (response.body().getStatus()==0){
                     userInfo=response.body().getUserInfo();
+                    SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                    SharedPreferences.Editor editor=shared.edit();
+                    editor.putString("HeadPortrait",response.body().getUserInfo().getHeadPortrait());
+                    editor.commit();
                     setData();
                 }else{
                     showToast(response.body().getMes());

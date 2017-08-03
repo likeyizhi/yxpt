@@ -79,6 +79,7 @@ public class LoginActivity extends BaseActivity{
                             SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
                             SharedPreferences.Editor editor=shared.edit();
                             editor.putString(TOKEN,response.body().getToken());
+                            editor.putString("HeadPortrait",response.body().getHeadPortrait());
                             editor.commit();
                             //保存帐号密码
                             editorAP.putString("YXACC",acc);
