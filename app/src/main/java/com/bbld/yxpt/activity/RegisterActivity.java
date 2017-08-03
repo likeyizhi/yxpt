@@ -88,7 +88,7 @@ public class RegisterActivity extends BaseActivity{
                                 if (isOnTimer){
                                     timerTask.cancel();
                                 }
-                                ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.class);
+                                finish();
                             }else{
                                 showToast(response.body().getMes());
                             }
@@ -182,7 +182,7 @@ public class RegisterActivity extends BaseActivity{
             if (isOnTimer){
                 timer.cancel();
             }
-            ActivityManagerUtil.getInstance().finishActivity(this);
+            finish();
         }
         return false;
     }

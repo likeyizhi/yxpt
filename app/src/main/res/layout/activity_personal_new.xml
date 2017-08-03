@@ -131,7 +131,7 @@
                 android:textColor="#ffffff"
                 android:textSize="13sp"
                 android:layout_marginTop="20dp"
-                android:text="奖励金额"/>
+                android:text="已返现金额"/>
             <TextView
                 android:id="@+id/tvJL"
                 android:layout_width="wrap_content"
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="到账订单"
+                android:text="已提现金额"
                 android:textSize="13sp"
                 android:textColor="#ffffff" />
 
@@ -178,15 +178,21 @@
         android:layout_height="wrap_content">
         <ListView
             android:id="@+id/lvOrder"
+            android:divider="#eeeeee"
+            android:dividerHeight="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
     <TextView
         android:id="@+id/tvUseCount"
+        android:paddingTop="5dp"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#cccccc"
         android:layout_gravity="center"
         android:gravity="bottom"
+        android:layout_marginBottom="5dp"
         />
 </LinearLayout>

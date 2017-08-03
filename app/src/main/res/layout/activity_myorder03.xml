@@ -6,10 +6,10 @@
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/ivClose"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:src="@mipmap/black_cha"
+        android:src="@mipmap/bigcha"
         android:padding="10dp"/>
     <TextView
         android:id="@+id/tvActivityTitle"
@@ -27,9 +27,23 @@
         android:textSize="14sp"
         android:textColor="#333333"
         android:layout_gravity="center_horizontal"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="40dp"
+        android:background="#eeeeee"
+        />
     <ListView
+
         android:id="@+id/lvMyOrder03"
+        android:divider="#eeeeee"
+        android:dividerHeight="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eeeeee"
+        />
 </LinearLayout>

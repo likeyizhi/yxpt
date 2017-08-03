@@ -1,5 +1,8 @@
 package com.bbld.yxpt.bean;
 
+
+import java.util.List;
+
 /**
  * 扫码获取店铺信息
  * Created by likey on 2017/7/3.
@@ -12,6 +15,15 @@ public class ScanShop {
     private int status;
     private String mes;
     private ScanShopShopInfo ShopInfo;
+    private java.util.List<ScanShopList> List;
+
+    public java.util.List<ScanShopList> getList() {
+        return List;
+    }
+
+    public void setList(java.util.List<ScanShopList> list) {
+        List = list;
+    }
 
     public int getStatus() {
         return status;
@@ -47,6 +59,9 @@ public class ScanShop {
          "Latitude": "39.92334",
          "Longitude": "116.512672",
          "Describe": "        进店送礼品哦",
+         "ActivityTitle": "周一至周四天天欢唱4小时",
+         "ActivityDesc": "先到先得",
+         "ActivityTotal": "3.00"
          "Tag": "测试专用"*/
         private String ShopName;
         private String ShopImg;
@@ -58,6 +73,33 @@ public class ScanShop {
         private String Longitude;
         private String Describe;
         private String Tag;
+        private String ActivityTitle;
+        private String ActivityDesc;
+        private String ActivityTotal;
+
+        public String getActivityTitle() {
+            return ActivityTitle;
+        }
+
+        public void setActivityTitle(String activityTitle) {
+            ActivityTitle = activityTitle;
+        }
+
+        public String getActivityDesc() {
+            return ActivityDesc;
+        }
+
+        public void setActivityDesc(String activityDesc) {
+            ActivityDesc = activityDesc;
+        }
+
+        public String getActivityTotal() {
+            return ActivityTotal;
+        }
+
+        public void setActivityTotal(String activityTotal) {
+            ActivityTotal = activityTotal;
+        }
 
         public String getShopName() {
             return ShopName;
@@ -137,6 +179,69 @@ public class ScanShop {
 
         public void setTag(String tag) {
             Tag = tag;
+        }
+    }
+
+    public static class ScanShopList{
+        /**"NOID": "96",
+         "NickName": "186*****068",
+         "HeadPortrait": "http://qyyxptapi.bjqydl.com/UpFile/User/0-8ace-20170731115703889.png",
+         "OrderNo": "00001201707311204575260003800001",
+         "ReturnPrice": "1.00",
+         "ReturnDate": "2017-07-31 12:05:37"*/
+        private String NOID;
+        private String NickName;
+        private String HeadPortrait;
+        private String OrderNo;
+        private String ReturnPrice;
+        private String ReturnDate;
+
+        public String getNOID() {
+            return NOID;
+        }
+
+        public void setNOID(String NOID) {
+            this.NOID = NOID;
+        }
+
+        public String getNickName() {
+            return NickName;
+        }
+
+        public void setNickName(String nickName) {
+            NickName = nickName;
+        }
+
+        public String getHeadPortrait() {
+            return HeadPortrait;
+        }
+
+        public void setHeadPortrait(String headPortrait) {
+            HeadPortrait = headPortrait;
+        }
+
+        public String getOrderNo() {
+            return OrderNo;
+        }
+
+        public void setOrderNo(String orderNo) {
+            OrderNo = orderNo;
+        }
+
+        public String getReturnPrice() {
+            return ReturnPrice;
+        }
+
+        public void setReturnPrice(String returnPrice) {
+            ReturnPrice = returnPrice;
+        }
+
+        public String getReturnDate() {
+            return ReturnDate;
+        }
+
+        public void setReturnDate(String returnDate) {
+            ReturnDate = returnDate;
         }
     }
 }

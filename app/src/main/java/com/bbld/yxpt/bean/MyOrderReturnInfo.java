@@ -42,15 +42,15 @@ public class MyOrderReturnInfo {
 
     public static class MyOrderReturnInfoList{
         private String NOID;
-         private String NickName;
-         private String HeadPortrait;
-         private String ActivityTitle;
-         private String OrderNo;
-         private String ActivityDiscount;
-         private String EnterAmount;
-         private String AddDate;
-         private int IsReturn;
-         private String ReturnStatus;
+        private String NickName;
+        private String HeadPortrait;
+        private String ActivityTitle;
+        private String OrderNo;
+        private String ActivityDiscount;
+        private String EnterAmount;
+        private String AddDate;
+        private int IsReturn;
+        private String ReturnStatus;
 
         public String getNOID() {
             return NOID;

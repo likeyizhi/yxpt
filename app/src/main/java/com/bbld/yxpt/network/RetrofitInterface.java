@@ -33,6 +33,7 @@ import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.bean.VersionAndroid;
 import com.bbld.yxpt.bean.WithdrawaAccountInfo;
+import com.bbld.yxpt.bean.WithdrawalList;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -44,15 +45,15 @@ import retrofit.http.Query;
 
 public interface RetrofitInterface {
     /**
-     * 测试
+     * 自动更新
      */
-    @GET("GetVersionAndroid.aspx")
+    @GET("api/User/GetVersionAndroid")
     Call<VersionAndroid> getVersionAndroid();
     /**
      * 登录
      */
     @GET("api/User/Login")
-    Call<Login> login(@Query("acc") String acc, @Query("pwd") String pwd);
+    Call<Login> login(@Query("acc") String acc, @Query("pwd") String pwd, @Query("plat") String plat, @Query("pushid") String pushid);
     /**
      * 发送短信验证码
      */
@@ -218,4 +219,9 @@ public interface RetrofitInterface {
      */
     @GET("api/User/GetAlipayPayParam")
     Call<GetAlipayPayParam> getAlipayPayParam(@Query("token") String token, @Query("orderNo") String orderNo);
+    /**
+     * 已提现金额
+     */
+    @GET("api/User/GetWithdrawalList")
+    Call<WithdrawalList> getWithdrawalList(@Query("token") String token, @Query("pageIndex") int pageIndex);
 }

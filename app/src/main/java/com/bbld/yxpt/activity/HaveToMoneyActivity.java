@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.UserReturnOrderList;
+import com.bbld.yxpt.bean.WithdrawalList;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
@@ -49,7 +50,7 @@ public class HaveToMoneyActivity extends BaseActivity{
     private int pageSize=10;
     private int count;
     private String total;
-    private List<UserReturnOrderList.UserReturnOrderListlist> list;
+    private List<WithdrawalList.WithdrawalListlist> list;
     private HaveToAdapter haveToAdapter;
     private Handler mHandler=new Handler(){
         @Override
@@ -126,19 +127,18 @@ public class HaveToMoneyActivity extends BaseActivity{
     }
 
     private void loadData(final boolean isLoadMore) {
-        Call<UserReturnOrderList> call= RetrofitService.getInstance().getUserReturnOrderList(token,pageIndex);
-        call.enqueue(new Callback<UserReturnOrderList>() {
+        Call<WithdrawalList> call= RetrofitService.getInstance().getWithdrawalList(token, pageIndex);
+        call.enqueue(new Callback<WithdrawalList>() {
             @Override
-            public void onResponse(Response<UserReturnOrderList> response, Retrofit retrofit) {
+            public void onResponse(Response<WithdrawalList> response, Retrofit retrofit) {
                 if (response==null){
                     showToast(responseFail());
                     return;
                 }
                 if (response.body().getStatus()==0){
-                    count=response.body().getCount();
                     total=response.body().getTotal();
                     if (isLoadMore){
-                        List<UserReturnOrderList.UserReturnOrderListlist> listAdd = response.body().getList();
+                        List<WithdrawalList.WithdrawalListlist> listAdd = response.body().getList();
                         list.addAll(listAdd);
                         haveToAdapter.notifyDataSetChanged();
                     }else{
@@ -175,7 +175,7 @@ public class HaveToMoneyActivity extends BaseActivity{
         }
 
         @Override
-        public UserReturnOrderList.UserReturnOrderListlist getItem(int i) {
+        public WithdrawalList.WithdrawalListlist getItem(int i) {
             return list.get(i);
         }
 
@@ -196,12 +196,12 @@ public class HaveToMoneyActivity extends BaseActivity{
                 holder.ivHead=(ImageView) view.findViewById(R.id.ivHead);
                 view.setTag(holder);
             }
-            UserReturnOrderList.UserReturnOrderListlist item = getItem(i);
+            WithdrawalList.WithdrawalListlist item = getItem(i);
             holder= (HaveToHolder) view.getTag();
-            holder.tvActivityTitle.setText(item.getShopName()+"");
-            holder.tvAddDate.setText("到账时间："+item.getAddDate()+"");
-            holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
-            Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
+            holder.tvActivityTitle.setText("尾号"+item.getCardNo().substring(item.getCardNo().length()-4,item.getCardNo().length())+"("+item.getBankName()+")");
+            holder.tvAddDate.setText("提现时间："+item.getAddDate()+"");
+            holder.tvEnterAmount.setText("￥"+item.getWithdrawalMoney());
+            Glide.with(getApplicationContext()).load(item.getBankLogo()).into(holder.ivHead);
             return view;
         }
 

@@ -266,6 +266,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/center"
-        android:layout_centerInParent="true"/>
+        android:src="@mipmap/center2"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

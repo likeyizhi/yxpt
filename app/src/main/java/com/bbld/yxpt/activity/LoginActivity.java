@@ -17,6 +17,7 @@ import com.bbld.yxpt.network.RetrofitService;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import butterknife.BindView;
+import cn.jpush.android.api.JPushInterface;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -62,9 +63,10 @@ public class LoginActivity extends BaseActivity{
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String rid = JPushInterface.getRegistrationID(getApplicationContext());
                 acc=etAcc.getText().toString().trim();
                 pwd=etPwd.getText().toString().trim();
-                Call<Login> call= RetrofitService.getInstance().login(acc,pwd);
+                Call<Login> call= RetrofitService.getInstance().login(acc,pwd, "android", rid);
                 call.enqueue(new Callback<Login>() {
                     @Override
                     public void onResponse(Response<Login> response, Retrofit retrofit) {

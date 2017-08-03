@@ -59,7 +59,16 @@ public class UserInfo {
         private String ReturnTotialSale;
         private int RewardOrderCount;
         private String RewardTotial;
+        private String WithdrawalPrice;
         private int PlatformUserCount;
+
+        public String getWithdrawalPrice() {
+            return WithdrawalPrice;
+        }
+
+        public void setWithdrawalPrice(String withdrawalPrice) {
+            WithdrawalPrice = withdrawalPrice;
+        }
 
         public String getNickName() {
             return NickName;

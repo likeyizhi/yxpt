@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.UserOrderList;
+import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
@@ -28,6 +29,8 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+
+import static android.R.id.list;
 
 /**
  * 奖励金额
@@ -48,8 +51,8 @@ public class ReceiveMoneyActivity extends BaseActivity{
     private int count;
     private String total;
     private int pageIndex=1;
-    private List<UserOrderList.UserOrderListlist> list;
     private ReceiveAdapter receiveAdapter;
+    private List<UserReturnOrderList.UserReturnOrderListlist> list;
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -126,20 +129,19 @@ public class ReceiveMoneyActivity extends BaseActivity{
     }
 
     private void loadData(final boolean isLoadMore) {
-        Call<UserOrderList> call= RetrofitService.getInstance().getUserOrderList(token,pageIndex);
-        call.enqueue(new Callback<UserOrderList>() {
+        Call<UserReturnOrderList> call= RetrofitService.getInstance().getUserReturnOrderList(token,pageIndex);
+        call.enqueue(new Callback<UserReturnOrderList>() {
             @Override
-            public void onResponse(Response<UserOrderList> response, Retrofit retrofit) {
+            public void onResponse(Response<UserReturnOrderList> response, Retrofit retrofit) {
                 if (response==null){
                     showToast(responseFail());
                     return;
                 }
                 if (response.body().getStatus()==0){
-//                    showToast(token+","+pageIndex+","+pageSize+","+response.body().getMes());
                     count=response.body().getCount();
                     total=response.body().getTotal();
                     if (isLoadMore){
-                        List<UserOrderList.UserOrderListlist> listAdd = response.body().getList();
+                        List<UserReturnOrderList.UserReturnOrderListlist> listAdd = response.body().getList();
                         list.addAll(listAdd);
                         receiveAdapter.notifyDataSetChanged();
                     }else{
@@ -175,7 +177,7 @@ public class ReceiveMoneyActivity extends BaseActivity{
         }
 
         @Override
-        public UserOrderList.UserOrderListlist getItem(int i) {
+        public UserReturnOrderList.UserReturnOrderListlist getItem(int i) {
             return list.get(i);
         }
 
@@ -196,10 +198,10 @@ public class ReceiveMoneyActivity extends BaseActivity{
                 holder.ivHead=(ImageView) view.findViewById(R.id.ivHead);
                 view.setTag(holder);
             }
-            UserOrderList.UserOrderListlist item = getItem(i);
+            UserReturnOrderList.UserReturnOrderListlist item = getItem(i);
             holder= (ReceiveHolder) view.getTag();
             holder.tvActivityTitle.setText(item.getShopName()+"");
-            holder.tvAddDate.setText("奖励时间："+item.getAddDate()+"");
+            holder.tvAddDate.setText("返现时间："+item.getAddDate()+"");
             holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
             Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
             return view;

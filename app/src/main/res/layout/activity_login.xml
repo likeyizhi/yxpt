@@ -3,42 +3,62 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:background="#ffffff"
     android:layout_height="match_parent">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:orientation="horizontal">
+       >
 
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:src="@mipmap/back" />
+            android:src="@mipmap/bigcha" />
 
         <View
+            android:visibility="gone"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:background="#666666" />
+            android:background="#666666"
+            android:id="@+id/view" />
 
         <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:text="登录"
             android:textColor="#666666"
-            android:textSize="16sp" />
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#eeeeee"
+            android:textSize="16sp"
+            android:id="@+id/textView" />
+
+        <TextView
+            android:id="@+id/tvCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#0bd28a"
+            android:textSize="14sp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="10dp"
+            android:text="创建新帐号"
+            android:layout_below="@+id/textView"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="center"
+        android:layout_height="60dp"
+        android:src="@mipmap/logo7"
         />
     <EditText
         android:id="@+id/etAcc"
@@ -49,7 +69,18 @@
         android:textColorHint="#999999"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@null"
+        android:textSize="14sp"
         android:hint="手机号"/>
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eeeeee"
+        android:lines="1"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        ></View>
     <EditText
         android:id="@+id/etPwd"
         android:theme="@style/MyEditText"
@@ -58,9 +89,20 @@
         android:layout_marginRight="40dp"
         android:textColorHint="#999999"
         android:inputType="textPassword"
+        android:background="@null"
         android:layout_width="match_parent"
+        android:textSize="14sp"
         android:layout_height="wrap_content"
         android:hint="密码"/>
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eeeeee"
+        android:lines="1"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        ></View>
 
     <TextView
         android:id="@+id/tvForgetPwd"
@@ -103,13 +145,5 @@
             android:layout_marginLeft="20dp"
             android:src="@mipmap/weixin1"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/tvCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:textColor="#0bd28a"
-        android:textSize="16sp"
-        android:layout_gravity="center"
-        android:text="创建新帐号"/>
+
 </LinearLayout>

@@ -88,6 +88,15 @@ public class ShopList {
         private String Longitude;
         private String OpenTime;
         private String Distance;
+        private String ShopTypeIdentity;
+
+        public String getShopTypeIdentity() {
+            return ShopTypeIdentity;
+        }
+
+        public void setShopTypeIdentity(String shopTypeIdentity) {
+            ShopTypeIdentity = shopTypeIdentity;
+        }
 
         public String getShopID() {
             return ShopID;

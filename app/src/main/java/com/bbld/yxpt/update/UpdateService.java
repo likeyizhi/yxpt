@@ -211,15 +211,15 @@ public class UpdateService extends Service {
 			notification.flags |= Notification.FLAG_AUTO_CANCEL;*/
 			notification = new Notification(
 					//R.drawable.video_player,//应用的图标
-					R.mipmap.ic_launcher,//应用的图标
+					R.mipmap.lhk_yhd,//应用的图标
 					app_name + getString(R.string.is_downing),
 					System.currentTimeMillis());
 			notification.flags = Notification.FLAG_ONGOING_EVENT;
 			notificationManager.notify(R.layout.notification_item, notification);
 		} else {
 			builder = new NotificationCompat.Builder(this);
-			notification = builder.setTicker("妈妈江湖版本更新")
-					.setSmallIcon(R.mipmap.ic_launcher).setWhen(System.currentTimeMillis()).setContentTitle(app_name + getString(R.string.is_downing)).build();
+			notification = builder.setTicker("利惠客版本更新")
+					.setSmallIcon(R.mipmap.lhk_yhd).setWhen(System.currentTimeMillis()).setContentTitle(app_name + getString(R.string.is_downing)).build();
 
 			notification.flags = Notification.FLAG_ONGOING_EVENT;
 			notificationManager.notify(R.layout.notification_item, notification);

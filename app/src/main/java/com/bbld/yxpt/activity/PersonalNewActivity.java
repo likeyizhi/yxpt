@@ -31,6 +31,7 @@ import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.jpush.android.api.JPushInterface;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -308,6 +309,7 @@ public class PersonalNewActivity extends BaseActivity{
                 }
             }
         });
+        //消费金额
         llPerson01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -318,6 +320,7 @@ public class PersonalNewActivity extends BaseActivity{
                 }
             }
         });
+        //已返现金额
         llPerson02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -328,6 +331,7 @@ public class PersonalNewActivity extends BaseActivity{
                 }
             }
         });
+        //已提现金额
         llPerson03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -341,7 +345,8 @@ public class PersonalNewActivity extends BaseActivity{
     }
 
     private void loadToken() {
-        Call<Login> call= RetrofitService.getInstance().login(sacc, spwd);
+        String rid = JPushInterface.getRegistrationID(getApplicationContext());
+        Call<Login> call= RetrofitService.getInstance().login(sacc, spwd,"android", rid);
         call.enqueue(new Callback<Login>() {
             @Override
             public void onResponse(Response<Login> response, Retrofit retrofit) {
@@ -395,9 +400,9 @@ public class PersonalNewActivity extends BaseActivity{
         Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
         tvShopName.setText(userInfo.getMobile()+"");
         tvXF.setText(""+userInfo.getTotialSale());
-        tvJL.setText(""+userInfo.getReturnTotialSale());
-        tvMyOrder.setText(userInfo.getRewardOrderCount()+"");
-        tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用利惠客购物平台");
+        tvJL.setText(""+userInfo.getRewardTotial());
+        tvMyOrder.setText(userInfo.getWithdrawalPrice()+"");
+        tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用");
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.bbld.yxpt.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.baofoo.OrderActivity;
@@ -19,6 +22,9 @@ import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
+
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import retrofit.Call;
@@ -46,6 +52,10 @@ public class PaymentActivity extends BaseActivity{
     EditText etMoney;
     @BindView(R.id.ivBack)
     ImageView ivBack;
+    @BindView(R.id.tvGetMoneyList)
+    TextView tvGetMoneyList;
+    @BindView(R.id.tvDesc)
+    TextView tvDesc;
 
     private String codedContent;
     Call<ScanShop> call;
@@ -86,7 +96,7 @@ public class PaymentActivity extends BaseActivity{
                                 bundle.putString("ShopImg",shopInfo.getShopImg()+"");
                                 bundle.putString("ShopName",shopInfo.getShopName());
                                 bundle.putString("money", etMoney.getText()+"");
-                                bundle.putString("Hot",shopInfo.getTag()+"");
+                                bundle.putString("Hot",shopInfo.getActivityTitle()+"");
                                 bundle.putString("orderNo" , response.body().getOrderNo()+"");
                                 ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
                                 readyGo(NewOrderActivity.class, bundle);
@@ -101,6 +111,24 @@ public class PaymentActivity extends BaseActivity{
                         }
                     });
                 }
+            }
+        });
+        tvGetMoneyList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle=new Bundle();
+                bundle.putString("ActivityCode",codedContent);
+                readyGo(ActivityGetMonetActivity.class,bundle);
+                overridePendingTransition(R.anim.zoomin,0);
+            }
+        });
+        tvDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle=new Bundle();
+                bundle.putString("desc",shopInfo.getActivityDesc()+"");
+                readyGo(ActivityDescActivity.class,bundle);
+                overridePendingTransition(R.anim.zoomin,0);
             }
         });
     }
@@ -137,8 +165,8 @@ public class PaymentActivity extends BaseActivity{
     private void setData() {
         Glide.with(getApplicationContext()).load(shopInfo.getShopImg()).into(ivShopImg);
         tvShopName.setText(shopInfo.getShopName());
-        tvHot.setText(shopInfo.getTag());
-
+        tvHot.setText(shopInfo.getActivityTitle());
+        tvAllMoney.setText("￥"+shopInfo.getActivityTotal());
     }
     private TextWatcher watcher = new TextWatcher(){
         @Override
@@ -153,17 +181,16 @@ public class PaymentActivity extends BaseActivity{
 
         @Override
         public void afterTextChanged(Editable s) {
-            tvAllMoney.setText("￥"+s);
             if (s.length()!=0){
                 btnSubmit.setBackgroundColor(Color.rgb(21,212,143));
                 btnSubmit.setClickable(true);
             }else{
-                tvAllMoney.setText("￥0.00");
                 btnSubmit.setBackgroundColor(Color.rgb(204,204,204));
                 btnSubmit.setClickable(false);
             }
         }
     };
+
     @Override
     protected void getBundleExtras(Bundle extras) {
         codedContent=extras.getString("codedContent");

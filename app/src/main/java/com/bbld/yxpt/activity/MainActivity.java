@@ -3,6 +3,7 @@ package com.bbld.yxpt.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,6 +69,10 @@ import com.bbld.yxpt.bean.Login;
 import com.bbld.yxpt.bean.OrderReturnInfo;
 import com.bbld.yxpt.bean.ShopList;
 import com.bbld.yxpt.bean.ShopListPage;
+import com.bbld.yxpt.bean.VersionAndroid;
+import com.bbld.yxpt.jpush.ExampleUtil;
+import com.bbld.yxpt.jpush.JPushMainActivity;
+import com.bbld.yxpt.jpush.LocalBroadcastManager;
 import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.update.UpdateService;
@@ -81,6 +87,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.jpush.android.api.CustomPushNotificationBuilder;
+import cn.jpush.android.api.JPushInterface;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -137,7 +145,11 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tvGoHere)
     TextView tvGoHere;
 
-
+    //for receive customer msg from jpush server
+    private MessageReceiver mMessageReceiver;
+    public static final String MESSAGE_RECEIVED_ACTION = "com.bbld.yxpt.MESSAGE_RECEIVED_ACTION";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_EXTRAS = "extras";
     // 定位相关
     LocationClient mLocClient;
     public MyLocationListenner myListener = new MyLocationListenner();
@@ -206,6 +218,9 @@ public class MainActivity extends BaseActivity {
     private ArrayList<BitmapDescriptor> bdImgs;
     private Dialog mWeiboDialog;
     private String isBack="noback";
+    private String shopPhone;
+    private String rid;
+    private BitmapDescriptor bdGcoding;
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
@@ -230,7 +245,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private SDKReceiver mReceiver;
-
 
     @Override
     protected void initViewsAndEvents() {
@@ -438,6 +452,7 @@ public class MainActivity extends BaseActivity {
                         shopId=shopList.get(i).getShopID();
                         shopY =shopList.get(i).getLatitude();
                         shopX =shopList.get(i).getLongitude();
+                        shopPhone=shopList.get(i).getContact()+"";
                         tvShopName.setText(shopList.get(i).getShopName()+"");
                         tvDistance.setText(shopList.get(i).getDistance()+"");
                         tvAddress.setText(shopList.get(i).getAddress()+"");
@@ -667,7 +682,10 @@ public class MainActivity extends BaseActivity {
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showToast("电话");
+//                showToast("电话");
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+shopPhone));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
         tvGoHere.setOnClickListener(new View.OnClickListener() {
@@ -693,6 +711,28 @@ public class MainActivity extends BaseActivity {
     private void initMap() {
         mWeiboDialog = WeiboDialogUtils.createLoadingDialog(MainActivity.this, "加载中...");
 
+        CustomPushNotificationBuilder builder = new
+                CustomPushNotificationBuilder(MainActivity.this,
+                R.layout.customer_notitfication_layout,
+                R.id.icon,
+                R.id.title,
+                R.id.text);
+        // 指定定制的 Notification Layout
+        builder.statusBarDrawable = R.mipmap.lhk_yhd;
+        // 指定最顶层状态栏小图标
+        builder.layoutIconDrawable = R.mipmap.lhk_yhd;
+        // 指定下拉状态栏时显示的通知图标
+        JPushInterface.setPushNotificationBuilder(2, builder);
+
+        //登录验证
+        getLogin();
+        //检查版本更新
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                checkUpdate();
+            }
+        });
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);//获取传感器管理服务
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         // 地图初始化
@@ -727,8 +767,26 @@ public class MainActivity extends BaseActivity {
         markerList=new ArrayList<Marker>();
         bdImgs=new ArrayList<BitmapDescriptor>();
         for (int l=0;l<latLngs.size();l++){
-            BitmapDescriptor bdGcoding = BitmapDescriptorFactory
-                    .fromResource(R.mipmap.yule);
+            switch (shopList.get(l).getShopTypeIdentity()){
+                case "ct":
+                     bdGcoding = BitmapDescriptorFactory
+                            .fromResource(R.mipmap.chide);
+                    break;
+                case "ktv":
+                    bdGcoding = BitmapDescriptorFactory
+                            .fromResource(R.mipmap.yule);
+                    break;
+                case "jd":
+                    bdGcoding = BitmapDescriptorFactory
+                            .fromResource(R.mipmap.shuijiao);
+                    break;
+                case "fw":
+                    bdGcoding = BitmapDescriptorFactory
+                            .fromResource(R.mipmap.aixin);
+                    break;
+                default:
+                    break;
+            }
             MarkerOptions oo = new MarkerOptions().position(latLngs.get(l)).icon(bdGcoding)
                     .zIndex(5);
             bdImgs.add(bdGcoding);
@@ -779,8 +837,6 @@ public class MainActivity extends BaseActivity {
             loadData(mCurrentLat, mCurrentLon);
             //设置地址信息街道等
             setLocationAddr();
-            //登录验证
-            getLogin();
             //定位点击监听
             setChangeLocationListener();
             mCurrentAccracy = location.getRadius();
@@ -834,22 +890,32 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getLogin() {
+        registerMessageReceiver();
+        rid = JPushInterface.getRegistrationID(getApplicationContext());
         //读取帐号密码
         SharedPreferences sharedGetAP=getSharedPreferences("YXAP",MODE_PRIVATE);
         String sacc = sharedGetAP.getString("YXACC", "");
         String spwd = sharedGetAP.getString("YXPWD", "");
         if (sacc.equals("")||spwd.equals("")){
+            Glide.with(getApplicationContext()).load("").error(R.mipmap.head).into(ivRight01);
         }else{
-            Call<Login> call= RetrofitService.getInstance().login(sacc, spwd);
+            Call<Login> call= RetrofitService.getInstance().login(sacc, spwd,"android", rid);
+//            showToast(rid);
             call.enqueue(new Callback<Login>() {
                 @Override
                 public void onResponse(Response<Login> response, Retrofit retrofit) {
-                    //保存Token
-                    SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
-                    SharedPreferences.Editor editor=shared.edit();
-                    editor.putString(TOKEN,response.body().getToken());
-                    editor.commit();
-                    Glide.with(getApplicationContext()).load(response.body().getHeadPortrait()).error(R.mipmap.head).into(ivRight01);
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        //保存Token
+                        SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                        SharedPreferences.Editor editor=shared.edit();
+                        editor.putString(TOKEN,response.body().getToken());
+                        editor.commit();
+                        Glide.with(getApplicationContext()).load(response.body().getHeadPortrait()).error(R.mipmap.head).into(ivRight01);
+                    }
                 }
 
                 @Override
@@ -862,13 +928,7 @@ public class MainActivity extends BaseActivity {
 
     private void loadData(double mLat, double mLon) {
         if (NetConnectUtil.isNetConnected(getApplicationContext())){
-            //检查版本更新
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    checkUpdate();
-//                }
-//            });
+            getLogin();
             //获取附近店铺列表（不分页）
 //            showToast(mLon+","+mLat+","+backKey);
             Call<ShopList> call= RetrofitService.getInstance().getShopList(mLon+"",mLat+""/*"116.512672","39.92334"*/, backKey);
@@ -1002,25 +1062,45 @@ public class MainActivity extends BaseActivity {
      * 更新
      */
     private void checkUpdate() {
-        final String versionName= VersionUtil.getVersionName(getApplicationContext());
-        // TODO 判断网络VersionName和当前app的VersionName
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("更新").setMessage("是否下载新版本").setPositiveButton("更新", new DialogInterface.OnClickListener() {
+        Call<VersionAndroid> updateCall=RetrofitService.getInstance().getVersionAndroid();
+        updateCall.enqueue(new Callback<VersionAndroid>() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(MainActivity.this, UpdateService.class);
-                intent.putExtra("Key_App_Name",getResources().getString(R.string.app_name));//app名
-                intent.putExtra("Key_Down_Url","下载链接");//网络获取的下载链接
-                startService(intent);
-                showToast("正在后台下载，不会影响您的正常使用");
-                dialogInterface.dismiss();
+            public void onResponse(Response<VersionAndroid> response, Retrofit retrofit) {
+                if (response==null){
+                    return;
+                }
+                if (response.body().getStatus()==0){
+                    String newVersionName = response.body().getVersion();
+                    final String updateUrl = response.body().getUrl();
+                    final String versionName= VersionUtil.getVersionName(getApplicationContext());
+                    // TODO 判断网络VersionName和当前app的VersionName
+                    if (!newVersionName.equals(versionName)){
+                        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("更新").setMessage("是否下载新版本").setPositiveButton("更新", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(MainActivity.this, UpdateService.class);
+                                intent.putExtra("Key_App_Name",getResources().getString(R.string.app_name));//app名
+                                intent.putExtra("Key_Down_Url",updateUrl);//网络获取的下载链接
+                                startService(intent);
+                                showToast("正在后台下载，不会影响您的正常使用");
+                                dialogInterface.dismiss();
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }).setCancelable(false).show();
+                    }
+                }
             }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void onFailure(Throwable throwable) {
+
             }
-        }).setCancelable(false).show();
+        });
     }
     /*
      * 打开设置网络界面
@@ -1063,6 +1143,8 @@ public class MainActivity extends BaseActivity {
         super.onRestart();
         loadData(mCurrentLat, mCurrentLon);
     }
+
+
     @Override
     protected void onPause() {
         mMapView.onPause();
@@ -1098,6 +1180,39 @@ public class MainActivity extends BaseActivity {
         bd.recycle();
         bdGround.recycle();
     }
+    /**
+     * 极光推送
+     * */
+    public void registerMessageReceiver() {
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        filter.addAction(MESSAGE_RECEIVED_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, filter);
+    }
+    public class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+                    String messge = intent.getStringExtra(KEY_MESSAGE);
+                    String extras = intent.getStringExtra(KEY_EXTRAS);
+                    StringBuilder showMsg = new StringBuilder();
+                    showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+                    if (!ExampleUtil.isEmpty(extras)) {
+                        showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
+                    }
+                    setCostomMsg(showMsg.toString());
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+    private void setCostomMsg(String msg){
+        //do something
+    }
+
 
     //--------------使用onKeyDown()干掉他--------------
     //记录用户首次点击返回键的时间

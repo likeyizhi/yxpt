@@ -8,34 +8,33 @@
         android:id="@+id/llTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="10dp"
             android:src="@mipmap/back" />
-
         <View
             android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="#666666" />
-
+            android:layout_marginTop="6dp"
+            android:layout_height="18dp"
+            android:background="#999999"
+            android:layout_marginLeft="7dp"
+            />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:text="店铺详情"
+            android:layout_height="30dp"
+            android:layout_marginLeft="12dp"
+            android:gravity="center|left"
+            android:textSize="15sp"
+            android:layout_weight="1"
             android:textColor="#666666"
-            android:textSize="16sp" />
+            android:text="店铺详情"/>
     </LinearLayout>
 
     <View
@@ -49,20 +48,18 @@
         android:id="@+id/rlBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#efefef"
         android:layout_alignParentBottom="true"
-        android:background="#EEEEEE">
+        android:layout_alignParentStart="true">
         <TextView
             android:id="@+id/tvBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginTop="15dp"
+            android:textColor="#333333"
             android:layout_marginBottom="15dp"
             android:text="点击到我的位置"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#26D596"/>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,19 +77,25 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 />
+            <ImageView
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_height="match_parent"
+                android:src="@mipmap/yinying"/>
             <TextView
                 android:id="@+id/tvShopName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
                 android:layout_centerInParent="true"
                 android:text=""/>
         </RelativeLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvShopActivity"
-            android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
-            android:background="#0BD28A"
+            android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
@@ -103,8 +106,8 @@
             android:scrollbars="none">
             <ListView
                 android:id="@+id/lvMyOrder02"
-                android:divider="@null"
-                android:dividerHeight="0dp"
+                android:divider="#eeeeee"
+                android:dividerHeight="1dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </ListView>

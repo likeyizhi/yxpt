@@ -14,9 +14,12 @@
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:layout_gravity="center_horizontal"
-            android:padding="5dp"
+            android:padding="10dp"
+            android:background="@drawable/bg_shadow"
+
             android:text="ActivityName"/>
         <TextView
+            android:visibility="gone"
             android:id="@+id/tvLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"

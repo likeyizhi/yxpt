@@ -35,6 +35,7 @@ import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.bean.VersionAndroid;
 import com.bbld.yxpt.bean.WithdrawaAccountInfo;
+import com.bbld.yxpt.bean.WithdrawalList;
 
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
@@ -68,7 +69,7 @@ public class RetrofitService {
     }
 
     /**
-     * 测试
+     * 自动更新
      */
     public Call<VersionAndroid> getVersionAndroid(){
         return retrofitInterface.getVersionAndroid();
@@ -76,8 +77,8 @@ public class RetrofitService {
     /**
      * 登录
      */
-    public Call<Login> login(String acc, String pwd){
-        return retrofitInterface.login(acc, pwd);
+    public Call<Login> login(String acc, String pwd, String plat, String pushid){
+        return retrofitInterface.login(acc, pwd, plat, pushid);
     }
     /**
      * 发送短信验证码
@@ -276,5 +277,11 @@ public class RetrofitService {
      */
     public Call<GetAlipayPayParam> getAlipayPayParam(String token, String orderNo){
         return retrofitInterface.getAlipayPayParam(token, orderNo);
+    }
+    /**
+     * 已提现金额
+     */
+    public Call<WithdrawalList> getWithdrawalList(String token, int pageIndex){
+        return retrofitInterface.getWithdrawalList(token, pageIndex);
     }
 }

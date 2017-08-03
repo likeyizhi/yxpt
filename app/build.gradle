@@ -1,19 +1,8 @@
 apply plugin: 'com.android.application'
 
-repositories {
-    flatDir {
-        dir 'libs'
-    }
-}
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-    sourceSets {
-        main {
-            jniLibs.srcDir 'libs'
-        }
-    }
     defaultConfig {
         applicationId "com.bbld.yxpt"
         minSdkVersion 21
@@ -22,6 +11,30 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['libs']
+            }
+        }
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "d94e4dce6175d9aae2757b6a", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+            jniLibs.srcDirs = ['libs']
+        }
     }
     buildTypes {
         release {
@@ -30,7 +43,11 @@ android {
         }
     }
 }
-
+repositories {
+    flatDir {
+        dir 'libs'
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -63,4 +80,6 @@ dependencies {
     compile files('libs/galaxy_lite_lbs_v2.0.jar')
     compile files('libs/httpmime-4.1.2.jar')
     compile files('libs/lbsCoreSDK.jar')
+    compile files('libs/jcore-android-1.1.6.jar')
+    compile files('libs/jpush-android-3.0.8.jar')
 }

@@ -56,6 +56,10 @@ public class SearchMoreActivity extends BaseActivity {
     TextView tvClearHistory;
     @BindView(R.id.ibBack)
     ImageButton ibBack;
+    @BindView(R.id.tvInput)
+    TextView tvInput;
+    @BindView(R.id.llInput)
+    LinearLayout llInput;
 
     private double x;
     private double y;
@@ -235,6 +239,22 @@ public class SearchMoreActivity extends BaseActivity {
                 ActivityManagerUtil.getInstance().finishActivity(SearchMoreActivity.this);
             }
         });
+        llInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent();
+                intent.putExtra("key",etSearch.getText().toString().trim());
+                intent.putExtra("isBack","back");
+                setResult(6065,intent);
+                List<SearchDBBean> thisShops = mUserDataBaseOperate.findUserByName(etSearch.getText().toString().trim());
+                if (thisShops.size()==0){
+                    SearchDBBean searchDBBean=new SearchDBBean();
+                    searchDBBean.setName(etSearch.getText().toString().trim());
+                    mUserDataBaseOperate.insertToUser(searchDBBean);
+                }
+                finish();
+            }
+        });
     }
 
     private TextWatcher watcher = new TextWatcher() {
@@ -257,8 +277,12 @@ public class SearchMoreActivity extends BaseActivity {
             if (key==null || key.equals("")){
                 llTSH.setVisibility(View.VISIBLE);
                 lvInputSearch.setVisibility(View.GONE);
+                llInput.setVisibility(View.GONE);
             }else{
                 setSearchData(key);
+                llTSH.setVisibility(View.GONE);
+                llInput.setVisibility(View.VISIBLE);
+                tvInput.setText(key);
             }
         }
     };

@@ -2,6 +2,7 @@ package com.bbld.yxpt.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class MyOrder03Activity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 ActivityManagerUtil.getInstance().finishActivity(MyOrder03Activity.this);
+                overridePendingTransition(0,R.anim.top_to_bottoom);
             }
         });
     }
@@ -120,8 +122,8 @@ public class MyOrder03Activity extends BaseActivity{
             }
             holder= (MyOrder03Holder) view.getTag();
             final ShopActivityMyOrderList.ShopActivityMyOrderListList order = getItem(i);
-            holder.tvDate.setText(order.getAddDate()+"，");
-            holder.tvEnterAmount.setText(order.getEnterAmount()+"");
+            holder.tvDate.setText(order.getAddDate()+"");
+            holder.tvEnterAmount.setText("消费"+order.getEnterAmount()+"元");
             holder.tvSequence.setText(order.getSequence()+"");
             holder.ivThisOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,6 +132,7 @@ public class MyOrder03Activity extends BaseActivity{
                     intent.putExtra("OrderID",order.getNOID()+"");
                     setResult(606,intent);
                     finish();
+                    overridePendingTransition(0,R.anim.top_to_bottoom);
                 }
             });
             return view;
@@ -139,6 +142,15 @@ public class MyOrder03Activity extends BaseActivity{
             TextView tvDate,tvEnterAmount,tvSequence;
             ImageView ivThisOrder;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            ActivityManagerUtil.getInstance().finishActivity(this);
+            overridePendingTransition(0,R.anim.top_to_bottoom);
+        }
+        return false;
     }
 
     @Override

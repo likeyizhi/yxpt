@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import butterknife.BindView;
+import cn.jpush.android.api.JPushInterface;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -125,7 +126,8 @@ public class PersonalActivity extends BaseActivity{
     }
 
     private void loadToken() {
-        Call<Login> call= RetrofitService.getInstance().login(sacc, spwd);
+        String rid = JPushInterface.getRegistrationID(getApplicationContext());
+        Call<Login> call= RetrofitService.getInstance().login(sacc, spwd,"android", rid);
         call.enqueue(new Callback<Login>() {
             @Override
             public void onResponse(Response<Login> response, Retrofit retrofit) {

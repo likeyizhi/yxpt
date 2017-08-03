@@ -5,34 +5,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="10dp"
             android:src="@mipmap/back" />
-
         <View
             android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="#666666" />
-
+            android:layout_marginTop="6dp"
+            android:layout_height="18dp"
+            android:background="#999999"
+            android:layout_marginLeft="7dp"
+            />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:text="添加银行卡"
+            android:layout_height="30dp"
+            android:layout_marginLeft="12dp"
+            android:gravity="center|left"
+            android:textSize="15sp"
+            android:layout_weight="1"
             android:textColor="#666666"
-            android:textSize="16sp" />
+            android:text="添加银行卡"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -42,14 +41,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_gravity="center_vertical"
             android:text="持卡人"/>
         <EditText
             android:id="@+id/etName"
@@ -59,23 +60,27 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:textColor="#333333"
+            android:hint="姓名"
+            android:textSize="14sp"
             android:text=""/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#eeeeee"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="15dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
-            android:textSize="18sp"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:text="卡号    "/>
         <EditText
@@ -87,33 +92,35 @@
             android:background="@null"
             android:textColor="#333333"
             android:maxLength="19"
+            android:textSize="14sp"
             android:hint="银行卡号"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#eeeeee"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="15dp"/>
     <LinearLayout
         android:id="@+id/llMoreBank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
             android:text="银行    "/>
         <TextView
             android:id="@+id/tvBank"
             android:layout_marginLeft="20dp"
             android:textColorHint="#999999"
             android:layout_weight="1"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textColor="#333333"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
@@ -131,16 +138,18 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#eeeeee"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="15dp"/>
     <Button
         android:id="@+id/btnAdd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="40dp"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="30dp"
-        android:textSize="18sp"
+        android:layout_marginLeft="10dp"
+        style="?android:attr/borderlessButtonStyle"
         android:background="@drawable/bg_feedback0bd28a"
-        android:text="下一步"
-        android:textColor="#ffffff" />
+        android:text="完成"
+      />
 </LinearLayout>

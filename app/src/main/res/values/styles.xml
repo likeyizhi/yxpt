@@ -12,7 +12,7 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
     <!-- my loading dialog -->
-    <style name="MyDialogStyle">
+    <style name="MyMDialogStyle">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -34,9 +34,8 @@
         <item name="colorControlActivated">#eeeeee</item>
     </style>
     <style name="myTransparent">
-        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowBackground">@color/my_transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 </resources>
