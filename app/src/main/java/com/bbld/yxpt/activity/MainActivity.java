@@ -252,7 +252,7 @@ public class MainActivity extends BaseActivity {
     protected void initViewsAndEvents() {
         token=new MyToken(this).getToken();
         headPortrait=new MyToken(this).getSPHeadPortrait();
-        showToast(token+","+headPortrait);
+//        showToast(token+","+headPortrait);
         // 注册 SDK 广播监听者
 //        IntentFilter iFilter = new IntentFilter();
 //        iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_OK);

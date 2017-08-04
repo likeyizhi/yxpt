@@ -2,6 +2,7 @@ package com.bbld.yxpt.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class ShopDetailsActivity extends BaseActivity{
     TextView tvAddress;
     @BindView(R.id.tvPhoneNumber)
     TextView tvPhoneNumber;
+    @BindView(R.id.wvDetail)
+    WebView wvDetail;
 
 
     private String shopId;
@@ -117,6 +120,7 @@ public class ShopDetailsActivity extends BaseActivity{
         tvDistance.setText(shopInfo.getDistance());
         tvAddress.setText(shopInfo.getAddress());
         tvPhoneNumber.setText(shopInfo.getContact()+"，"+shopInfo.getLinkPhone());
+        wvDetail.loadUrl(shopInfo.getDetailsUrl());
     }
 
     @Override

@@ -60,7 +60,16 @@ public class ShopInfo {
         private String Longitude;
         private String Describe;
         private String Tag;
+        private String DetailsUrl;
         private String Distance;
+
+        public String getDetailsUrl() {
+            return DetailsUrl;
+        }
+
+        public void setDetailsUrl(String detailsUrl) {
+            DetailsUrl = detailsUrl;
+        }
 
         public String getShopBigImg() {
             return ShopBigImg;
