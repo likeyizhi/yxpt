@@ -85,31 +85,26 @@ public class ShopDetailsActivity extends BaseActivity{
         });
     }
     private void loadData() {
-        if (token==null || token.equals("")){
-            call= RetrofitService.getInstance().getShopInfo("",shopId+"",shopX+"",shopY+"");
-            showToast("请先登录");
-        }else{
-            call= RetrofitService.getInstance().getShopInfo(token,shopId+"",shopX+"",shopY+"");
-            call.enqueue(new Callback<ShopInfo>() {
-                @Override
-                public void onResponse(Response<ShopInfo> response, Retrofit retrofit) {
-                    if (response==null){
-                        showToast(responseFail());
-                        return;
-                    }
-                    if (response.body().getStatus()==0){
-                        shopInfo=response.body().getShopInfo();
-                        setData();
-                    }else{
-                        showToast(response.body().getMes());
-                    }
+        call= RetrofitService.getInstance().getShopInfo("",shopId+"",mCurrentLon+"",mCurrentLat+"");
+        call.enqueue(new Callback<ShopInfo>() {
+            @Override
+            public void onResponse(Response<ShopInfo> response, Retrofit retrofit) {
+                if (response==null){
+                    showToast(responseFail());
+                    return;
                 }
-                @Override
-                public void onFailure(Throwable throwable) {
+                if (response.body().getStatus()==0){
+                    shopInfo=response.body().getShopInfo();
+                    setData();
+                }else{
+                    showToast(response.body().getMes());
+                }
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
 
-                }
-            });
-        }
+            }
+        });
     }
 
     private void setData() {
@@ -119,7 +114,7 @@ public class ShopDetailsActivity extends BaseActivity{
         tvTag.setText(shopInfo.getTag());
         tvDistance.setText(shopInfo.getDistance());
         tvAddress.setText(shopInfo.getAddress());
-        tvPhoneNumber.setText(shopInfo.getContact()+"，"+shopInfo.getLinkPhone());
+        tvPhoneNumber.setText(/*shopInfo.getContact()+"，"+*/shopInfo.getLinkPhone());
         wvDetail.loadUrl(shopInfo.getDetailsUrl());
     }
 

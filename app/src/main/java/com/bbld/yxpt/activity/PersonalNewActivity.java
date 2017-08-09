@@ -19,7 +19,9 @@ import android.widget.TextView;
 
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
+import com.bbld.yxpt.bean.GetMessageCount;
 import com.bbld.yxpt.bean.Login;
+import com.bbld.yxpt.bean.SetMessageRead;
 import com.bbld.yxpt.bean.UserInfo;
 import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
@@ -102,7 +104,35 @@ public class PersonalNewActivity extends BaseActivity{
     protected void initViewsAndEvents() {
         loadData();
         loadBottomData(false);
+        loadMessage();
         setListeners();
+    }
+    private  void loadMessage(){
+        Call<GetMessageCount> call= RetrofitService.getInstance().getMessageCount(new MyToken(PersonalNewActivity.this).getToken()+"");
+        call.enqueue(new Callback<GetMessageCount>() {
+            @Override
+            public void onResponse(Response<GetMessageCount> response, Retrofit retrofit) {
+                if (response==null){
+                    showToast("获取数据失败");
+                    return;
+                }
+                if (response.body().getStatus()==0){
+                    if(response.body().getCount()==0){
+                        ivRing.setImageResource(R.mipmap.lingdg);
+                    }else{
+                        ivRing.setImageResource(R.mipmap.lingdgdian);
+                    }
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
+
     }
 
     private void loadBottomData(final boolean isLoadMore) {
@@ -227,7 +257,6 @@ public class PersonalNewActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
                     readyGo(LoginActivity.class);
                 }else{
                     readyGo(WithdrawscashActivity.class);
@@ -245,10 +274,11 @@ public class PersonalNewActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
                     readyGo(LoginActivity.class);
                 }else{
-                    readyGo(MessageCenterActivity.class);
+                    setMessageRead();
+
+                        readyGo(MessageCenterActivity.class);
                 }
             }
         });
@@ -302,7 +332,7 @@ public class PersonalNewActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     readyGo(PayMoneyActivity.class);
                 }
@@ -313,7 +343,7 @@ public class PersonalNewActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     readyGo(ReceiveMoneyActivity.class);
                 }
@@ -324,10 +354,32 @@ public class PersonalNewActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
+                    readyGo(LoginActivity.class);
                 }else{
                     readyGo(HaveToMoneyActivity.class);
                 }
+            }
+        });
+    }
+    private  void  setMessageRead(){
+        Call<SetMessageRead> call= RetrofitService.getInstance().setMessageRead(new MyToken(PersonalNewActivity.this).getToken()+"");
+        call.enqueue(new Callback<SetMessageRead>() {
+            @Override
+            public void onResponse(Response<SetMessageRead> response, Retrofit retrofit) {
+                if (response==null){
+                    showToast("获取数据失败");
+                    return;
+                }
+                if (response.body().getStatus()==0){
+
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
             }
         });
     }
@@ -355,12 +407,11 @@ public class PersonalNewActivity extends BaseActivity{
         mWeiboDialog = WeiboDialogUtils.createLoadingDialog(PersonalNewActivity.this, "加载中...");
         Glide.with(getApplicationContext()).load(new MyToken(PersonalNewActivity.this).getSPHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
         if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-            showToast("暂未登录");
             Glide.with(getApplicationContext()).load(R.mipmap.head).into(ivShopImg);
             tvShopName.setText("您还未登录");
-            tvXF.setText("0.00");
+            tvXF.setText("￥0.00");
             tvJL.setText("￥0.00");
-            tvMyOrder.setText("0");
+            tvMyOrder.setText("￥0.00");
             tvUseCount.setText("");
         }else{
             Call<UserInfo> call=RetrofitService.getInstance().getUserInfo(new MyToken(PersonalNewActivity.this).getToken());
@@ -400,6 +451,7 @@ public class PersonalNewActivity extends BaseActivity{
         loadData();
         pageIndex=1;
         loadBottomData(false);
+        loadMessage();
     }
 
     @Override

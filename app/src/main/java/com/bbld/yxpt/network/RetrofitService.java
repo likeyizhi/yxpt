@@ -13,8 +13,10 @@ import com.bbld.yxpt.bean.CityList;
 import com.bbld.yxpt.bean.Feedback;
 import com.bbld.yxpt.bean.GetAlipayPayParam;
 import com.bbld.yxpt.bean.GetBankCardList;
+import com.bbld.yxpt.bean.GetMessageCount;
 import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
+import com.bbld.yxpt.bean.JoinLogin;
 import com.bbld.yxpt.bean.Login;
 import com.bbld.yxpt.bean.MessageList;
 import com.bbld.yxpt.bean.MyOrderReturnInfo;
@@ -25,6 +27,7 @@ import com.bbld.yxpt.bean.RegisterMessage;
 import com.bbld.yxpt.bean.Retrieve;
 import com.bbld.yxpt.bean.RetrieveMessage;
 import com.bbld.yxpt.bean.ScanShop;
+import com.bbld.yxpt.bean.SetMessageRead;
 import com.bbld.yxpt.bean.ShopActivityMyOrderList;
 import com.bbld.yxpt.bean.ShopActivityOrderList;
 import com.bbld.yxpt.bean.ShopInfo;
@@ -34,6 +37,7 @@ import com.bbld.yxpt.bean.UserInfo;
 import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.bean.VersionAndroid;
+import com.bbld.yxpt.bean.WeiXinPayParam;
 import com.bbld.yxpt.bean.WithdrawaAccountInfo;
 import com.bbld.yxpt.bean.WithdrawalList;
 
@@ -91,6 +95,13 @@ public class RetrofitService {
      */
     public Call<Register> register(String mobile, int indentiy, String vcode, String password){
         return retrofitInterface.register(mobile, indentiy, vcode, password);
+    }
+    /**
+     * 注册
+     */
+    public Call<Register> otherRegister(String mobile, int indentiy, String vcode, String password,
+                                        int jointype, String joinid, String nickname, String faceurl, String sex){
+        return retrofitInterface.otherRegister(mobile, indentiy, vcode, password, jointype, joinid, nickname, faceurl, sex);
     }
     /**
      * 个人中心
@@ -283,5 +294,31 @@ public class RetrofitService {
      */
     public Call<WithdrawalList> getWithdrawalList(String token, int pageIndex){
         return retrofitInterface.getWithdrawalList(token, pageIndex);
+    }
+    /**
+     * san
+     */
+    public Call<JoinLogin> joinLogin(int jointype, String joinid){
+        return retrofitInterface.joinLogin(jointype, joinid);
+    }
+    /**
+     * 消息数量
+     */
+    public Call<GetMessageCount> getMessageCount(String token) {
+        return retrofitInterface.getMessageCount(token);
+    }
+
+    /**
+     * 消息已读
+     */
+    public Call<SetMessageRead> setMessageRead(String token) {
+        return retrofitInterface.setMessageRead(token);
+    }
+
+    /**
+     * 微信支付
+     */
+    public Call<WeiXinPayParam> getWeiXinPayParam(String token, String orderNo) {
+        return retrofitInterface.getWeiXinPayParam(token,orderNo);
     }
 }

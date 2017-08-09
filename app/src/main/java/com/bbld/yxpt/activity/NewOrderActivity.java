@@ -19,12 +19,17 @@ import com.alipay.sdk.app.PayTask;
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.GetAlipayPayParam;
+import com.bbld.yxpt.bean.WeiXinPayParam;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.AuthResult;
 import com.bbld.yxpt.utils.MyToken;
 import com.bbld.yxpt.utils.OrderInfoUtil2_0;
 import com.bbld.yxpt.utils.PayResult;
 import com.bumptech.glide.Glide;
+import com.switfpass.pay.utils.Constants;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
 import java.util.Map;
@@ -52,13 +57,24 @@ public class NewOrderActivity extends BaseActivity {
     Button btnTest;
     @BindView(R.id.tv_amount)
     TextView tvAmount;
+    @BindView(R.id.img_weixin_checked)
+    ImageView imgWeixin;
+    @BindView(R.id.img_zhifubao_checked)
+    ImageView imgZhifubao;
+
     private String orderNo;
     private String token;
     private String orderInfo;
-    private String money;
-    private String shopImg;
-    private String shopName;
+    public static String money;
+    public static String shopImg;
+    public static  String shopName;
+    public static NewOrderActivity newOrderActivity;
     private String hot;
+    private String payType="wx";
+
+    /** 微信支付相关*/
+    private IWXAPI api;
+
 
     /** 支付宝支付业务：入参app_id */
     public static final String APPID = "2017072707921833";
@@ -201,8 +217,49 @@ public class NewOrderActivity extends BaseActivity {
         Thread payThread = new Thread(payRunnable);
         payThread.start();
     }
+
+    /**
+     * 微信支付相关
+     */
+    private void payWX() {
+        Call<WeiXinPayParam> call=RetrofitService.getInstance().getWeiXinPayParam(new MyToken(NewOrderActivity.this).getToken(),orderNo);
+        call.enqueue(new Callback<WeiXinPayParam>() {
+            @Override
+            public void onResponse(Response<WeiXinPayParam> response, Retrofit retrofit) {
+                if (response==null){
+                    showToast(responseFail());
+                    return;
+                }
+                if (response.body().getStatus()==0){
+                    WeiXinPayParam.WeiXinPayParamOrderString wxOrder = response.body().getOrderString();
+                    api = WXAPIFactory.createWXAPI(NewOrderActivity.this, wxOrder.getAppid(), false);
+                    api.registerApp(wxOrder.getAppid());
+
+                    PayReq payReq = new PayReq();
+                    payReq.appId = wxOrder.getAppid();// 微信开放平台审核通过的应用APPID
+                    payReq.partnerId = wxOrder.getPartnerid();// 微信支付分配的商户号
+                    payReq.prepayId = wxOrder.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+                    payReq.packageValue = wxOrder.getPackage();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                    payReq.nonceStr = wxOrder.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+                    payReq.timeStamp = wxOrder.getTimestamp();// 时间戳，app服务器小哥给出
+                    payReq.sign = wxOrder.getSign();// 签名，服务器小哥给出，他会根据：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=4_3指导得到这个
+                    // 调用api接口发送数据到微信
+                    api.sendReq(payReq);
+                }else{
+                    showToast(response.body().getMes());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
+    }
+
     @Override
     protected void initViewsAndEvents() {
+        newOrderActivity=this;
         token=new MyToken(this).getToken();
         tvAmount.setText("￥"+money);
         Glide.with(getApplicationContext()).load(shopImg).into(ivShopImg);
@@ -212,14 +269,6 @@ public class NewOrderActivity extends BaseActivity {
         setListeners();
     }
 
-    @Override
-    protected void getBundleExtras(Bundle extras) {
-        orderNo=extras.getString("orderNo");
-        money=extras.getString("money");
-        shopImg=extras.getString("ShopImg");
-        shopName=extras.getString("ShopName");
-        hot=extras.getString("Hot");
-    }
     private void loadData(){
         Call<GetAlipayPayParam> call= RetrofitService.getInstance().getAlipayPayParam(token,orderNo);
         call.enqueue(new Callback<GetAlipayPayParam>() {
@@ -246,7 +295,14 @@ public class NewOrderActivity extends BaseActivity {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                payV2();
+                switch (payType){
+                    case "wx":
+                        payWX();
+                        break;
+                    case "zfb":
+                        payV2();
+                        break;
+                }
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -255,7 +311,32 @@ public class NewOrderActivity extends BaseActivity {
                 ActivityManagerUtil.getInstance().finishActivity(NewOrderActivity.this);
             }
         });
+        imgWeixin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgWeixin.setImageResource(R.drawable.checked);
+                imgZhifubao.setImageResource(R.drawable.unchecked);
+                payType="wx";
+            }
+        });
+        imgZhifubao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgWeixin.setImageResource(R.drawable.unchecked);
+                imgZhifubao.setImageResource(R.drawable.checked);
+                payType="zfb";
+            }
+        });
     }
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+        orderNo=extras.getString("orderNo");
+        money=extras.getString("money");
+        shopImg=extras.getString("ShopImg");
+        shopName=extras.getString("ShopName");
+        hot=extras.getString("Hot");
+    }
+
     @Override
     public int getContentView() {
         return R.layout.activity_gopay;

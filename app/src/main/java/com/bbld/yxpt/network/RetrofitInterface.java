@@ -11,8 +11,10 @@ import com.bbld.yxpt.bean.CityList;
 import com.bbld.yxpt.bean.Feedback;
 import com.bbld.yxpt.bean.GetAlipayPayParam;
 import com.bbld.yxpt.bean.GetBankCardList;
+import com.bbld.yxpt.bean.GetMessageCount;
 import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
+import com.bbld.yxpt.bean.JoinLogin;
 import com.bbld.yxpt.bean.Login;
 import com.bbld.yxpt.bean.MessageList;
 import com.bbld.yxpt.bean.MyOrderReturnInfo;
@@ -23,6 +25,7 @@ import com.bbld.yxpt.bean.RegisterMessage;
 import com.bbld.yxpt.bean.Retrieve;
 import com.bbld.yxpt.bean.RetrieveMessage;
 import com.bbld.yxpt.bean.ScanShop;
+import com.bbld.yxpt.bean.SetMessageRead;
 import com.bbld.yxpt.bean.ShopActivityMyOrderList;
 import com.bbld.yxpt.bean.ShopActivityOrderList;
 import com.bbld.yxpt.bean.ShopInfo;
@@ -32,6 +35,7 @@ import com.bbld.yxpt.bean.UserInfo;
 import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
 import com.bbld.yxpt.bean.VersionAndroid;
+import com.bbld.yxpt.bean.WeiXinPayParam;
 import com.bbld.yxpt.bean.WithdrawaAccountInfo;
 import com.bbld.yxpt.bean.WithdrawalList;
 
@@ -64,6 +68,12 @@ public interface RetrofitInterface {
      */
     @GET("api/User/Register")
     Call<Register> register(@Query("mobile") String mobile, @Query("indentiy") int indentiy, @Query("vcode") String vcode, @Query("password") String password);
+    /**
+     * 三方注册
+     */
+    @GET("api/User/Register")
+    Call<Register> otherRegister(@Query("mobile") String mobile, @Query("indentiy") int indentiy, @Query("vcode") String vcode, @Query("password") String password,
+                            @Query("jointype") int jointype, @Query("joinid") String joinid, @Query("nickname") String nickname, @Query("faceurl") String faceurl, @Query("sex") String sex);
     /**
      * 个人中心
      */
@@ -224,4 +234,24 @@ public interface RetrofitInterface {
      */
     @GET("api/User/GetWithdrawalList")
     Call<WithdrawalList> getWithdrawalList(@Query("token") String token, @Query("pageIndex") int pageIndex);
+    /**
+     * 三方登录
+     */
+    @GET("api/User/JoinLogin")
+    Call<JoinLogin> joinLogin(@Query("jointype") int jointype, @Query("joinid") String joinid);
+    /**
+     *   消息数量
+     */
+    @GET("api/User/GetMessageCount")
+    Call<GetMessageCount> getMessageCount(@Query("token") String token);
+    /**
+     *   消息已读
+     */
+    @GET("api/User/SetMessageRead")
+    Call<SetMessageRead> setMessageRead(@Query("token") String token);
+    /**
+     *   微信支付
+     */
+    @GET("api/User/GetWeiXinPayParam")
+    Call<WeiXinPayParam> getWeiXinPayParam(@Query("token") String token, @Query("orderNo") String orderNo);
 }

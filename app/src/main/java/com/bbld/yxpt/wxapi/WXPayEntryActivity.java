@@ -8,6 +8,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bbld.yxpt.R;
+import com.bbld.yxpt.activity.NewOrderActivity;
+import com.bbld.yxpt.activity.PaySuccessActivity;
+import com.switfpass.pay.utils.Constants;
+import com.tencent.mm.opensdk.utils.Log;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -16,46 +20,48 @@ import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
-
     private static final String TAG = "MicroMsg.SDKSample.WXPayEntryActivity";
-
-    private RelativeLayout mLayout;
-
-    private TextView tvOrderNo, tvOrderTime, tvMoney;
     private IWXAPI api;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pay_results);
-        api = WXAPIFactory.createWXAPI(this, "wx5f490891bf38366c");//appid需换成商户自己开放平台appid
+        setContentView(R.layout.pay_result);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID);
         api.handleIntent(getIntent(), this);
     }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+        api.handleIntent(intent, this);
     }
-
     @Override
     public void onReq(BaseReq req) {
     }
-
+    /**
+     *  第三方应用发送到微信的请求处理后的响应结果，会回调到该方法
+     *   arg0。errCode  0成功 -1支付失败 -2取消
+     */
     @Override
     public void onResp(BaseResp resp) {
-        if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            // resp.errCode == -1 原因：支付错误,可能的原因：签名错误、未注册APPID、项目设置APPID不正确、注册的APPID与设置的不匹配、其他异常等
-            // resp.errCode == -2 原因 用户取消,无需处理。发生场景：用户不支付了，点击取消，返回APP
-            if (resp.errCode == 0) // 支付成功
-            {
-                Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
-            } else  {
-                Toast.makeText(this, getString(R.string.pay_error) + resp.errCode + "test", Toast.LENGTH_SHORT)
-                        .show();
-
-                finish();
-            }
+        Log.d(TAG, "onPayFinish, errCode = " + resp.errCode);
+        if (resp.errCode == 0) {//支付成功
+            Intent intent=new Intent(WXPayEntryActivity.this, PaySuccessActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("money", NewOrderActivity.money);
+            bundle.putString("ShopImg", NewOrderActivity.shopImg);
+            bundle.putString("ShopName", NewOrderActivity.shopName);
+            intent.putExtras(bundle);
+            Toast.makeText(getApplicationContext(), "支付成功", Toast.LENGTH_SHORT).show();
+            NewOrderActivity.newOrderActivity.finish();
+            startActivity(intent);
+            finish();
+        } else if (resp.errCode == -1) {//支付失败
+            Toast.makeText(getApplicationContext(), "支付失败", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {//取消
+            Toast.makeText(getApplicationContext(), "支付取消", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }

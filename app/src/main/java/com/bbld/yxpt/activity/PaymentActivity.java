@@ -1,6 +1,7 @@
 package com.bbld.yxpt.activity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.bbld.yxpt.baofoo.OrderActivity;
 import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.AddPayOrder;
 import com.bbld.yxpt.bean.ScanShop;
+import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.MyToken;
 import com.bumptech.glide.Glide;
@@ -61,6 +63,7 @@ public class PaymentActivity extends BaseActivity{
     Call<ScanShop> call;
     private String token;
     private ScanShop.ScanShopShopInfo shopInfo;
+    private Dialog loading;
 
     @Override
     protected void initViewsAndEvents() {
@@ -134,6 +137,7 @@ public class PaymentActivity extends BaseActivity{
     }
 
     private void loadData() {
+        loading=WeiboDialogUtils.createLoadingDialog(PaymentActivity.this,"加载中...");
         if (token==null || token.equals("")){
             call= RetrofitService.getInstance().scanShop("", codedContent);
             showToast("未登录");
@@ -144,13 +148,17 @@ public class PaymentActivity extends BaseActivity{
                 public void onResponse(Response<ScanShop> response, Retrofit retrofit) {
                     if (response==null){
                         showToast(responseFail());
+                        WeiboDialogUtils.closeDialog(loading);
                         return;
                     }
                     if (response.body().getStatus()==0){
                         shopInfo=response.body().getShopInfo();
                         setData();
+                        WeiboDialogUtils.closeDialog(loading);
                     }else{
                         showToast(response.body().getMes());
+                        WeiboDialogUtils.closeDialog(loading);
+                        ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
                     }
                 }
 

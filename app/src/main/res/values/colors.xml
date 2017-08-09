@@ -20,5 +20,7 @@
     <color name="white">#FFFFFF</color>
     <color name="line_b3b3b3">#b3b3b3</color>
     <color name="line_fc880f">#fc880f</color>
-    <color name="my_transparent">#55000000</color>
+    <color name="my_transparent">#98000000</color>
+
+    <color name="navpage">#FFE1E8EB</color>
 </resources>

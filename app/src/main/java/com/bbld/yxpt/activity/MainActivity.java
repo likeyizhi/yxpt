@@ -461,7 +461,7 @@ public class MainActivity extends BaseActivity {
                         tvShopName.setText(shopList.get(i).getShopName()+"");
                         tvDistance.setText(shopList.get(i).getDistance()+"");
                         tvAddress.setText(shopList.get(i).getAddress()+"");
-                        tvPhone.setText(shopList.get(i).getContact()+"");
+//                        tvPhone.setText(shopList.get(i).getContact()+"");
                         tvOpenTime.setText("营业时间:"+shopList.get(i).getOpenTime());
                     }
                 }
@@ -576,19 +576,14 @@ public class MainActivity extends BaseActivity {
         llBottomIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String token = new MyToken(MainActivity.this).getToken();
-                if (token==null || token.equals("")){
-                    readyGo(LoginActivity.class);
-                }else{
-                    Bundle bundle=new Bundle();
-                    bundle.putString("shopId",shopId);
-                    bundle.putDouble("shopX",Double.parseDouble(shopX));
-                    bundle.putDouble("shopY",Double.parseDouble(shopY));
-                    bundle.putDouble("mCurrentLat",mCurrentLat);
-                    bundle.putDouble("mCurrentLon",mCurrentLon);
-                    bundle.putString("mCurrentCity",mCurrentCity);
-                    readyGo(ShopDetailsActivity.class, bundle);
-                }
+                Bundle bundle=new Bundle();
+                bundle.putString("shopId",shopId);
+                bundle.putDouble("shopX",Double.parseDouble(shopX));
+                bundle.putDouble("shopY",Double.parseDouble(shopY));
+                bundle.putDouble("mCurrentLat",mCurrentLat);
+                bundle.putDouble("mCurrentLon",mCurrentLon);
+                bundle.putString("mCurrentCity",mCurrentCity);
+                readyGo(ShopDetailsActivity.class, bundle);
             }
         });
         //跳转到用户订单的返还信息
@@ -1040,19 +1035,14 @@ public class MainActivity extends BaseActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String token = new MyToken(MainActivity.this).getToken();
-                        if (token==null || token.equals("")){
-                            readyGo(LoginActivity.class);
-                        }else{
-                            Bundle bundle=new Bundle();
-                            bundle.putString("shopId",shop.getShopID()+"");
-                            bundle.putDouble("shopX",Double.parseDouble(shop.getLongitude()+""));
-                            bundle.putDouble("shopY",Double.parseDouble(shop.getLatitude()+""));
-                            bundle.putDouble("mCurrentLat",mCurrentLat);
-                            bundle.putDouble("mCurrentLon",mCurrentLon);
-                            bundle.putString("mCurrentCity",mCurrentCity);
-                            readyGo(ShopDetailsActivity.class, bundle);
-                        }
+                        Bundle bundle=new Bundle();
+                        bundle.putString("shopId",shop.getShopID()+"");
+                        bundle.putDouble("shopX",Double.parseDouble(shop.getLongitude()+""));
+                        bundle.putDouble("shopY",Double.parseDouble(shop.getLatitude()+""));
+                        bundle.putDouble("mCurrentLat",mCurrentLat);
+                        bundle.putDouble("mCurrentLon",mCurrentLon);
+                        bundle.putString("mCurrentCity",mCurrentCity);
+                        readyGo(ShopDetailsActivity.class, bundle);
                     }
                 });
             }

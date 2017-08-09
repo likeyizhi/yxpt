@@ -135,6 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:textColor="#bbbbbb"
+                        android:lines="1"
                         android:text="地址"/>
                 </LinearLayout>
                 <TextView
@@ -143,38 +144,36 @@
                     android:background="#bbbbbb"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/tvPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@mipmap/dh_home"
+                        android:drawableLeft="@mipmap/dianh"
                         android:layout_weight="1"
-                        android:text="电话"
-                        android:padding="5dp"
                         android:textColor="#0AD28A"
                         android:gravity="center_vertical"
-                        android:layout_margin="5dp"/>
+                        />
                     <TextView
                         android:id="@+id/tvGoHere"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@mipmap/go_home"
+                        android:drawableLeft="@mipmap/daoh"
                         android:layout_weight="1"
-                        android:text="导航"
                         android:textColor="#0AD28A"
-                        android:padding="5dp"
                         android:gravity="center_vertical"
-                        android:layout_margin="5dp"/>
+                        />
                     <TextView
                         android:id="@+id/tvOpenTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="营业时间:8:00-17:00"
                         android:gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:layout_margin="5dp"/>
+                        android:layout_weight="1.4"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

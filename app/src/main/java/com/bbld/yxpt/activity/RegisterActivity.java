@@ -1,5 +1,7 @@
 package com.bbld.yxpt.activity;
 
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -10,8 +12,10 @@ import android.widget.TextView;
 
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
+import com.bbld.yxpt.bean.Login;
 import com.bbld.yxpt.bean.Register;
 import com.bbld.yxpt.bean.RegisterMessage;
+import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
 
@@ -19,6 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
+import cn.jpush.android.api.JPushInterface;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -53,6 +58,16 @@ public class RegisterActivity extends BaseActivity{
     private int            time            = 60;
     private TimerTask timerTask;
     private boolean isOnTimer;
+    private static final String TOKEN=null;
+    private Call<Register> registerCall;
+    private int jointype;
+    private String joinid;
+    private String nickname;
+    private String faceurl;
+    private String sex;
+    private Dialog mWeiboDialogSend;
+    private Dialog mWeiboDialogCreate;
+    private Dialog mWeiboDialogLogin;
 
     @Override
     protected void initViewsAndEvents() {
@@ -75,28 +90,37 @@ public class RegisterActivity extends BaseActivity{
                 }else if (phone.length()!=11){
                     showToast("请输入正确手机号");
                 }else{
-                    Call<Register> call= RetrofitService.getInstance().register(phone,indentiy,code,password);
-                    call.enqueue(new Callback<Register>() {
+                    mWeiboDialogCreate=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"注册中...");
+                    if (jointype!=0){
+                        registerCall= RetrofitService.getInstance().otherRegister(phone,indentiy,code,password,jointype,joinid,nickname,faceurl,sex);
+                    }else{
+                        registerCall= RetrofitService.getInstance().register(phone,indentiy,code,password);
+                    }
+                    registerCall.enqueue(new Callback<Register>() {
                         @Override
                         public void onResponse(Response<Register> response, Retrofit retrofit) {
                             if (response==null){
                                 showToast(responseFail());
+                                WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
                                 return;
                             }
                             if (response.body().getStatus()==0){
-                                showToast(response.body().getMes());
-                                if (isOnTimer){
-                                    timerTask.cancel();
-                                }
-                                finish();
+                                WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
+                                toLogin();
+//                                showToast(response.body().getMes());
+//                                if (isOnTimer){
+//                                    timerTask.cancel();
+//                                }
+//                                finish();
                             }else{
                                 showToast(response.body().getMes());
+                                WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
                             }
                         }
 
                         @Override
                         public void onFailure(Throwable throwable) {
-
+                            WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
                         }
                     });
                 }
@@ -112,12 +136,14 @@ public class RegisterActivity extends BaseActivity{
                 }else if (phone.length()!=11){
                     showToast("请输入正确手机号");
                 }else{
+                    mWeiboDialogSend=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"发送中...");
                     Call<RegisterMessage> call=RetrofitService.getInstance().sendRegisterMessage(phone);
                     call.enqueue(new Callback<RegisterMessage>() {
                         @Override
                         public void onResponse(Response<RegisterMessage> response, Retrofit retrofit) {
                             if (response==null){
                                 showToast(getResources().getString(R.string.response_fail));
+                                WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                                 return;
                             }
                             if (response.body().getStatus()==0){
@@ -146,14 +172,16 @@ public class RegisterActivity extends BaseActivity{
                                     }
                                 };
                                 timer.schedule(timerTask, 1000, 1000);
+                                WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                             }else{
                                 showToast(response.body().getMes());
+                                WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                             }
                         }
 
                         @Override
                         public void onFailure(Throwable throwable) {
-
+                            WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                         }
                     });
                 }
@@ -176,6 +204,42 @@ public class RegisterActivity extends BaseActivity{
         });
     }
 
+    private void toLogin() {
+        mWeiboDialogLogin=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"登录中...");
+        String rid = JPushInterface.getRegistrationID(getApplicationContext());
+        Call<Login> call= RetrofitService.getInstance().login(phone,password, "android", rid);
+        call.enqueue(new Callback<Login>() {
+            @Override
+            public void onResponse(Response<Login> response, Retrofit retrofit) {
+                if (response==null){
+                    showToast(responseFail());
+                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                    return;
+                }
+                if (response.body().getStatus()==0){
+                    //保存Token
+                    SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                    SharedPreferences.Editor editor=shared.edit();
+                    editor.putString(TOKEN,response.body().getToken());
+                    editor.putString("HeadPortrait",response.body().getHeadPortrait());
+                    editor.commit();
+                    showToast("登录成功");
+                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                    LoginActivity.loginActivity.finish();
+                    finish();
+                }else{
+                    showToast(response.body().getMes());
+                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+            }
+        });
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
@@ -189,7 +253,12 @@ public class RegisterActivity extends BaseActivity{
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-
+        jointype=extras.getInt("jointype", 0);
+        joinid=extras.getString("joinid");
+        nickname=extras.getString("nickname");
+        faceurl=extras.getString("faceurl");
+        sex=extras.getString("sex");
+//        showToast(jointype+","+joinid+","+nickname+","+faceurl+","+sex);
     }
 
     @Override

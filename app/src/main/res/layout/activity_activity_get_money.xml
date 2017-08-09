@@ -6,14 +6,14 @@
         android:background="@drawable/bg_activity_desc_all"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="100dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
             android:text="获奖名单"
             android:gravity="center"
             android:textColor="#ffffff"
@@ -23,12 +23,12 @@
         <RelativeLayout
             android:id="@+id/rlActivittyDescClose"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
             android:background="@drawable/bg_activity_desc_bottom"
             android:layout_alignParentBottom="true">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/black_cha"/>
         </RelativeLayout>
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/rlActivittyDescClose"
-            android:background="#cccccc"/>
+            android:background="#eeeeee"/>
         <ListView
             android:id="@+id/lvGetMoney"
             android:layout_below="@+id/tvTitle"
