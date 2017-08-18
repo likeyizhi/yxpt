@@ -144,6 +144,8 @@ public class MainActivity extends BaseActivity {
     TextView tvNearShopCount;
     @BindView(R.id.tvGoHere)
     TextView tvGoHere;
+    @BindView(R.id.ivScanCodeGoHere)
+    ImageView ivScanCodeGoHere;
 
     //for receive customer msg from jpush server
     private MessageReceiver mMessageReceiver;
@@ -223,6 +225,7 @@ public class MainActivity extends BaseActivity {
     private BitmapDescriptor bdGcoding;
     private String token;
     private String headPortrait;
+    private String isPoint;
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
@@ -252,6 +255,7 @@ public class MainActivity extends BaseActivity {
     protected void initViewsAndEvents() {
         token=new MyToken(this).getToken();
         headPortrait=new MyToken(this).getSPHeadPortrait();
+        registerMessageReceiver();
 //        showToast(token+","+headPortrait);
         // 注册 SDK 广播监听者
 //        IntentFilter iFilter = new IntentFilter();
@@ -396,6 +400,7 @@ public class MainActivity extends BaseActivity {
         ivLeft01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                backKey="";
                 location(mCurrentLat,mCurrentLon);
             }
         });
@@ -407,7 +412,8 @@ public class MainActivity extends BaseActivity {
                     llBottomIn.setVisibility(View.GONE);
                     rlBottomWhite.setVisibility(View.VISIBLE);
                     ivRight02.setVisibility(View.GONE);
-                    ivScanCode.setImageResource(R.mipmap.saoma);
+                    ivScanCode.setVisibility(View.VISIBLE);
+                    ivScanCodeGoHere.setVisibility(View.GONE);
                     isWhat=IS_SCAN;
                 }
                 if (rlSecond.getVisibility()==View.VISIBLE){
@@ -444,7 +450,13 @@ public class MainActivity extends BaseActivity {
         rlRight01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readyGo(PersonalNewActivity.class);
+                String token = new MyToken(MainActivity.this).getToken();
+                if(token==null || token.equals("")){
+                    showToast("请先登录");
+                    readyGo(LoginActivity.class);
+                }else {
+                    readyGo(PersonalNewActivity.class);
+                }
             }
         });
 
@@ -478,7 +490,8 @@ public class MainActivity extends BaseActivity {
                 if (llBottomIn.getVisibility()!=View.VISIBLE){
                     llBottomIn.setVisibility(View.VISIBLE);
                     rlBottomWhite.setVisibility(View.GONE);
-                    ivScanCode.setImageResource(R.mipmap.gozl);
+                    ivScanCode.setVisibility(View.GONE);
+                    ivScanCodeGoHere.setVisibility(View.VISIBLE);
                     isWhat=IS_GO;
                 }
                 if (rlSecond.getVisibility()==View.VISIBLE){
@@ -700,6 +713,18 @@ public class MainActivity extends BaseActivity {
                 readyGo(RoutePlanActivity.class,bundle);
             }
         });
+        ivScanCodeGoHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle=new Bundle();
+                bundle.putDouble("shopX",Double.parseDouble(shopX));
+                bundle.putDouble("shopY",Double.parseDouble(shopY));
+                bundle.putDouble("mCurrentLat",mCurrentLat);
+                bundle.putDouble("mCurrentLon",mCurrentLon);
+                bundle.putString("mCurrentCity",mCurrentCity);
+                readyGo(RoutePlanActivity.class,bundle);
+            }
+        });
     }
     private void updateMapState(MapStatus status) {
         LatLng mCenterLatLng = status.target;
@@ -880,7 +905,18 @@ public class MainActivity extends BaseActivity {
             case 6065:
                 backKey = data.getExtras().getString("key");
                 isBack = data.getExtras().getString("isBack");
-                loadData(mCurrentLat, mCurrentLon);
+                isPoint = data.getExtras().getString("isPoint");
+                if (isPoint.equals("isPoint")){
+                    location(Double.parseDouble(data.getExtras().getString("pointX")),
+                            Double.parseDouble(data.getExtras().getString("pointY")));
+//                    loadData(Double.parseDouble(data.getExtras().getString("pointX")),
+//                            Double.parseDouble(data.getExtras().getString("pointY")));
+                    isBack="noBack";
+                    isPoint="noPoint";
+                    loadData(mCurrentLat, mCurrentLon);
+                }else{
+                    loadData(mCurrentLat, mCurrentLon);
+                }
                 break;
         }
     }

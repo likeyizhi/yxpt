@@ -56,39 +56,51 @@ public class MyOrder03Activity extends BaseActivity{
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(MyOrder03Activity.this);
-                overridePendingTransition(0,R.anim.top_to_bottoom);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(MyOrder03Activity.this);
+                    overridePendingTransition(0,R.anim.top_to_bottoom);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData() {
-        Call<ShopActivityMyOrderList> call= RetrofitService.getInstance().getShopActivityMyOrderList(token,shopActivityID);
-        call.enqueue(new Callback<ShopActivityMyOrderList>() {
-            @Override
-            public void onResponse(Response<ShopActivityMyOrderList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<ShopActivityMyOrderList> call= RetrofitService.getInstance().getShopActivityMyOrderList(token,shopActivityID);
+            call.enqueue(new Callback<ShopActivityMyOrderList>() {
+                @Override
+                public void onResponse(Response<ShopActivityMyOrderList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        myOrderList = response.body().getList();
+                        setAdapter();
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    myOrderList = response.body().getList();
-                    setAdapter();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setAdapter() {
-        MyOrder03Adapter adapter=new MyOrder03Adapter();
-        lvMyOrder03.setAdapter(adapter);
+        try {
+            MyOrder03Adapter adapter=new MyOrder03Adapter();
+            lvMyOrder03.setAdapter(adapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class MyOrder03Adapter extends BaseAdapter{
@@ -122,19 +134,27 @@ public class MyOrder03Activity extends BaseActivity{
             }
             holder= (MyOrder03Holder) view.getTag();
             final ShopActivityMyOrderList.ShopActivityMyOrderListList order = getItem(i);
-            holder.tvDate.setText(order.getAddDate()+"");
-            holder.tvEnterAmount.setText("消费"+order.getEnterAmount()+"元");
-            holder.tvSequence.setText(order.getSequence()+"");
-            holder.ivThisOrder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent=new Intent();
-                    intent.putExtra("OrderID",order.getNOID()+"");
-                    setResult(606,intent);
-                    finish();
-                    overridePendingTransition(0,R.anim.top_to_bottoom);
-                }
-            });
+            try {
+                holder.tvDate.setText(order.getAddDate()+"");
+                holder.tvEnterAmount.setText("消费"+order.getEnterAmount()+"元");
+                holder.tvSequence.setText(order.getSequence()+"");
+                holder.ivThisOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            Intent intent=new Intent();
+                            intent.putExtra("OrderID",order.getNOID()+"");
+                            setResult(606,intent);
+                            finish();
+                            overridePendingTransition(0,R.anim.top_to_bottoom);
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }
+                });
+            }catch (Exception e){
+                showToast(someException());
+            }
             return view;
         }
 

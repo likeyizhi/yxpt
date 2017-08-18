@@ -54,39 +54,51 @@ public class MessageCenterActivity extends BaseActivity{
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(MessageCenterActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(MessageCenterActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData() {
-        Call<MessageList> call= RetrofitService.getInstance().getMessageList(token);
-        call.enqueue(new Callback<MessageList>() {
-            @Override
-            public void onResponse(Response<MessageList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<MessageList> call= RetrofitService.getInstance().getMessageList(token);
+            call.enqueue(new Callback<MessageList>() {
+                @Override
+                public void onResponse(Response<MessageList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        count=response.body().getCount();
+                        list=response.body().getList();
+                        setData();
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    count=response.body().getCount();
-                    list=response.body().getList();
-                    setData();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        adapter=new MessageAdapter();
-        lvMessage.setAdapter(adapter);
+        try {
+            adapter=new MessageAdapter();
+            lvMessage.setAdapter(adapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class MessageAdapter extends BaseAdapter{
@@ -120,9 +132,13 @@ public class MessageCenterActivity extends BaseActivity{
             }
             holder= (MessageHolder) view.getTag();
             MessageList.MessageListlist item=getItem(i);
-            holder.tvMsg.setText(item.getTitle()+"");
-            holder.tvContent.setText(item.getContent()+"");
-            holder.tvDate.setText(item.getTime());
+            try {
+                holder.tvMsg.setText(item.getTitle()+"");
+                holder.tvContent.setText(item.getContent()+"");
+                holder.tvDate.setText(item.getTime());
+            }catch (Exception e){
+                showToast(someException());
+            }
             return view;
         }
 

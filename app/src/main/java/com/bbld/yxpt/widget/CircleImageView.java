@@ -195,7 +195,7 @@ public class CircleImageView extends ImageView {
 		mBitmapWidth = mBitmap.getWidth();
 
 		mBorderRect.set(0, 0, getWidth(), getHeight());
-		mBorderRadius = Math.min((mBorderRect.height() - mBorderWidth) / 2, (mBorderRect.width() - mBorderWidth) / 2);
+//		mBorderRadius = Math.min((mBorderRect.height() - mBorderWidth) / 2, (mBorderRect.width() - mBorderWidth) / 2);
 
 		mDrawableRect.set(mBorderWidth, mBorderWidth, mBorderRect.width() - mBorderWidth, mBorderRect.height() - mBorderWidth);
 		mDrawableRadius = Math.min(mDrawableRect.height() / 2, mDrawableRect.width() / 2);

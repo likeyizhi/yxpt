@@ -3,6 +3,8 @@ package com.bbld.yxpt.network;
 import com.bbld.yxpt.bean.AddBankCard;
 import com.bbld.yxpt.bean.AddPayOrder;
 import com.bbld.yxpt.bean.AddWithdrawa;
+import com.bbld.yxpt.bean.AlipayLoginParam;
+import com.bbld.yxpt.bean.AlipayUserInfo;
 import com.bbld.yxpt.bean.BankCardRecognition;
 import com.bbld.yxpt.bean.BankList;
 import com.bbld.yxpt.bean.BuyShopInfo;
@@ -254,4 +256,14 @@ public interface RetrofitInterface {
      */
     @GET("api/User/GetWeiXinPayParam")
     Call<WeiXinPayParam> getWeiXinPayParam(@Query("token") String token, @Query("orderNo") String orderNo);
+    /**
+     *   支付宝登录授权所需信息
+     */
+    @GET("api/User/GetAlipayLoginParam")
+    Call<AlipayLoginParam> getAlipayLoginParam();
+    /**
+     *   支付宝登录获取用户信息
+     */
+    @GET("api/User/GetAlipayUserInfo")
+    Call<AlipayUserInfo> getAlipayUserInfo(@Query("code") String code);
 }

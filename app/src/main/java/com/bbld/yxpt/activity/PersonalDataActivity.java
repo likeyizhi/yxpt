@@ -95,8 +95,12 @@ public class PersonalDataActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 111:
-                    showToast("修改头像成功");
-                    loadData();
+                    try {
+                        showToast("修改头像成功");
+                        loadData();
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 case 222:
                     showToast("修改头像失败,错误信息:"+request);
@@ -116,46 +120,70 @@ public class PersonalDataActivity extends BaseActivity{
         btnOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MyToken(PersonalDataActivity.this).delToken();
-                new MyToken(PersonalDataActivity.this).delSPHeadPortrait();
-                SharedPreferences sharedAP=getSharedPreferences("YXAP",MODE_PRIVATE);
-                SharedPreferences.Editor editorAP = sharedAP.edit();
-                editorAP.putString("YXACC","");
-                editorAP.putString("YXPWD","");
-                editorAP.commit();
-                ActivityManagerUtil.getInstance().finishActivity(PersonalDataActivity.this);
+                try {
+                    new MyToken(PersonalDataActivity.this).delToken();
+                    new MyToken(PersonalDataActivity.this).delSPHeadPortrait();
+                    SharedPreferences sharedAP=getSharedPreferences("YXAP",MODE_PRIVATE);
+                    SharedPreferences.Editor editorAP = sharedAP.edit();
+                    editorAP.putString("YXACC","");
+                    editorAP.putString("YXPWD","");
+                    editorAP.commit();
+                    ActivityManagerUtil.getInstance().finishActivity(PersonalDataActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(PersonalDataActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(PersonalDataActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         llChangePwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle=new Bundle();
-                bundle.putString("bandPhone", userInfo.getMobile());
-                readyGo(UpdatePasswordActivity.class,bundle);
+                try {
+                    Bundle bundle=new Bundle();
+                    bundle.putString("bandPhone", userInfo.getMobile());
+                    readyGo(UpdatePasswordActivity.class,bundle);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         ivHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showHeadDialog();
+                try {
+                    showHeadDialog();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         llNickName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNickNamedialog();
+                try {
+                    showNickNamedialog();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         llSex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSexDialog();
+                try {
+                    showSexDialog();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
@@ -166,41 +194,57 @@ public class PersonalDataActivity extends BaseActivity{
                 .setPositiveButton("男", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        changeSex("男");
-                        dialogInterface.dismiss();
+                        try {
+                            changeSex("男");
+                            dialogInterface.dismiss();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
                     }
                 })
                 .setNegativeButton("女", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        changeSex("女");
-                        dialogInterface.dismiss();
+                        try {
+                            changeSex("女");
+                            dialogInterface.dismiss();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
                     }
                 }).show();
     }
 
     private void changeSex(String sex) {
-        Call<NickName> call=RetrofitService.getInstance().updateUserSex(token, sex);
-        call.enqueue(new Callback<NickName>() {
-            @Override
-            public void onResponse(Response<NickName> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<NickName> call=RetrofitService.getInstance().updateUserSex(token, sex);
+            call.enqueue(new Callback<NickName>() {
+                @Override
+                public void onResponse(Response<NickName> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            showToast("修改成功");
+                            loadData();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    showToast("修改成功");
-                    loadData();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void showNickNamedialog() {
@@ -211,8 +255,12 @@ public class PersonalDataActivity extends BaseActivity{
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String newNick = et.getText().toString().trim();
-                        changeNick(newNick);
+                        try {
+                            String newNick = et.getText().toString().trim();
+                            changeNick(newNick);
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
                         dialogInterface.dismiss();
                     }
                 })
@@ -249,40 +297,54 @@ public class PersonalDataActivity extends BaseActivity{
     }
 
     private void loadData() {
-        loadDialog= WeiboDialogUtils.createLoadingDialog(PersonalDataActivity.this, "加载中...");
-        Call<UserInfo> call= RetrofitService.getInstance().getUserInfo(new MyToken(PersonalDataActivity.this).getToken());
-        call.enqueue(new Callback<UserInfo>() {
-            @Override
-            public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            loadDialog= WeiboDialogUtils.createLoadingDialog(PersonalDataActivity.this, "加载中...");
+            Call<UserInfo> call= RetrofitService.getInstance().getUserInfo(new MyToken(PersonalDataActivity.this).getToken());
+            call.enqueue(new Callback<UserInfo>() {
+                @Override
+                public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            userInfo=response.body().getUserInfo();
+                            SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                            SharedPreferences.Editor editor=shared.edit();
+                            editor.putString("HeadPortrait",response.body().getUserInfo().getHeadPortrait());
+                            editor.commit();
+                            setData();
+                        }catch (Exception e){
+                            showToast(someException());
+                            WeiboDialogUtils.closeDialog(loadDialog);
+                        }
+                    }else{
+                        WeiboDialogUtils.closeDialog(loadDialog);
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    userInfo=response.body().getUserInfo();
-                    SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
-                    SharedPreferences.Editor editor=shared.edit();
-                    editor.putString("HeadPortrait",response.body().getUserInfo().getHeadPortrait());
-                    editor.commit();
-                    setData();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    WeiboDialogUtils.closeDialog(loadDialog);
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivHead);
-        tvName.setText(userInfo.getNickName()+"");
-        tvPhone.setText(userInfo.getMobile()+"");
-        tvSex.setText(userInfo.getSex()+"");
-        WeiboDialogUtils.closeDialog(loadDialog);
+        try {
+            Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivHead);
+            tvName.setText(userInfo.getNickName()+"");
+            tvPhone.setText(userInfo.getMobile()+"");
+            tvSex.setText(userInfo.getSex()+"");
+            WeiboDialogUtils.closeDialog(loadDialog);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

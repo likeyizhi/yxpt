@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -71,6 +72,8 @@ public class RegisterActivity extends BaseActivity{
 
     @Override
     protected void initViewsAndEvents() {
+        etCode.setInputType(EditorInfo.TYPE_CLASS_PHONE);
+        tvSend.setClickable(true);
         setListeners();
     }
 
@@ -80,7 +83,7 @@ public class RegisterActivity extends BaseActivity{
             public void onClick(View view) {
                 phone=etPhone.getText().toString().trim();
                 code=etCode.getText().toString().trim();
-                password=etPwd.getText().toString().trim();
+                password="111111";
                 if (indentiy==0){
                     showToast("请获取验证码");
                 }else if (code.equals("")||code==null){
@@ -90,39 +93,43 @@ public class RegisterActivity extends BaseActivity{
                 }else if (phone.length()!=11){
                     showToast("请输入正确手机号");
                 }else{
-                    mWeiboDialogCreate=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"注册中...");
-                    if (jointype!=0){
-                        registerCall= RetrofitService.getInstance().otherRegister(phone,indentiy,code,password,jointype,joinid,nickname,faceurl,sex);
-                    }else{
-                        registerCall= RetrofitService.getInstance().register(phone,indentiy,code,password);
-                    }
-                    registerCall.enqueue(new Callback<Register>() {
-                        @Override
-                        public void onResponse(Response<Register> response, Retrofit retrofit) {
-                            if (response==null){
-                                showToast(responseFail());
-                                WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
-                                return;
-                            }
-                            if (response.body().getStatus()==0){
-                                WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
-                                toLogin();
+                    try {
+                        mWeiboDialogCreate=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"注册中...");
+                        if (jointype!=0){
+                            registerCall= RetrofitService.getInstance().otherRegister(phone,indentiy,code,password,jointype,joinid,nickname,faceurl,sex);
+                        }else{
+                            registerCall= RetrofitService.getInstance().register(phone,indentiy,code,password);
+                        }
+                        registerCall.enqueue(new Callback<Register>() {
+                            @Override
+                            public void onResponse(Response<Register> response, Retrofit retrofit) {
+                                if (response==null){
+                                    showToast(responseFail());
+                                    WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
+                                    return;
+                                }
+                                if (response.body().getStatus()==0){
+                                    WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
+                                    toLogin();
 //                                showToast(response.body().getMes());
 //                                if (isOnTimer){
 //                                    timerTask.cancel();
 //                                }
 //                                finish();
-                            }else{
-                                showToast(response.body().getMes());
+                                }else{
+                                    showToast(response.body().getMes());
+                                    WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable throwable) {
                                 WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            WeiboDialogUtils.closeDialog(mWeiboDialogCreate);
-                        }
-                    });
+                        });
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                 }
 
             }
@@ -130,11 +137,14 @@ public class RegisterActivity extends BaseActivity{
         tvSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tvSend.setClickable(false);
                 phone=etPhone.getText().toString().trim();
                 if (phone.equals("")||phone==null){
                     showToast("请输入手机号");
+                    tvSend.setClickable(true);
                 }else if (phone.length()!=11){
                     showToast("请输入正确手机号");
+                    tvSend.setClickable(true);
                 }else{
                     mWeiboDialogSend=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"发送中...");
                     Call<RegisterMessage> call=RetrofitService.getInstance().sendRegisterMessage(phone);
@@ -144,6 +154,7 @@ public class RegisterActivity extends BaseActivity{
                             if (response==null){
                                 showToast(getResources().getString(R.string.response_fail));
                                 WeiboDialogUtils.closeDialog(mWeiboDialogSend);
+                                tvSend.setClickable(true);
                                 return;
                             }
                             if (response.body().getStatus()==0){
@@ -174,6 +185,7 @@ public class RegisterActivity extends BaseActivity{
                                 timer.schedule(timerTask, 1000, 1000);
                                 WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                             }else{
+                                tvSend.setClickable(true);
                                 showToast(response.body().getMes());
                                 WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                             }
@@ -181,6 +193,7 @@ public class RegisterActivity extends BaseActivity{
 
                         @Override
                         public void onFailure(Throwable throwable) {
+                            tvSend.setClickable(true);
                             WeiboDialogUtils.closeDialog(mWeiboDialogSend);
                         }
                     });
@@ -190,54 +203,79 @@ public class RegisterActivity extends BaseActivity{
         tvHave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isOnTimer){
-                    timer.cancel();
+                try {
+                    if (isOnTimer){
+                        timer.cancel();
+                    }
+                    tvSend.setClickable(true);
+                    ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
                 }
-                ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
+                try {
+                    if (isOnTimer){
+                        timer.cancel();
+                    }
+                    tvSend.setClickable(true);
+                    ActivityManagerUtil.getInstance().finishActivity(RegisterActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void toLogin() {
-        mWeiboDialogLogin=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"登录中...");
-        String rid = JPushInterface.getRegistrationID(getApplicationContext());
-        Call<Login> call= RetrofitService.getInstance().login(phone,password, "android", rid);
-        call.enqueue(new Callback<Login>() {
-            @Override
-            public void onResponse(Response<Login> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
-                    return;
+        try {
+            mWeiboDialogLogin=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"登录中...");
+            String rid = JPushInterface.getRegistrationID(getApplicationContext());
+            Call<Login> call= RetrofitService.getInstance().login(phone,password, "android", rid);
+            call.enqueue(new Callback<Login>() {
+                @Override
+                public void onResponse(Response<Login> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            //保存Token
+                            SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                            SharedPreferences.Editor editor=shared.edit();
+                            editor.putString(TOKEN,response.body().getToken());
+                            editor.putString("HeadPortrait",response.body().getHeadPortrait());
+                            editor.commit();
+                            showToast("登录成功");
+                            WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                            LoginActivity.loginActivity.finish();
+                            if (isOnTimer){
+                                timer.cancel();
+                            }
+                            finish();
+                        }catch (Exception e){
+                            showToast(someException());
+                            WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                        WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    //保存Token
-                    SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
-                    SharedPreferences.Editor editor=shared.edit();
-                    editor.putString(TOKEN,response.body().getToken());
-                    editor.putString("HeadPortrait",response.body().getHeadPortrait());
-                    editor.commit();
-                    showToast("登录成功");
-                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
-                    LoginActivity.loginActivity.finish();
-                    finish();
-                }else{
-                    showToast(response.body().getMes());
-                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
-            }
-        });
+                @Override
+                public void onFailure(Throwable throwable) {
+                    WeiboDialogUtils.closeDialog(mWeiboDialogLogin);
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     @Override
@@ -246,6 +284,7 @@ public class RegisterActivity extends BaseActivity{
             if (isOnTimer){
                 timer.cancel();
             }
+            tvSend.setClickable(true);
             finish();
         }
         return false;

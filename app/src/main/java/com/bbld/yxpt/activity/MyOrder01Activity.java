@@ -51,38 +51,50 @@ public class MyOrder01Activity extends BaseActivity{
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(MyOrder01Activity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(MyOrder01Activity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData() {
-        Call<BuyShopList> call= RetrofitService.getInstance().getBuyShopList(token);
-        call.enqueue(new Callback<BuyShopList>() {
-            @Override
-            public void onResponse(Response<BuyShopList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<BuyShopList> call= RetrofitService.getInstance().getBuyShopList(token);
+            call.enqueue(new Callback<BuyShopList>() {
+                @Override
+                public void onResponse(Response<BuyShopList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        buyShopList = response.body().getList();
+                        setAdapter();
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    buyShopList = response.body().getList();
-                    setAdapter();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setAdapter() {
-        adapter=new MyOrder01Adapter();
-        lvMyOrder01.setAdapter(adapter);
+        try {
+            adapter=new MyOrder01Adapter();
+            lvMyOrder01.setAdapter(adapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class MyOrder01Adapter extends BaseAdapter{
@@ -117,20 +129,24 @@ public class MyOrder01Activity extends BaseActivity{
             }
             holder01= (MyOrder01Holder) view.getTag();
             final BuyShopList.BuyShopListlist buyShop = getItem(i);
-            Glide.with(getApplicationContext()).load(buyShop.getShopImg()).into(holder01.ivShopImg);
-            holder01.tvShopName.setText(buyShop.getShopName()+"");
-            holder01.tvShopAddr.setText(buyShop.getAddress()+"");
-            holder01.tvActivityCount.setText(buyShop.getActivityCount()+"");
-            holder01.tvOrderCount.setText(buyShop.getOrderCount()+"");
-            if (view!=null){
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Bundle bundle=new Bundle();
-                        bundle.putString("shopId", buyShop.getShopID()+"");
-                        readyGo(MyOrder02Activity.class,bundle);
-                    }
-                });
+            try {
+                Glide.with(getApplicationContext()).load(buyShop.getShopImg()).into(holder01.ivShopImg);
+                holder01.tvShopName.setText(buyShop.getShopName()+"");
+                holder01.tvShopAddr.setText(buyShop.getAddress()+"");
+                holder01.tvActivityCount.setText(buyShop.getActivityCount()+"");
+                holder01.tvOrderCount.setText(buyShop.getOrderCount()+"");
+                if (view!=null){
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle bundle=new Bundle();
+                            bundle.putString("shopId", buyShop.getShopID()+"");
+                            readyGo(MyOrder02Activity.class,bundle);
+                        }
+                    });
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
             return view;
         }

@@ -44,41 +44,49 @@ public class FeedbackActivity extends BaseActivity{
         btn_go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (etDescribe.getText().toString().trim().equals("")){
-                    showToast("请输入内容");
-                }else if (etTel.getText().toString().trim().equals("")){
-                    showToast("请输入手机号");
-                }else if (etTel.getText().toString().trim().length()!=11){
-                    showToast("请输入正确手机号");
-                }else{
-                    submit();
+                try {
+                    if (etDescribe.getText().toString().trim().equals("")){
+                        showToast("请输入内容");
+                    }else if (etTel.getText().toString().trim().equals("")){
+                        showToast("请输入手机号");
+                    }else if (etTel.getText().toString().trim().length()!=11){
+                        showToast("请输入正确手机号");
+                    }else{
+                        submit();
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
     }
 
     private void submit() {
-        Call<Feedback> call= RetrofitService.getInstance().feedback(token, etDescribe.getText()+"",etTel.getText()+"");
-        call.enqueue(new Callback<Feedback>() {
-            @Override
-            public void onResponse(Response<Feedback> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<Feedback> call= RetrofitService.getInstance().feedback(token, etDescribe.getText()+"",etTel.getText()+"");
+            call.enqueue(new Callback<Feedback>() {
+                @Override
+                public void onResponse(Response<Feedback> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        showToast("反馈成功");
+                        ActivityManagerUtil.getInstance().finishActivity(FeedbackActivity.class);
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    showToast("反馈成功");
-                    ActivityManagerUtil.getInstance().finishActivity(FeedbackActivity.class);
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     @Override

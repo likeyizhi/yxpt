@@ -14,8 +14,8 @@
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="10dp"
+            android:paddingTop="6dp"
+            android:paddingLeft="10dp"
             android:src="@mipmap/back" />
         <View
             android:layout_width="1dp"
@@ -32,7 +32,7 @@
             android:textSize="15sp"
             android:layout_weight="1"
             android:textColor="#666666"
-            android:text="我的订单"/>
+            android:text="店铺活动订单"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

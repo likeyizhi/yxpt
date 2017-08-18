@@ -73,108 +73,148 @@ public class PaymentActivity extends BaseActivity{
     }
 
     private void setListeners() {
-        etMoney.addTextChangedListener(watcher);
+        try {
+            etMoney.addTextChangedListener(watcher);
+        }catch (Exception e){
+            showToast(someException());
+        }
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (etMoney.getText().toString().trim().equals("")){
-                    showToast("请输入金额");
-                }else{
-                    Call<AddPayOrder> payOrderCall=RetrofitService.getInstance().addPayOrder(token,codedContent,etMoney.getText()+"");
-                    payOrderCall.enqueue(new Callback<AddPayOrder>() {
-                        @Override
-                        public void onResponse(Response<AddPayOrder> response, Retrofit retrofit) {
-                            if (response==null){
-                                showToast(responseFail());
-                                return;
+                try {
+                    if (etMoney.getText().toString().trim().equals("")){
+                        showToast("请输入金额");
+                    }else{
+                        Call<AddPayOrder> payOrderCall=RetrofitService.getInstance().addPayOrder(token,codedContent,etMoney.getText()+"");
+                        payOrderCall.enqueue(new Callback<AddPayOrder>() {
+                            @Override
+                            public void onResponse(Response<AddPayOrder> response, Retrofit retrofit) {
+                                if (response==null){
+                                    showToast(responseFail());
+                                    return;
+                                }
+                                if (response.body().getStatus()==0){
+                                    try {
+                                        Bundle bundle=new Bundle();
+                                        bundle.putString("ShopImg",shopInfo.getShopImg()+"");
+                                        bundle.putString("ShopName",shopInfo.getShopName());
+                                        bundle.putString("money", etMoney.getText()+"");
+                                        bundle.putString("Hot",shopInfo.getActivityTitle()+"");
+                                        bundle.putString("orderNo" , response.body().getOrderNo()+"");
+                                        ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
+                                        readyGo(NewOrderActivity.class, bundle);
+                                    }catch (Exception e){
+                                        showToast(someException());
+                                    }
+                                }else{
+                                    showToast(response.body().getMes());
+                                }
                             }
-                            if (response.body().getStatus()==0){
-                                Bundle bundle=new Bundle();
-                                bundle.putString("ShopImg",shopInfo.getShopImg()+"");
-                                bundle.putString("ShopName",shopInfo.getShopName());
-                                bundle.putString("money", etMoney.getText()+"");
-                                bundle.putString("Hot",shopInfo.getActivityTitle()+"");
-                                bundle.putString("orderNo" , response.body().getOrderNo()+"");
-                                ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
-                                readyGo(NewOrderActivity.class, bundle);
-                            }else{
-                                showToast(response.body().getMes());
+
+                            @Override
+                            public void onFailure(Throwable throwable) {
+
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-
-                        }
-                    });
+                        });
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         tvGetMoneyList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle=new Bundle();
-                bundle.putString("ActivityCode",codedContent);
-                readyGo(ActivityGetMonetActivity.class,bundle);
-                overridePendingTransition(R.anim.zoomin,0);
+                try {
+                    Bundle bundle=new Bundle();
+                    bundle.putString("ActivityCode",codedContent);
+                    readyGo(ActivityGetMonetActivity.class,bundle);
+                    overridePendingTransition(R.anim.zoomin,0);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         tvDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle=new Bundle();
-                bundle.putString("desc",shopInfo.getActivityDesc()+"");
-                readyGo(ActivityDescActivity.class,bundle);
-                overridePendingTransition(R.anim.zoomin,0);
+                try {
+                    Bundle bundle=new Bundle();
+                    bundle.putString("desc",shopInfo.getActivityDesc()+"");
+                    readyGo(ActivityDescActivity.class,bundle);
+                    overridePendingTransition(R.anim.zoomin,0);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData() {
-        loading=WeiboDialogUtils.createLoadingDialog(PaymentActivity.this,"加载中...");
-        if (token==null || token.equals("")){
-            call= RetrofitService.getInstance().scanShop("", codedContent);
-            showToast("未登录");
-        }else {
-            call= RetrofitService.getInstance().scanShop(token, codedContent);
-            call.enqueue(new Callback<ScanShop>() {
-                @Override
-                public void onResponse(Response<ScanShop> response, Retrofit retrofit) {
-                    if (response==null){
-                        showToast(responseFail());
-                        WeiboDialogUtils.closeDialog(loading);
-                        return;
+        try {
+            loading=WeiboDialogUtils.createLoadingDialog(PaymentActivity.this,"加载中...");
+            if (token==null || token.equals("")){
+                call= RetrofitService.getInstance().scanShop("", codedContent);
+                showToast("未登录");
+            }else {
+                call= RetrofitService.getInstance().scanShop(token, codedContent);
+                call.enqueue(new Callback<ScanShop>() {
+                    @Override
+                    public void onResponse(Response<ScanShop> response, Retrofit retrofit) {
+                        if (response==null){
+                            showToast(responseFail());
+                            WeiboDialogUtils.closeDialog(loading);
+                            return;
+                        }
+                        if (response.body().getStatus()==0){
+                            try {
+                                shopInfo=response.body().getShopInfo();
+                                setData();
+                                WeiboDialogUtils.closeDialog(loading);
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                        }else{
+                            try {
+                                showToast(response.body().getMes());
+                                WeiboDialogUtils.closeDialog(loading);
+                                ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                        }
                     }
-                    if (response.body().getStatus()==0){
-                        shopInfo=response.body().getShopInfo();
-                        setData();
+                    @Override
+                    public void onFailure(Throwable throwable) {
                         WeiboDialogUtils.closeDialog(loading);
-                    }else{
-                        showToast(response.body().getMes());
-                        WeiboDialogUtils.closeDialog(loading);
-                        ActivityManagerUtil.getInstance().finishActivity(PaymentActivity.this);
                     }
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-
-                }
-            });
+                });
+            }
+        }catch (Exception e){
+            showToast(someException());
+            WeiboDialogUtils.closeDialog(loading);
         }
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(shopInfo.getShopImg()).into(ivShopImg);
-        tvShopName.setText(shopInfo.getShopName());
-        tvHot.setText(shopInfo.getActivityTitle());
-        tvAllMoney.setText("￥"+shopInfo.getActivityTotal());
+        try {
+            Glide.with(getApplicationContext()).load(shopInfo.getShopImg()).into(ivShopImg);
+            tvShopName.setText(shopInfo.getShopName());
+            tvHot.setText(shopInfo.getActivityTitle());
+            tvAllMoney.setText("￥"+shopInfo.getActivityTotal());
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
     private TextWatcher watcher = new TextWatcher(){
         @Override
@@ -189,12 +229,16 @@ public class PaymentActivity extends BaseActivity{
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.length()!=0){
-                btnSubmit.setBackgroundColor(Color.rgb(21,212,143));
-                btnSubmit.setClickable(true);
-            }else{
-                btnSubmit.setBackgroundColor(Color.rgb(204,204,204));
-                btnSubmit.setClickable(false);
+            try {
+                if (s.length()!=0){
+                    btnSubmit.setBackgroundColor(Color.rgb(21,212,143));
+                    btnSubmit.setClickable(true);
+                }else{
+                    btnSubmit.setBackgroundColor(Color.rgb(204,204,204));
+                    btnSubmit.setClickable(false);
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
         }
     };

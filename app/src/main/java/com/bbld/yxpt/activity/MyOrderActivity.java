@@ -66,7 +66,11 @@ public class MyOrderActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    srl.setRefreshing(false);
+                    try {
+                        srl.setRefreshing(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -118,24 +122,32 @@ public class MyOrderActivity extends BaseActivity{
             private boolean isBottom;
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-                switch (i) {
-                    case SCROLL_STATE_FLING:
-                        //Log.i("info", "SCROLL_STATE_FLING");
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        if (isBottom) {
-                            switch (whichList){
-                                case 1:
-                                    whichList=2;
-                                    setAdapter();
-                                    break;
-                                case 2:
-                                    break;
-                                case 3:
-                                    break;
+                try {
+                    switch (i) {
+                        case SCROLL_STATE_FLING:
+                            //Log.i("info", "SCROLL_STATE_FLING");
+                            break;
+                        case SCROLL_STATE_IDLE:
+                            if (isBottom) {
+                                switch (whichList){
+                                    case 1:
+                                        try {
+                                            whichList=2;
+                                            setAdapter();
+                                        }catch (Exception e){
+                                            showToast(someException());
+                                        }
+                                        break;
+                                    case 2:
+                                        break;
+                                    case 3:
+                                        break;
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
 
@@ -152,71 +164,95 @@ public class MyOrderActivity extends BaseActivity{
         tvToMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                whichList=3;
-                setAdapter();
+                try {
+                    whichList=3;
+                    setAdapter();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(MyOrderActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(MyOrderActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData() {
-        Call<OrderReturnInfo> call= RetrofitService.getInstance().getOrderReturnInfo(token);
-        call.enqueue(new Callback<OrderReturnInfo>() {
-            @Override
-            public void onResponse(Response<OrderReturnInfo> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<OrderReturnInfo> call= RetrofitService.getInstance().getOrderReturnInfo(token);
+            call.enqueue(new Callback<OrderReturnInfo>() {
+                @Override
+                public void onResponse(Response<OrderReturnInfo> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            QueueInfo=response.body().getQueueInfo();
+                            ShopInfo=response.body().getShopInfo();
+                            ReturnList=response.body().getReturnList();
+                            NextList=response.body().getNextList();
+                            MyList=response.body().getMyList();
+                            setData();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    QueueInfo=response.body().getQueueInfo();
-                    ShopInfo=response.body().getShopInfo();
-                    ReturnList=response.body().getReturnList();
-                    NextList=response.body().getNextList();
-                    MyList=response.body().getMyList();
-                    setData();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
 
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(ShopInfo.getShopImg()).into(ivBackground);
-        tvShopName.setText(ShopInfo.getShopName());
-        tvPeopleCount.setText(QueueInfo);
+        try {
+            Glide.with(getApplicationContext()).load(ShopInfo.getShopImg()).into(ivBackground);
+            tvShopName.setText(ShopInfo.getShopName());
+            tvPeopleCount.setText(QueueInfo);
+        }catch (Exception e){
+            showToast(someException());
+        }
         setAdapter();
     }
 
     private void setAdapter() {
-        if (whichList==1){
-            if (ReturnList!=null){
-                adapter=new OrderAdapter();
-                lvMyorder.setAdapter(adapter);
+        try {
+            if (whichList==1){
+                if (ReturnList!=null){
+                    adapter=new OrderAdapter();
+                    lvMyorder.setAdapter(adapter);
+                }
+            }else if (whichList==2){
+                if (NextList!=null){
+                    adapter=new OrderAdapter();
+                    lvMyorder.setAdapter(adapter);
+                }
+            }else if (whichList==3){
+                if (MyList!=null){
+                    adapter=new OrderAdapter();
+                    lvMyorder.setAdapter(adapter);
+                }
+            }else{
             }
-        }else if (whichList==2){
-            if (NextList!=null){
-                adapter=new OrderAdapter();
-                lvMyorder.setAdapter(adapter);
-            }
-        }else if (whichList==3){
-            if (MyList!=null){
-                adapter=new OrderAdapter();
-                lvMyorder.setAdapter(adapter);
-            }
-        }else{
+        }catch (Exception e){
+            showToast(someException());
         }
 //        adapter=new OrderAdapter();
 //        lvMyorder.setAdapter(adapter);

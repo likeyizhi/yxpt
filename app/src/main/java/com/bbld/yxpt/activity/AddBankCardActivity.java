@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbld.yxpt.R;
 import com.bbld.yxpt.base.BaseActivity;
@@ -57,91 +58,119 @@ public class AddBankCardActivity extends BaseActivity {
 
     @Override
     protected void initViewsAndEvents() {
-        token=new MyToken(this).getToken();
+        try {
+            token=new MyToken(this).getToken();
+        }catch (Exception e){
+            showToast(someException());
+        }
         getBank();
         setListeners();
     }
 
     private void getBank() {
-        Call<BankList> call=RetrofitService.getInstance().getBankList();
-        call.enqueue(new Callback<BankList>() {
-            @Override
-            public void onResponse(Response<BankList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    banks=response.body().getList();
-                    items=new String[banks.size()];
-                    for (int i=0;i<banks.size();i++){
-                        items[i]=banks.get(i).getBankName();
+        try {
+            Call<BankList> call=RetrofitService.getInstance().getBankList();
+            call.enqueue(new Callback<BankList>() {
+                @Override
+                public void onResponse(Response<BankList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        banks=response.body().getList();
+                        items=new String[banks.size()];
+                        for (int i=0;i<banks.size();i++){
+                            items[i]=banks.get(i).getBankName();
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setListeners() {
-        etNumber.addTextChangedListener(watcher);
+        try {
+            etNumber.addTextChangedListener(watcher);
+        }catch (Exception e){
+            showToast(someException());
+        }
         llMoreBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showBankDialog();
+                try {
+                    showBankDialog();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (etNumber.getText().toString().trim().equals("")){
-                    showToast("请填写银行卡");
-                }else if(etName.getText().toString().trim().equals("")){
-                    showToast("请填写持卡人");
-                }else if (tvBank.equals("请选择银行")){
-                    showToast("请选择银行");
-                }else{
-                    toAddBankCard();
+                try {
+                    if (etNumber.getText().toString().trim().equals("")){
+                        showToast("请填写银行卡");
+                    }else if(etName.getText().toString().trim().equals("")){
+                        showToast("请填写持卡人");
+                    }else if (tvBank.equals("请选择银行")){
+                        showToast("请选择银行");
+                    }else{
+                        toAddBankCard();
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(AddBankCardActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(AddBankCardActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void toAddBankCard() {
-        Call<AddBankCard> call=RetrofitService.getInstance().addBankCard(token,bankId,etName.getText()+"",etNumber.getText()+"","");
+        try {
+            Call<AddBankCard> call=RetrofitService.getInstance().addBankCard(token,bankId,etName.getText()+"",etNumber.getText()+"","");
 //        showToast(token+","+bankId+","+etName.getText()+","+etNumber.getText()+"");
-        call.enqueue(new Callback<AddBankCard>() {
-            @Override
-            public void onResponse(Response<AddBankCard> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+            call.enqueue(new Callback<AddBankCard>() {
+                @Override
+                public void onResponse(Response<AddBankCard> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        showToast("添加成功");
+                        ActivityManagerUtil.getInstance().finishActivity(AddBankCardActivity.this);
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    showToast("添加成功");
-                    ActivityManagerUtil.getInstance().finishActivity(AddBankCardActivity.this);
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     TextWatcher watcher=new TextWatcher() {
@@ -157,36 +186,56 @@ public class AddBankCardActivity extends BaseActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            Recognition(editable+"");
+            try {
+                Recognition(editable+"");
+            }catch (Exception e){
+                showToast(someException());
+            }
         }
     };
 
     private void Recognition(String cardno) {
-        Call<BankCardRecognition> call= RetrofitService.getInstance().BankCardRecognition(cardno);
-        call.enqueue(new Callback<BankCardRecognition>() {
-            @Override
-            public void onResponse(Response<BankCardRecognition> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    if (response.body().getList()==null || response.body().getList().size()==0){
-                        tvBank.setText("请选择银行");
-                    }else{
-                        tvBank.setText(response.body().getList().get(0).getBankName());
-                        bankId=response.body().getList().get(0).getBankID();
+        try {
+            Call<BankCardRecognition> call= RetrofitService.getInstance().BankCardRecognition(cardno);
+            call.enqueue(new Callback<BankCardRecognition>() {
+                @Override
+                public void onResponse(Response<BankCardRecognition> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        try {
+                            if (response.body().getList()==null || response.body().getList().size()==0){
+                                try {
+                                    tvBank.setText("请选择银行");
+                                }catch (Exception e){
+                                    showToast(someException());
+                                }
+                            }else{
+                                try {
+                                    tvBank.setText(response.body().getList().get(0).getBankName());
+                                    bankId=response.body().getList().get(0).getBankID();
+                                }catch (Exception e){
+                                    showToast(someException());
+                                }
+                            }
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
     private void showBankDialog() {
         AlertDialog alertDialog=new AlertDialog.Builder(AddBankCardActivity.this)
@@ -194,8 +243,12 @@ public class AddBankCardActivity extends BaseActivity {
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        tvBank.setText(items[i]);
-                        bankId=banks.get(i).getBankID();
+                        try {
+                            tvBank.setText(items[i]);
+                            bankId=banks.get(i).getBankID();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
                         dialogInterface.dismiss();
                     }
                 }).create();

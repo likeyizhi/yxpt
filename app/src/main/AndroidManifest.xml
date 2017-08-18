@@ -366,6 +366,11 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"/>
+        <!--主页蒙层-注册或绑定-->
+        <activity
+            android:name=".activity.MainRegistBindActivity"
+            android:theme="@style/myTransparent"
+            android:launchMode="singleTop"/>
 
     </application>
 

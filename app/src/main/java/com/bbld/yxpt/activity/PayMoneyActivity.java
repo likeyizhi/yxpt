@@ -1,5 +1,6 @@
 package com.bbld.yxpt.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -58,9 +59,13 @@ public class PayMoneyActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    srl.setRefreshing(false);
-                    pageIndex=1;
-                    loadData(false);
+                    try {
+                        srl.setRefreshing(false);
+                        pageIndex=1;
+                        loadData(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -97,16 +102,24 @@ public class PayMoneyActivity extends BaseActivity{
             private boolean isBottom;
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-                switch (i) {
-                    case SCROLL_STATE_FLING:
-                        //Log.i("info", "SCROLL_STATE_FLING");
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        if (isBottom) {
-                            pageIndex++;
-                            loadData(true);
-                        }
-                        break;
+                try {
+                    switch (i) {
+                        case SCROLL_STATE_FLING:
+                            //Log.i("info", "SCROLL_STATE_FLING");
+                            break;
+                        case SCROLL_STATE_IDLE:
+                            try {
+                                if (isBottom) {
+                                    pageIndex++;
+                                    loadData(true);
+                                }
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                            break;
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
 
@@ -123,52 +136,68 @@ public class PayMoneyActivity extends BaseActivity{
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(PayMoneyActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(PayMoneyActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData(final boolean isLoadMore) {
-        Call<UserOrderList> call= RetrofitService.getInstance().getUserOrderList(token,pageIndex);
-        call.enqueue(new Callback<UserOrderList>() {
-            @Override
-            public void onResponse(Response<UserOrderList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-//                    showToast(token+","+pageIndex+","+pageSize+","+response.body().getMes());
-                    count=response.body().getCount();
-                    total=response.body().getTotal();
-                    if (isLoadMore){
-                        List<UserOrderList.UserOrderListlist> listAdd = response.body().getList();
-                        list.addAll(listAdd);
-                        payAdapter.notifyDataSetChanged();
-                    }else{
-                        list = response.body().getList();
-                        setData();
+        try {
+            Call<UserOrderList> call= RetrofitService.getInstance().getUserOrderList(token,pageIndex);
+            call.enqueue(new Callback<UserOrderList>() {
+                @Override
+                public void onResponse(Response<UserOrderList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+//                    showToast(token+","+pageIndex+","+pageSize+","+response.body().getMes());
+                        count=response.body().getCount();
+                        total=response.body().getTotal();
+                        if (isLoadMore){
+                            List<UserOrderList.UserOrderListlist> listAdd = response.body().getList();
+                            list.addAll(listAdd);
+                            payAdapter.notifyDataSetChanged();
+                        }else{
+                            list = response.body().getList();
+                            setData();
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        tvMoney.setText(total);
+        try {
+            tvMoney.setText(total);
+        }catch (Exception e){
+            showToast(someException());
+        }
         setPayAdapter();
     }
 
     private void setPayAdapter() {
-        payAdapter=new PayAdapter();
-        lvOrder.setAdapter(payAdapter);
+        try {
+            payAdapter=new PayAdapter();
+            lvOrder.setAdapter(payAdapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class PayAdapter extends BaseAdapter{
@@ -202,10 +231,15 @@ public class PayMoneyActivity extends BaseActivity{
             }
             UserOrderList.UserOrderListlist item = getItem(i);
             holder= (PayHolder) view.getTag();
-            holder.tvActivityTitle.setText(item.getShopName()+"");
-            holder.tvAddDate.setText("消费时间："+item.getAddDate()+"");
-            holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
-            Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
+            try {
+                holder.tvActivityTitle.setText(item.getShopName()+"");
+                holder.tvAddDate.setText("消费时间："+item.getAddDate()+"");
+                holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
+                holder.tvEnterAmount.setTextColor(Color.rgb(225,66,88));
+                Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
+            }catch (Exception e){
+                showToast(someException());
+            }
             return view;
         }
 

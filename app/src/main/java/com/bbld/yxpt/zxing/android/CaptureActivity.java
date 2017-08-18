@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -52,6 +53,10 @@ public final class CaptureActivity extends Activity implements
     private BeepManager beepManager;
 
     private ImageButton imageButton_back;
+    private ImageButton ibLight;
+    private boolean isFlashlightOpen;
+    private Camera m_Camera;
+    private Camera camera;
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -91,6 +96,22 @@ public final class CaptureActivity extends Activity implements
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        ibLight=(ImageButton)findViewById(R.id.ibLight);
+        ibLight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isFlashlightOpen) {
+                    ibLight.setBackgroundResource(R.mipmap.light_close);
+                    cameraManager.setTorch(false); // 关闭闪光灯
+                    isFlashlightOpen = false;
+                } else {
+                    ibLight.setBackgroundResource(R.mipmap.light_open);
+                    cameraManager.setTorch(true); // 打开闪光灯
+                    isFlashlightOpen = true;
+                }
             }
         });
     }

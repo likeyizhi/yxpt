@@ -68,54 +68,70 @@ public class ShopDetailsActivity extends BaseActivity{
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(ShopDetailsActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(ShopDetailsActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         ivHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle=new Bundle();
-                bundle.putDouble("shopX",shopX);
-                bundle.putDouble("shopY",shopY);
-                bundle.putDouble("mCurrentLat",mCurrentLat);
-                bundle.putDouble("mCurrentLon",mCurrentLon);
-                bundle.putString("mCurrentCity",mCurrentCity);
-                readyGo(RoutePlanActivity.class,bundle);
+                try {
+                    Bundle bundle=new Bundle();
+                    bundle.putDouble("shopX",shopX);
+                    bundle.putDouble("shopY",shopY);
+                    bundle.putDouble("mCurrentLat",mCurrentLat);
+                    bundle.putDouble("mCurrentLon",mCurrentLon);
+                    bundle.putString("mCurrentCity",mCurrentCity);
+                    readyGo(RoutePlanActivity.class,bundle);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
     private void loadData() {
-        call= RetrofitService.getInstance().getShopInfo("",shopId+"",mCurrentLon+"",mCurrentLat+"");
-        call.enqueue(new Callback<ShopInfo>() {
-            @Override
-            public void onResponse(Response<ShopInfo> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            call= RetrofitService.getInstance().getShopInfo("",shopId+"",mCurrentLon+"",mCurrentLat+"");
+            call.enqueue(new Callback<ShopInfo>() {
+                @Override
+                public void onResponse(Response<ShopInfo> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        shopInfo=response.body().getShopInfo();
+                        setData();
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    shopInfo=response.body().getShopInfo();
-                    setData();
-                }else{
-                    showToast(response.body().getMes());
-                }
-            }
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(shopInfo.getShopBigImg()).into(ivBackground);
+        try {
+            Glide.with(getApplicationContext()).load(shopInfo.getShopBigImg()).into(ivBackground);
 //        Glide.with(getApplicationContext()).load(shopInfo.getShopImg()).into(ivHead);
-        tvShopName.setText(shopInfo.getShopName());
-        tvTag.setText(shopInfo.getTag());
-        tvDistance.setText(shopInfo.getDistance());
-        tvAddress.setText(shopInfo.getAddress());
-        tvPhoneNumber.setText(/*shopInfo.getContact()+"，"+*/shopInfo.getLinkPhone());
-        wvDetail.loadUrl(shopInfo.getDetailsUrl());
+            tvShopName.setText(shopInfo.getShopName());
+            tvTag.setText(shopInfo.getTag());
+            tvDistance.setText(shopInfo.getDistance());
+            tvAddress.setText(shopInfo.getAddress());
+            tvPhoneNumber.setText(/*shopInfo.getContact()+"，"+*/shopInfo.getLinkPhone());
+            wvDetail.loadUrl(shopInfo.getDetailsUrl());
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     @Override

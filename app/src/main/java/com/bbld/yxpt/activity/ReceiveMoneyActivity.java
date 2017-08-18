@@ -1,5 +1,6 @@
 package com.bbld.yxpt.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,9 +60,13 @@ public class ReceiveMoneyActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    pageIndex=1;
-                    loadData(false);
-                    srl.setRefreshing(false);
+                    try {
+                        pageIndex=1;
+                        loadData(false);
+                        srl.setRefreshing(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -97,16 +102,24 @@ public class ReceiveMoneyActivity extends BaseActivity{
             private boolean isBottom;
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-                switch (i) {
-                    case SCROLL_STATE_FLING:
-                        //Log.i("info", "SCROLL_STATE_FLING");
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        if (isBottom) {
-                            pageIndex++;
-                            loadData(true);
-                        }
-                        break;
+                try {
+                    switch (i) {
+                        case SCROLL_STATE_FLING:
+                            //Log.i("info", "SCROLL_STATE_FLING");
+                            break;
+                        case SCROLL_STATE_IDLE:
+                            try {
+                                if (isBottom) {
+                                    pageIndex++;
+                                    loadData(true);
+                                }
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                            break;
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
 
@@ -123,51 +136,79 @@ public class ReceiveMoneyActivity extends BaseActivity{
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(ReceiveMoneyActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(ReceiveMoneyActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData(final boolean isLoadMore) {
-        Call<UserReturnOrderList> call= RetrofitService.getInstance().getUserReturnOrderList(token,pageIndex);
-        call.enqueue(new Callback<UserReturnOrderList>() {
-            @Override
-            public void onResponse(Response<UserReturnOrderList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    count=response.body().getCount();
-                    total=response.body().getTotal();
-                    if (isLoadMore){
-                        List<UserReturnOrderList.UserReturnOrderListlist> listAdd = response.body().getList();
-                        list.addAll(listAdd);
-                        receiveAdapter.notifyDataSetChanged();
-                    }else{
-                        list = response.body().getList();
-                        setData();
+        try {
+            Call<UserReturnOrderList> call= RetrofitService.getInstance().getUserReturnOrderList(token,pageIndex);
+            call.enqueue(new Callback<UserReturnOrderList>() {
+                @Override
+                public void onResponse(Response<UserReturnOrderList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        try {
+                            count=response.body().getCount();
+                            total=response.body().getTotal();
+                            if (isLoadMore){
+                                try {
+                                    List<UserReturnOrderList.UserReturnOrderListlist> listAdd = response.body().getList();
+                                    list.addAll(listAdd);
+                                    receiveAdapter.notifyDataSetChanged();
+                                }catch (Exception e){
+                                    showToast(someException());
+                                }
+                            }else{
+                                try {
+                                    list = response.body().getList();
+                                    setData();
+                                }catch (Exception e){
+                                    showToast(someException());
+                                }
+                            }
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        tvMoney.setText(total);
+        try {
+            tvMoney.setText(total);
+        }catch (Exception e){
+            showToast(someException());
+        }
         setPayAdapter();
     }
 
     private void setPayAdapter() {
-        receiveAdapter=new ReceiveAdapter();
-        lvOrder.setAdapter(receiveAdapter);
+        try {
+            receiveAdapter=new ReceiveAdapter();
+            lvOrder.setAdapter(receiveAdapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class ReceiveAdapter extends BaseAdapter{
@@ -200,10 +241,15 @@ public class ReceiveMoneyActivity extends BaseActivity{
             }
             UserReturnOrderList.UserReturnOrderListlist item = getItem(i);
             holder= (ReceiveHolder) view.getTag();
-            holder.tvActivityTitle.setText(item.getShopName()+"");
-            holder.tvAddDate.setText("返现时间："+item.getAddDate()+"");
-            holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
-            Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
+            try {
+                holder.tvActivityTitle.setText(item.getShopName()+"");
+                holder.tvAddDate.setText("返现时间："+item.getAddDate()+"");
+                holder.tvEnterAmount.setTextColor(Color.rgb(102,204,255));
+                holder.tvEnterAmount.setText("￥"+item.getEnterAmount());
+                Glide.with(getApplicationContext()).load(item.getShopImg()).into(holder.ivHead);
+            }catch (Exception e){
+                showToast(someException());
+            }
             return view;
         }
 

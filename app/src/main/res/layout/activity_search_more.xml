@@ -39,10 +39,10 @@
                 android:src="@mipmap/search" />
 
             <EditText
-
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:singleLine="true"
                 android:layout_marginLeft="5dp"
                 android:layout_toLeftOf="@+id/ibSearch"
                 android:background="@null" />

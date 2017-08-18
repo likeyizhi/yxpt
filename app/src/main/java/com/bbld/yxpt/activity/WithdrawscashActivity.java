@@ -65,60 +65,84 @@ public class WithdrawscashActivity extends BaseActivity{
     }
 
     private void loadData() {
-        Call<WithdrawaAccountInfo> call= RetrofitService.getInstance().getWithdrawaAccountInfo(token);
-        call.enqueue(new Callback<WithdrawaAccountInfo>() {
-            @Override
-            public void onResponse(Response<WithdrawaAccountInfo> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    accountMoney=response.body().getAccountMoney();
-                    cardinfo=response.body().getCardinfo();
-                    Glide.with(getApplicationContext()).load(cardinfo.getBankLogo()).into(ivBankLogo);
-                    bankCardId=cardinfo.getBankCardID();
-                    if (bankCardId!=0){
-                        tvBankName.setText(cardinfo.getBankName()+"");
-                        tvBankNo.setText("尾号"+cardinfo.getCardNo().substring(cardinfo.getCardNo().length()-4,cardinfo.getCardNo().length())+"("+cardinfo.getBankName()+")");
+        try {
+            Call<WithdrawaAccountInfo> call= RetrofitService.getInstance().getWithdrawaAccountInfo(token);
+            call.enqueue(new Callback<WithdrawaAccountInfo>() {
+                @Override
+                public void onResponse(Response<WithdrawaAccountInfo> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                    tvCanMoney.setText("可提现金额"+accountMoney+"元");
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        try {
+                            accountMoney=response.body().getAccountMoney();
+                            cardinfo=response.body().getCardinfo();
+                            Glide.with(getApplicationContext()).load(cardinfo.getBankLogo()).into(ivBankLogo);
+                            bankCardId=cardinfo.getBankCardID();
+                            if (bankCardId!=0){
+                                tvBankName.setText(cardinfo.getBankName()+"");
+                                tvBankNo.setText("尾号"+cardinfo.getCardNo().substring(cardinfo.getCardNo().length()-4,cardinfo.getCardNo().length()));
+                            }
+                            tvCanMoney.setText("可提现金额"+accountMoney+"元");
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setListeners() {
         llBankCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readyGoForResult(BankCardActivity.class,7788);
+                try {
+                    readyGoForResult(BankCardActivity.class,7788);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         tvAllMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                etMoney.setText(accountMoney);
+                try {
+                    etMoney.setText(accountMoney);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mWeiboDialog = WeiboDialogUtils.createLoadingDialog(WithdrawscashActivity.this, "处理中...");
-                toAddWithdrawa();
+                try {
+                    mWeiboDialog = WeiboDialogUtils.createLoadingDialog(WithdrawscashActivity.this, "处理中...");
+                    toAddWithdrawa();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                try {
+                    finish();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
@@ -128,40 +152,52 @@ public class WithdrawscashActivity extends BaseActivity{
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
             case 7788:
-                String bankName = data.getExtras().getString("bankName");
-                String bankNo = data.getExtras().getString("bankNo");
-                String bankLogo = data.getExtras().getString("bankLogo");
-                bankCardId=data.getExtras().getInt("bankCardId");
-                tvBankName.setText(bankName);
-                tvBankNo.setText("尾号"+bankNo.substring(bankNo.length()-4,bankNo.length())+"("+bankName+")");
-                Glide.with(getApplicationContext()).load(bankLogo).into(ivBankLogo);
+                try {
+                    String bankName = data.getExtras().getString("bankName");
+                    String bankNo = data.getExtras().getString("bankNo");
+                    String bankLogo = data.getExtras().getString("bankLogo");
+                    bankCardId=data.getExtras().getInt("bankCardId");
+                    tvBankName.setText(bankName);
+                    tvBankNo.setText("尾号"+bankNo.substring(bankNo.length()-4,bankNo.length())+"("+bankName+")");
+                    Glide.with(getApplicationContext()).load(bankLogo).into(ivBankLogo);
+                }catch (Exception e){
+                    showToast(someException());
+                }
                 break;
         }
     }
 
     private void toAddWithdrawa() {
-        Call<AddWithdrawa> call=RetrofitService.getInstance().addWithdrawa(token,bankCardId,etMoney.getText()+"");
-        call.enqueue(new Callback<AddWithdrawa>() {
-            @Override
-            public void onResponse(Response<AddWithdrawa> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<AddWithdrawa> call=RetrofitService.getInstance().addWithdrawa(token,bankCardId,etMoney.getText()+"");
+            call.enqueue(new Callback<AddWithdrawa>() {
+                @Override
+                public void onResponse(Response<AddWithdrawa> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            showToast("提现成功");
+                            ActivityManagerUtil.getInstance().finishActivity(WithdrawscashActivity.this);
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
+                    WeiboDialogUtils.closeDialog(mWeiboDialog);
                 }
-                if (response.body().getStatus()==0){
-                    showToast("提现成功");
-                    ActivityManagerUtil.getInstance().finishActivity(WithdrawscashActivity.this);
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-                WeiboDialogUtils.closeDialog(mWeiboDialog);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     @Override

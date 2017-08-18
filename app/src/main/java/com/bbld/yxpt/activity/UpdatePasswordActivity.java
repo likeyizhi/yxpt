@@ -74,7 +74,7 @@ public class UpdatePasswordActivity extends BaseActivity{
         SharedPreferences sharedGetAP=getSharedPreferences("YXAP",MODE_PRIVATE);
         sacc = sharedGetAP.getString("YXACC", "");
         spwd = sharedGetAP.getString("YXPWD", "");
-
+        tvSendCode.setClickable(true);
         if (sacc.equals("")||spwd.equals("")){
         }else{
             etPhone.setText(bandPhone);
@@ -87,134 +87,184 @@ public class UpdatePasswordActivity extends BaseActivity{
         tvSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendCode();
+                try {
+                    tvSendCode.setClickable(false);
+                    sendCode();
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ll_1.getVisibility()==View.VISIBLE){
-                    if (etPhone.getText().toString().trim().equals("")){
-                        showToast("请输入手机号");
-                    }else{
-                        if (etPhone.getText().toString().trim().length()==11){
-                            ll_1.setVisibility(View.GONE);
-                            ll_2.setVisibility(View.VISIBLE);
-                            ll_3.setVisibility(View.GONE);
-                            iv123.setImageResource(R.mipmap.pwd02);
+                try {
+                    if (ll_1.getVisibility()==View.VISIBLE){
+                        if (etPhone.getText().toString().trim().equals("")){
+                            showToast("请输入手机号");
                         }else{
-                            showToast("请输入正确手机号");
-                        }
-                    }
-                }else if (ll_2.getVisibility()==View.VISIBLE){
-                    if (etCode.getText().toString().trim().equals("")){
-                        showToast("请输入验证码");
-                    }else{
-                        ll_1.setVisibility(View.GONE);
-                        ll_2.setVisibility(View.GONE);
-                        ll_3.setVisibility(View.VISIBLE);
-                        iv123.setImageResource(R.mipmap.pwd03);
-                        btnOK.setText("完成");
-                    }
-                }else {
-                    newPwd1 = etNewPwd1.getText().toString().trim();
-                    newPwd2 = etNewPwd2.getText().toString().trim();
-                    if (newPwd1.equals("") || newPwd2.equals("")){
-                        showToast("请输入密码");
-                    }else{
-                        if (newPwd1.length()<6 || newPwd2.length()<6){
-                            showToast("请确认密码长度大于6位");
-                        }else{
-                            if (newPwd1.equals(newPwd2)){
-                                UpdatePwd();
+                            if (etPhone.getText().toString().trim().length()==11){
+                                try {
+                                    ll_1.setVisibility(View.GONE);
+                                    ll_2.setVisibility(View.VISIBLE);
+                                    ll_3.setVisibility(View.GONE);
+                                    iv123.setImageResource(R.mipmap.pwd02);
+                                }catch (Exception e){
+                                    showToast(someException());
+                                }
                             }else{
-                                showToast("两次输入不相同");
+                                showToast("请输入正确手机号");
+                            }
+                        }
+                    }else if (ll_2.getVisibility()==View.VISIBLE){
+                        if (etCode.getText().toString().trim().equals("")){
+                            showToast("请输入验证码");
+                        }else{
+                            try {
+                                ll_1.setVisibility(View.GONE);
+                                ll_2.setVisibility(View.GONE);
+                                ll_3.setVisibility(View.VISIBLE);
+                                iv123.setImageResource(R.mipmap.pwd03);
+                                btnOK.setText("完成");
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                        }
+                    }else {
+                        newPwd1 = etNewPwd1.getText().toString().trim();
+                        newPwd2 = etNewPwd2.getText().toString().trim();
+                        if (newPwd1.equals("") || newPwd2.equals("")){
+                            showToast("请输入密码");
+                        }else{
+                            try {
+                                if (newPwd1.length()<6 || newPwd2.length()<6){
+                                    showToast("请确认密码长度大于6位");
+                                }else{
+                                    if (newPwd1.equals(newPwd2)){
+                                        try {
+                                            UpdatePwd();
+                                        }catch (Exception e){
+                                            showToast(someException());
+                                        }
+                                    }else{
+                                        showToast("两次输入不相同");
+                                    }
+                                }
+                            }catch (Exception e){
+                                showToast(someException());
                             }
                         }
                     }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(UpdatePasswordActivity.this);
+                try {
+                    if (isOnTimer){
+                        timer.cancel();
+                    }
+                    tvSendCode.setClickable(true);
+                    ActivityManagerUtil.getInstance().finishActivity(UpdatePasswordActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void sendCode() {
-        Call<RetrieveMessage> call= RetrofitService.getInstance().sendRetrieveMessage(etPhone.getText().toString().trim());
-        call.enqueue(new Callback<RetrieveMessage>() {
-            @Override
-            public void onResponse(Response<RetrieveMessage> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    identity = response.body().getIdentity();
-                    timer = new Timer();
-                    isOnTimer=true;
-                    timerTask = new TimerTask() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
+        try {
+            Call<RetrieveMessage> call= RetrofitService.getInstance().sendRetrieveMessage(etPhone.getText().toString().trim());
+            call.enqueue(new Callback<RetrieveMessage>() {
+                @Override
+                public void onResponse(Response<RetrieveMessage> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            identity = response.body().getIdentity();
+                            timer = new Timer();
+                            isOnTimer=true;
+                            timerTask = new TimerTask() {
                                 @Override
                                 public void run() {
-                                    time--;
-                                    tvSendCode.setClickable(false);
-                                    tvSendCode.setText(time + "s");
-                                    if (time < 0) {
-                                        time = 60;
-                                        timer.cancel();
-                                        isOnTimer=false;
-                                        tvSendCode.setClickable(true);
-                                        tvSendCode.setText("发送");
-                                    }
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            time--;
+                                            tvSendCode.setClickable(false);
+                                            tvSendCode.setText(time + "s");
+                                            if (time < 0) {
+                                                time = 60;
+                                                timer.cancel();
+                                                isOnTimer=false;
+                                                tvSendCode.setClickable(true);
+                                                tvSendCode.setText("发送");
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            };
+                            timer.schedule(timerTask, 1000, 1000);
+                            showToast("发送成功");
+                        }catch (Exception e){
+                            showToast(someException());
                         }
-                    };
-                    timer.schedule(timerTask, 1000, 1000);
-                    showToast("发送成功");
-                } else {
-                    showToast(response.body().getMes());
+                    } else {
+                        showToast(response.body().getMes());
+                        tvSendCode.setClickable(true);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void UpdatePwd() {
-        Call<Retrieve> call=RetrofitService.getInstance().retrieve(etPhone.getText().toString().trim(), identity,etCode.getText().toString().trim(),newPwd1);
-        call.enqueue(new Callback<Retrieve>() {
-            @Override
-            public void onResponse(Response<Retrieve> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    showToast("修改成功");
-                    if (isOnTimer){
-                        timer.cancel();
+        try {
+            Call<Retrieve> call=RetrofitService.getInstance().retrieve(etPhone.getText().toString().trim(), identity,etCode.getText().toString().trim(),newPwd1);
+            call.enqueue(new Callback<Retrieve>() {
+                @Override
+                public void onResponse(Response<Retrieve> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                    ActivityManagerUtil.getInstance().finishActivity(UpdatePasswordActivity.this);
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        try {
+                            showToast("修改成功");
+                            if (isOnTimer){
+                                timer.cancel();
+                            }
+                            ActivityManagerUtil.getInstance().finishActivity(UpdatePasswordActivity.this);
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

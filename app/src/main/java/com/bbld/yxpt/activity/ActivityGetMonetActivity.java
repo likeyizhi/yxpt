@@ -56,44 +56,60 @@ public class ActivityGetMonetActivity extends Activity{
         rlActivittyDescClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                overridePendingTransition(0,R.anim.zoomout);
+                try {
+                    finish();
+                    overridePendingTransition(0,R.anim.zoomout);
+                }catch (Exception e){
+                    Toast.makeText(ActivityGetMonetActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void loadData() {
-        if (token==null || token.equals("")){
-            call= RetrofitService.getInstance().scanShop("", activityCode);
-            Toast.makeText(ActivityGetMonetActivity.this,"未登录",Toast.LENGTH_SHORT).show();
-        }else {
-            call= RetrofitService.getInstance().scanShop(token, activityCode);
-            call.enqueue(new Callback<ScanShop>() {
-                @Override
-                public void onResponse(Response<ScanShop> response, Retrofit retrofit) {
-                    if (response==null){
-                        Toast.makeText(ActivityGetMonetActivity.this,"数据获取失败，请重试",Toast.LENGTH_SHORT).show();
-                        return;
+        try {
+            if (token==null || token.equals("")){
+                call= RetrofitService.getInstance().scanShop("", activityCode);
+                Toast.makeText(ActivityGetMonetActivity.this,"未登录",Toast.LENGTH_SHORT).show();
+            }else {
+                call= RetrofitService.getInstance().scanShop(token, activityCode);
+                call.enqueue(new Callback<ScanShop>() {
+                    @Override
+                    public void onResponse(Response<ScanShop> response, Retrofit retrofit) {
+                        if (response==null){
+                            Toast.makeText(ActivityGetMonetActivity.this,"数据获取失败，请重试",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (response.body().getStatus()==0){
+                            try {
+                                gmList = response.body().getList();
+                                setData();
+                            }catch (Exception e){
+                                Toast.makeText(ActivityGetMonetActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(ActivityGetMonetActivity.this,""+response.body().getMes(),Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if (response.body().getStatus()==0){
-                        gmList = response.body().getList();
-                        setData();
-                    }else{
-                        Toast.makeText(ActivityGetMonetActivity.this,""+response.body().getMes(),Toast.LENGTH_SHORT).show();
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+
                     }
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-
-                }
-            });
+                });
+            }
+        }catch (Exception e){
+            Toast.makeText(ActivityGetMonetActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setData() {
-        adapter=new GMAdapter();
-        lvGetMoney.setAdapter(adapter);
+        try {
+            adapter=new GMAdapter();
+            lvGetMoney.setAdapter(adapter);
+        }catch (Exception e){
+            Toast.makeText(ActivityGetMonetActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+        }
     }
 
     class GMAdapter extends BaseAdapter{
@@ -126,9 +142,13 @@ public class ActivityGetMonetActivity extends Activity{
             }
             ScanShop.ScanShopList gm = getItem(i);
             holder= (GMHolder) view.getTag();
-            Glide.with(getApplicationContext()).load(gm.getHeadPortrait()).into(holder.img);
-            holder.phone.setText(gm.getNickName()+"");
-            holder.money.setText("￥"+gm.getReturnPrice());
+            try {
+                Glide.with(getApplicationContext()).load(gm.getHeadPortrait()).into(holder.img);
+                holder.phone.setText(gm.getNickName()+"");
+                holder.money.setText("￥"+gm.getReturnPrice());
+            }catch (Exception e){
+                Toast.makeText(ActivityGetMonetActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+            }
             return view;
         }
 
@@ -139,8 +159,12 @@ public class ActivityGetMonetActivity extends Activity{
     }
 
     private void initView() {
-        lvGetMoney=(ListView)findViewById(R.id.lvGetMoney);
-        rlActivittyDescClose=(RelativeLayout)findViewById(R.id.rlActivittyDescClose);
+        try {
+            lvGetMoney=(ListView)findViewById(R.id.lvGetMoney);
+            rlActivittyDescClose=(RelativeLayout)findViewById(R.id.rlActivittyDescClose);
+        }catch (Exception e){
+            Toast.makeText(ActivityGetMonetActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

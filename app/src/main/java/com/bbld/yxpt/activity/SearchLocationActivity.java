@@ -84,35 +84,43 @@ public class SearchLocationActivity extends BaseActivity {
     }
 
     private void loadCity() {
-        Call<CityList> call= RetrofitService.getInstance().getCityList();
-        call.enqueue(new Callback<CityList>() {
-            @Override
-            public void onResponse(Response<CityList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    cityList=response.body().getList();
-                    brands=new ArrayList<CityList.CityListlist.CityListCityList>();
-                    for (int i=0;i<cityList.size();i++){
-                        List<CityList.CityListlist.CityListCityList> citise = cityList.get(i).getCityList();
-                        for (int j=0;j<citise.size();j++){
-                            CityList.CityListlist.CityListCityList brand = cityList.get(i).getCityList().get(j);
-                            brands.add(brand);
-                        }
+        try {
+            Call<CityList> call= RetrofitService.getInstance().getCityList();
+            call.enqueue(new Callback<CityList>() {
+                @Override
+                public void onResponse(Response<CityList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                    setLocationAdapter(brands);
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        try {
+                            cityList=response.body().getList();
+                            brands=new ArrayList<CityList.CityListlist.CityListCityList>();
+                            for (int i=0;i<cityList.size();i++){
+                                List<CityList.CityListlist.CityListCityList> citise = cityList.get(i).getCityList();
+                                for (int j=0;j<citise.size();j++){
+                                    CityList.CityListlist.CityListCityList brand = cityList.get(i).getCityList().get(j);
+                                    brands.add(brand);
+                                }
+                            }
+                            setLocationAdapter(brands);
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
     private void setLocationAdapter(ArrayList<CityList.CityListlist.CityListCityList> brands) {
         locationAdapter=new LoactionCityAdapter(SearchLocationActivity.this, brands);
@@ -121,24 +129,36 @@ public class SearchLocationActivity extends BaseActivity {
         locationAdapter.setOnItemClickSetChangeCity(new LoactionCityAdapter.OnItemClickSetChangeCity() {
             @Override
             public void OnItemClickSetChangeCity(int id, String name, String x, String y) {
-                tv_city.setText(name+"");
-                city=name;
-                rlCity.setVisibility(View.GONE);
-                lvSearchLocation.setVisibility(View.VISIBLE);
+                try {
+                    tv_city.setText(name+"");
+                    city=name;
+                    rlCity.setVisibility(View.GONE);
+                    lvSearchLocation.setVisibility(View.VISIBLE);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
     private void setListeners() {
-        etSearchLocation.addTextChangedListener(watcher);
+        try {
+            etSearchLocation.addTextChangedListener(watcher);
+        }catch (Exception e){
+            showToast(someException());
+        }
         ll_city.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (rlCity.getVisibility()==View.VISIBLE){
-                    rlCity.setVisibility(View.GONE);
-                    lvSearchLocation.setVisibility(View.VISIBLE);
-                }else{
-                    rlCity.setVisibility(View.VISIBLE);
-                    lvSearchLocation.setVisibility(View.GONE);
+                try {
+                    if (rlCity.getVisibility()==View.VISIBLE){
+                        rlCity.setVisibility(View.GONE);
+                        lvSearchLocation.setVisibility(View.VISIBLE);
+                    }else{
+                        rlCity.setVisibility(View.VISIBLE);
+                        lvSearchLocation.setVisibility(View.GONE);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
 
             }
@@ -146,10 +166,14 @@ public class SearchLocationActivity extends BaseActivity {
         sidrbar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
             public void onTouchingLetterChanged(String s) {
-                // 该字母首次出现的位置
-                int position = locationAdapter.getPositionForSection(s.charAt(0));
-                if (position != -1) {
-                    lvChangeCity.setSelection(position);
+                try {
+                    // 该字母首次出现的位置
+                    int position = locationAdapter.getPositionForSection(s.charAt(0));
+                    if (position != -1) {
+                        lvChangeCity.setSelection(position);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
@@ -157,11 +181,19 @@ public class SearchLocationActivity extends BaseActivity {
     OnGetPoiSearchResultListener onGetPoiSearchResultListener=new OnGetPoiSearchResultListener(){
         @Override
         public void onGetPoiResult(PoiResult poiResult){
-            if(poiResult.getAllPoi()!=null){
-                showToast(poiResult.getAllPoi().get(0).address+","+poiResult.getAllPoi().get(0).location+","
-                        +poiResult.getAllPoi().get(0).name);
-                List<PoiInfo> searchResult = poiResult.getAllPoi();
-                setSearchAdapter(searchResult);
+            try {
+                if(poiResult.getAllPoi()!=null){
+                    try {
+                        showToast(poiResult.getAllPoi().get(0).address+","+poiResult.getAllPoi().get(0).location+","
+                                +poiResult.getAllPoi().get(0).name);
+                        List<PoiInfo> searchResult = poiResult.getAllPoi();
+                        setSearchAdapter(searchResult);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
         }
 
@@ -177,14 +209,18 @@ public class SearchLocationActivity extends BaseActivity {
     };
 
     private void setSearchAdapter(List<PoiInfo> searchResult) {
-        List<Address> addressList=new ArrayList<Address>();
-        for (int i=0;i<searchResult.size();i++){
-            Address addressItem = new Address();
-            addressItem.setX(searchResult.get(i).location.latitude);
-            addressItem.setY(searchResult.get(i).location.longitude);
-            addressItem.setName(searchResult.get(i).name);
-            addressItem.setAddress(searchResult.get(i).address);
-            addressList.add(addressItem);
+        try {
+            List<Address> addressList=new ArrayList<Address>();
+            for (int i=0;i<searchResult.size();i++){
+                Address addressItem = new Address();
+                addressItem.setX(searchResult.get(i).location.latitude);
+                addressItem.setY(searchResult.get(i).location.longitude);
+                addressItem.setName(searchResult.get(i).name);
+                addressItem.setAddress(searchResult.get(i).address);
+                addressList.add(addressItem);
+            }
+        }catch (Exception e){
+            showToast(someException());
         }
     }
 
@@ -206,9 +242,13 @@ public class SearchLocationActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-            if (!s.toString().trim().equals("")){
-                poiCitySearchOption= new PoiCitySearchOption().city(city).keyword(etSearchLocation.getText()+"");
-                poiSearch.searchInCity(poiCitySearchOption);
+            try {
+                if (!s.toString().trim().equals("")){
+                    poiCitySearchOption= new PoiCitySearchOption().city(city).keyword(etSearchLocation.getText()+"");
+                    poiSearch.searchInCity(poiCitySearchOption);
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
         }
     };

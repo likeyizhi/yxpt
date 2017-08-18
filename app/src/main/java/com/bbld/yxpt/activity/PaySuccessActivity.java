@@ -34,22 +34,34 @@ public class PaySuccessActivity extends BaseActivity{
     private String shopName;
     @Override
     protected void initViewsAndEvents() {
-        tvAmount.setText(money+"");
-        tvShopName.setText(shopName+"");
-        Glide.with(getApplicationContext()).load(shopImg).into(ivShopImg);
+        try {
+            tvAmount.setText(money+"");
+            tvShopName.setText(shopName+"");
+            Glide.with(getApplicationContext()).load(shopImg).into(ivShopImg);
+        }catch (Exception e){
+            showToast(someException());
+        }
         setListeners();
     }
     private void setListeners(){
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(PaySuccessActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(PaySuccessActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         tvGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(PaySuccessActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(PaySuccessActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }

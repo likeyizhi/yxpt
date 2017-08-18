@@ -92,37 +92,49 @@ public class PersonalActivity extends BaseActivity{
             tv04.setText("0单");
             tvUseCount.setText("");
         }else{
-            Call<UserInfo> call=RetrofitService.getInstance().getUserInfo(new MyToken(PersonalActivity.this).getToken());
-            call.enqueue(new Callback<UserInfo>() {
-                @Override
-                public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
-                    if (response==null){
-                        showToast(responseFail());
-                        return;
+            try {
+                Call<UserInfo> call=RetrofitService.getInstance().getUserInfo(new MyToken(PersonalActivity.this).getToken());
+                call.enqueue(new Callback<UserInfo>() {
+                    @Override
+                    public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
+                        if (response==null){
+                            showToast(responseFail());
+                            return;
+                        }
+                        if (response.body().getStatus()==0){
+                            try {
+                                userInfo=response.body().getUserInfo();
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                            setData();
+                        }else{
+                            showToast(response.body().getMes());
+                        }
                     }
-                    if (response.body().getStatus()==0){
-                        userInfo=response.body().getUserInfo();
-                        setData();
-                    }else{
-                        showToast(response.body().getMes());
+                    @Override
+                    public void onFailure(Throwable throwable) {
                     }
-                }
-                @Override
-                public void onFailure(Throwable throwable) {
-                }
-            });
+                });
+            }catch (Exception e){
+                showToast(someException());
+            }
         }
 
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivHead);
-        tvMobile.setText(userInfo.getMobile()+"");
-        tv01.setText("￥"+userInfo.getTotialSale());
-        tv02.setText("￥"+userInfo.getReturnTotialSale());
-        tv03.setText("￥"+userInfo.getRewardTotial());
-        tv04.setText(userInfo.getRewardOrderCount()+"单");
-        tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用言闻享购物平台");
+        try {
+            Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivHead);
+            tvMobile.setText(userInfo.getMobile()+"");
+            tv01.setText("￥"+userInfo.getTotialSale());
+            tv02.setText("￥"+userInfo.getReturnTotialSale());
+            tv03.setText("￥"+userInfo.getRewardTotial());
+            tv04.setText(userInfo.getRewardOrderCount()+"单");
+            tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用言闻享购物平台");
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void loadToken() {
@@ -149,86 +161,122 @@ public class PersonalActivity extends BaseActivity{
         ivHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(PersonalDataActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(PersonalDataActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         tvMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(PersonalDataActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(PersonalDataActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(PersonalActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(PersonalActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         llPayMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
-                }else{
-                    readyGo(PayMoneyActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
+                        showToast("暂未登录");
+                    }else{
+                        readyGo(PayMoneyActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         llHaveToMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
-                }else{
-                    readyGo(HaveToMoneyActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
+                        showToast("暂未登录");
+                    }else{
+                        readyGo(HaveToMoneyActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         llReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
-                }else{
-                    readyGo(ReceiveMoneyActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
+                        showToast("暂未登录");
+                    }else{
+                        readyGo(ReceiveMoneyActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         llMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
-                }else{
-                    readyGo(MessageCenterActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
+                        showToast("暂未登录");
+                    }else{
+                        readyGo(MessageCenterActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         llHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
-                }else{
-                    readyGo(GuideActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
+                        showToast("暂未登录");
+                    }else{
+                        readyGo(GuideActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         tvFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
-                    showToast("暂未登录");
-                }else{
-                    readyGo(FeedbackActivity.class);
+                try {
+                    if (new MyToken(PersonalActivity.this).getToken()==null || new MyToken(PersonalActivity.this).getToken().equals("")){
+                        showToast("暂未登录");
+                    }else{
+                        readyGo(FeedbackActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });

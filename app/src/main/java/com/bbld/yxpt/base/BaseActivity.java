@@ -180,4 +180,8 @@ public abstract class BaseActivity extends AppCompatActivity{
     public String responseFail(){
         return getResources().getString(R.string.response_fail);
     }
+
+    public String someException(){
+        return getResources().getString(R.string.some_exception);
+    }
 }

@@ -69,6 +69,20 @@ public final class CameraManager {
 		previewCallback = new PreviewCallback(configManager);
 	}
 
+	public synchronized void setTorch(boolean newSetting) {
+		if (newSetting != configManager.getTorchState(camera)) {
+			if (camera != null) {
+				if (autoFocusManager != null) {
+					autoFocusManager.stop();
+				}
+				configManager.setTorch(camera, newSetting);
+				if (autoFocusManager != null) {
+					autoFocusManager.start();
+				}
+			}
+		}
+	}
+
 	/**
 	 * Opens the camera driver and initializes the hardware parameters.
 	 * 

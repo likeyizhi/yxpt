@@ -52,7 +52,11 @@ public class BankCardActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    srlMember.setRefreshing(false);
+                    try {
+                        srlMember.setRefreshing(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -68,7 +72,11 @@ public class BankCardActivity extends BaseActivity {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(BankCardActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(BankCardActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         srlMember.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,46 +99,58 @@ public class BankCardActivity extends BaseActivity {
         ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readyGo(AddBankCardActivity.class);
+                try {
+                    readyGo(AddBankCardActivity.class);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
     private void loadData(final boolean isLoadMore) {
-        Call<GetBankCardList> call= RetrofitService.getInstance().getBankCardList(new MyToken(BankCardActivity.this).getToken());
-        call.enqueue(new Callback<GetBankCardList>() {
-            @Override
-            public void onResponse(Response<GetBankCardList> response, Retrofit retrofit) {
-                if (response==null){
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    if (isLoadMore){
-                        List<GetBankCardList.GetBankCardListRes> productsAdd = response.body().getList();
-                        bankcardlist.addAll(productsAdd);
-                        adapter.notifyDataSetChanged();
-                    }else{
-                        bankcardlist = response.body().getList();
-                        if( bankcardlist.isEmpty()){
-                            setAdapter();
-                        }else{
-                            setAdapter();
-                        }
+        try {
+            Call<GetBankCardList> call= RetrofitService.getInstance().getBankCardList(new MyToken(BankCardActivity.this).getToken());
+            call.enqueue(new Callback<GetBankCardList>() {
+                @Override
+                public void onResponse(Response<GetBankCardList> response, Retrofit retrofit) {
+                    if (response==null){
+                        return;
                     }
-                }else{
-                    showToast(response.body().getMes()+"");
+                    if (response.body().getStatus()==0){
+                        if (isLoadMore){
+                            List<GetBankCardList.GetBankCardListRes> productsAdd = response.body().getList();
+                            bankcardlist.addAll(productsAdd);
+                            adapter.notifyDataSetChanged();
+                        }else{
+                            bankcardlist = response.body().getList();
+                            if( bankcardlist.isEmpty()){
+                                setAdapter();
+                            }else{
+                                setAdapter();
+                            }
+                        }
+                    }else{
+                        showToast(response.body().getMes()+"");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setAdapter() {
-        adapter=new BankCardListAdapter();
-        lvList.setAdapter(adapter);
+        try {
+            adapter=new BankCardListAdapter();
+            lvList.setAdapter(adapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class BankCardListAdapter extends BaseAdapter {
@@ -163,27 +183,31 @@ public class BankCardActivity extends BaseActivity {
             }
             holder= (BankCardListHolder) view.getTag();
             final GetBankCardList.GetBankCardListRes list = getItem(i);
-            holder.tvCardNo.setText("尾号"+list.getCardNo().substring(list.getCardNo().length()-4,list.getCardNo().length())+"("+list.getBankName()+")");
-            holder.tvBankName.setText(list.getBankName()+"");
-            if (i==0){
-                holder.ivLast.setVisibility(View.VISIBLE);
-            }else{
-                holder.ivLast.setVisibility(View.INVISIBLE);
-            }
-            Glide.with(getApplicationContext()).load(list.getBankLogo()).error(R.drawable.zwt).into(holder.ivBankLogo);
-            if (view!=null){
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent=new Intent();
-                        intent.putExtra("bankName", list.getBankName()+"");
-                        intent.putExtra("bankNo", list.getCardNo()+"");
-                        intent.putExtra("bankLogo", list.getBankLogo()+"");
-                        intent.putExtra("bankCardId", list.getBankCardID());
-                        setResult(7788,intent);
-                        finish();
-                    }
-                });
+            try {
+                holder.tvCardNo.setText("尾号"+list.getCardNo().substring(list.getCardNo().length()-4,list.getCardNo().length())+"("+list.getBankName()+")");
+                holder.tvBankName.setText(list.getBankName()+"");
+                if (i==0){
+                    holder.ivLast.setVisibility(View.VISIBLE);
+                }else{
+                    holder.ivLast.setVisibility(View.INVISIBLE);
+                }
+                Glide.with(getApplicationContext()).load(list.getBankLogo()).error(R.drawable.zwt).into(holder.ivBankLogo);
+                if (view!=null){
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent=new Intent();
+                            intent.putExtra("bankName", list.getBankName()+"");
+                            intent.putExtra("bankNo", list.getCardNo()+"");
+                            intent.putExtra("bankLogo", list.getBankLogo()+"");
+                            intent.putExtra("bankCardId", list.getBankCardID());
+                            setResult(7788,intent);
+                            finish();
+                        }
+                    });
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
             return view;
         }

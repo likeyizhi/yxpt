@@ -5,6 +5,8 @@ import com.bbld.yxpt.base.Constants;
 import com.bbld.yxpt.bean.AddBankCard;
 import com.bbld.yxpt.bean.AddPayOrder;
 import com.bbld.yxpt.bean.AddWithdrawa;
+import com.bbld.yxpt.bean.AlipayLoginParam;
+import com.bbld.yxpt.bean.AlipayUserInfo;
 import com.bbld.yxpt.bean.BankCardRecognition;
 import com.bbld.yxpt.bean.BankList;
 import com.bbld.yxpt.bean.BuyShopInfo;
@@ -320,5 +322,17 @@ public class RetrofitService {
      */
     public Call<WeiXinPayParam> getWeiXinPayParam(String token, String orderNo) {
         return retrofitInterface.getWeiXinPayParam(token,orderNo);
+    }
+    /**
+     * 支付宝登录授权所需信息
+     */
+    public Call<AlipayLoginParam> getAlipayLoginParam() {
+        return retrofitInterface.getAlipayLoginParam();
+    }
+    /**
+     * 支付宝登录授权所需信息
+     */
+    public Call<AlipayUserInfo> getAlipayUserInfo(String code) {
+        return retrofitInterface.getAlipayUserInfo(code);
     }
 }

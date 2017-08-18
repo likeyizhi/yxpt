@@ -40,33 +40,41 @@ public class GuideActivity extends BaseActivity{
     }
 
     private void loadData() {
-        Call<HelpList> call= RetrofitService.getInstance().getHelpList();
-        call.enqueue(new Callback<HelpList>() {
-            @Override
-            public void onResponse(Response<HelpList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<HelpList> call= RetrofitService.getInstance().getHelpList();
+            call.enqueue(new Callback<HelpList>() {
+                @Override
+                public void onResponse(Response<HelpList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        count=response.body().getCount();
+                        list=response.body().getList();
+                        setAdapter();
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    count=response.body().getCount();
-                    list=response.body().getList();
-                    setAdapter();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setAdapter() {
-        adapter=new GuideAdapter();
-        lvHelp.setAdapter(adapter);
+        try {
+            adapter=new GuideAdapter();
+            lvHelp.setAdapter(adapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class GuideAdapter extends BaseAdapter{
@@ -97,7 +105,11 @@ public class GuideActivity extends BaseActivity{
             }
             holder= (GuideHolder) view.getTag();
             HelpList.HelpListlist item = getItem(i);
-            holder.tvGuide.setText(item.getTitle());
+            try {
+                holder.tvGuide.setText(item.getTitle());
+            }catch (Exception e){
+                showToast(someException());
+            }
             return view;
         }
 

@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bbld.yxpt.R;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
@@ -36,19 +37,35 @@ public class ActivityDescActivity extends Activity{
         rlActivittyDescClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                overridePendingTransition(0,R.anim.zoomout);
+                try {
+                    finish();
+                    overridePendingTransition(0,R.anim.zoomout);
+                }catch (Exception e){
+                    Toast.makeText(ActivityDescActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void loadData() {
-        tvShowDesc.setText(desc);
+        try {
+            tvShowDesc.setText(desc);
+        }catch (Exception e){
+            Toast.makeText(ActivityDescActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initView() {
-        tvShowDesc=(TextView)findViewById(R.id.tvShowDesc);
-        rlActivittyDescClose=(RelativeLayout)findViewById(R.id.rlActivittyDescClose);
+        try {
+            tvShowDesc=(TextView)findViewById(R.id.tvShowDesc);
+        }catch (Exception e){
+            Toast.makeText(ActivityDescActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+        }
+        try {
+            rlActivittyDescClose=(RelativeLayout)findViewById(R.id.rlActivittyDescClose);
+        }catch (Exception e){
+            Toast.makeText(ActivityDescActivity.this,getString(R.string.some_exception),Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

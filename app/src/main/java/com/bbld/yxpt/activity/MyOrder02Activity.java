@@ -85,8 +85,12 @@ public class MyOrder02Activity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    loadMyOrder02Data();
-                    srl.setRefreshing(false);
+                    try {
+                        loadMyOrder02Data();
+                        srl.setRefreshing(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -105,17 +109,25 @@ public class MyOrder02Activity extends BaseActivity{
         rlBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle=new Bundle();
-                bundle.putString("shopActivityID",checkActivityID);
-                bundle.putString("activityTitle",aList.get(checkPosition).getTitle()+"");
-                readyGoForResult(MyOrder03Activity.class,606,bundle);
-                overridePendingTransition(R.anim.bottom_to_top,0);
+                try {
+                    Bundle bundle=new Bundle();
+                    bundle.putString("shopActivityID",checkActivityID);
+                    bundle.putString("activityTitle",aList.get(checkPosition).getTitle()+"");
+                    readyGoForResult(MyOrder03Activity.class,606,bundle);
+                    overridePendingTransition(R.anim.bottom_to_top,0);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(MyOrder02Activity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(MyOrder02Activity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -137,98 +149,122 @@ public class MyOrder02Activity extends BaseActivity{
     }
 
     private void loadBuyShopInfoData() {
-        Call<BuyShopInfo> call= RetrofitService.getInstance().getBuyShopInfo(token, shopId);
-        call.enqueue(new Callback<BuyShopInfo>() {
-            @Override
-            public void onResponse(Response<BuyShopInfo> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<BuyShopInfo> call= RetrofitService.getInstance().getBuyShopInfo(token, shopId);
+            call.enqueue(new Callback<BuyShopInfo>() {
+                @Override
+                public void onResponse(Response<BuyShopInfo> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        BuyShopInfo shopInfo = response.body();
+                        setBuyShopInfo(shopInfo);
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    BuyShopInfo shopInfo = response.body();
-                    setBuyShopInfo(shopInfo);
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setBuyShopInfo(BuyShopInfo shopInfo) {
-        Glide.with(getApplicationContext()).load(shopInfo.getShopBigImg()).into(ivShopImg);
-        tvShopName.setText(shopInfo.getShopName()+"");
-        aList=shopInfo.getList();
-        if (checkPosition==0){
-            checkActivityID=aList.get(checkPosition).getShopActivityID();
+        try {
+            Glide.with(getApplicationContext()).load(shopInfo.getShopBigImg()).into(ivShopImg);
+            tvShopName.setText(shopInfo.getShopName()+"");
+            aList=shopInfo.getList();
+            if (checkPosition==0){
+                checkActivityID=aList.get(checkPosition).getShopActivityID();
+            }
+        }catch (Exception e){
+            showToast(someException());
         }
-        setActivityAdapter();
-        loadMyOrder02Data();
+        try {
+            setActivityAdapter();
+            loadMyOrder02Data();
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void loadMyOrder02Data() {
-        Call<ShopActivityOrderList> call=RetrofitService.getInstance().getShopActivityOrderList(token, checkActivityID);
-        call.enqueue(new Callback<ShopActivityOrderList>() {
-            @Override
-            public void onResponse(Response<ShopActivityOrderList> response, Retrofit retrofit) {
-                if (response.body()==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    returnList=response.body().getReturnList();
-                    nextList=response.body().getNextList();
-                    myOrders=new ArrayList<MyOrder02>();
-                    for (int r=0;r<returnList.size();r++){
-                        MyOrder02 myOrder=new MyOrder02();
-                        myOrder.setNOID(returnList.get(r).getNOID());
-                        myOrder.setNickName(returnList.get(r).getNickName());
-                        myOrder.setHeadPortrait(returnList.get(r).getHeadPortrait());
-                        myOrder.setActivityTitle(returnList.get(r).getActivityTitle());
-                        myOrder.setOrderNo(returnList.get(r).getOrderNo());
-                        myOrder.setActivityDiscount(returnList.get(r).getActivityDiscount());
-                        myOrder.setEnterAmount(returnList.get(r).getEnterAmount());
-                        myOrder.setAddDate(returnList.get(r).getAddDate());
-                        myOrder.setIsReturn(returnList.get(r).getIsReturn());
-                        myOrder.setReturnStatus(returnList.get(r).getReturnStatus());
-                        myOrders.add(myOrder);
+        try {
+            Call<ShopActivityOrderList> call=RetrofitService.getInstance().getShopActivityOrderList(token, checkActivityID);
+            call.enqueue(new Callback<ShopActivityOrderList>() {
+                @Override
+                public void onResponse(Response<ShopActivityOrderList> response, Retrofit retrofit) {
+                    if (response.body()==null){
+                        showToast(responseFail());
+                        return;
                     }
-                    for (int n=0;n<nextList.size();n++){
-                        MyOrder02 myOrder=new MyOrder02();
-                        myOrder.setNOID(nextList.get(n).getNOID());
-                        myOrder.setNickName(nextList.get(n).getNickName());
-                        myOrder.setHeadPortrait(nextList.get(n).getHeadPortrait());
-                        myOrder.setActivityTitle(nextList.get(n).getActivityTitle());
-                        myOrder.setOrderNo(nextList.get(n).getOrderNo());
-                        myOrder.setActivityDiscount(nextList.get(n).getActivityDiscount());
-                        myOrder.setEnterAmount(nextList.get(n).getEnterAmount());
-                        myOrder.setAddDate(nextList.get(n).getAddDate());
-                        myOrder.setIsReturn(nextList.get(n).getIsReturn());
-                        myOrder.setReturnStatus(nextList.get(n).getReturnStatus());
-                        myOrders.add(myOrder);
+                    if (response.body().getStatus()==0){
+                        try {
+                            returnList=response.body().getReturnList();
+                            nextList=response.body().getNextList();
+                            myOrders=new ArrayList<MyOrder02>();
+                            for (int r=0;r<returnList.size();r++){
+                                MyOrder02 myOrder=new MyOrder02();
+                                myOrder.setNOID(returnList.get(r).getNOID());
+                                myOrder.setNickName(returnList.get(r).getNickName());
+                                myOrder.setHeadPortrait(returnList.get(r).getHeadPortrait());
+                                myOrder.setActivityTitle(returnList.get(r).getActivityTitle());
+                                myOrder.setOrderNo(returnList.get(r).getOrderNo());
+                                myOrder.setActivityDiscount(returnList.get(r).getActivityDiscount());
+                                myOrder.setEnterAmount(returnList.get(r).getEnterAmount());
+                                myOrder.setAddDate(returnList.get(r).getAddDate());
+                                myOrder.setIsReturn(returnList.get(r).getIsReturn());
+                                myOrder.setReturnStatus(returnList.get(r).getReturnStatus());
+                                myOrders.add(myOrder);
+                            }
+                            for (int n=0;n<nextList.size();n++){
+                                MyOrder02 myOrder=new MyOrder02();
+                                myOrder.setNOID(nextList.get(n).getNOID());
+                                myOrder.setNickName(nextList.get(n).getNickName());
+                                myOrder.setHeadPortrait(nextList.get(n).getHeadPortrait());
+                                myOrder.setActivityTitle(nextList.get(n).getActivityTitle());
+                                myOrder.setOrderNo(nextList.get(n).getOrderNo());
+                                myOrder.setActivityDiscount(nextList.get(n).getActivityDiscount());
+                                myOrder.setEnterAmount(nextList.get(n).getEnterAmount());
+                                myOrder.setAddDate(nextList.get(n).getAddDate());
+                                myOrder.setIsReturn(nextList.get(n).getIsReturn());
+                                myOrder.setReturnStatus(nextList.get(n).getReturnStatus());
+                                myOrders.add(myOrder);
+                            }
+                            setMyOrder02Adapter();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
                     }
-                    setMyOrder02Adapter();
-                }else{
-                    showToast(response.body().getMes());
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setMyOrder02Adapter() {
-        mo2NAdapter=new MyOrder02NextAdapter();
-        lvMyOrder02.setAdapter(mo2NAdapter);
-        lvMyOrder02.setSelection(returnList.size());
+        try {
+            mo2NAdapter=new MyOrder02NextAdapter();
+            lvMyOrder02.setAdapter(mo2NAdapter);
+            lvMyOrder02.setSelection(returnList.size());
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class MyOrder02NextAdapter extends BaseAdapter{
@@ -257,6 +293,7 @@ public class MyOrder02Activity extends BaseActivity{
                 nextHolder.ivHeadPortrait=(ImageView)view.findViewById(R.id.ivHeadPortrait);
                 nextHolder.tvNickName=(TextView)view.findViewById(R.id.tvNickName);
                 nextHolder.tvEnterAmount=(TextView)view.findViewById(R.id.tvEnterAmount);
+                nextHolder.tvEnterAmountTMD=(TextView)view.findViewById(R.id.tvEnterAmountTMD);
                 nextHolder.tvAddDate=(TextView)view.findViewById(R.id.tvAddDate);
                 nextHolder.tvReturnStatus=(TextView)view.findViewById(R.id.tvReturnStatus);
                 nextHolder.llJuzhong=(LinearLayout) view.findViewById(R.id.llJuzhong);
@@ -265,41 +302,58 @@ public class MyOrder02Activity extends BaseActivity{
             }
             nextHolder= (MyOrder02NextHolder) view.getTag();
             MyOrder02 item = getItem(i);
-            Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(nextHolder.ivHeadPortrait);
-            nextHolder.tvNickName.setText(item.getNickName()+"");
-            nextHolder.tvEnterAmount.setText("￥"+item.getEnterAmount());
-            nextHolder.tvAddDate.setText("订单时间："+item.getAddDate()+"");
-            nextHolder.tvReturnStatus.setText(item.getReturnStatus()+"");
-            if(item.getReturnStatus().equals("已返还")){
-                nextHolder.llBujuzhong.setVisibility(View.VISIBLE);
-                nextHolder.llJuzhong.setVisibility(View.GONE);
-                nextHolder.tvEnterAmount.setTextColor(Color.rgb(153,153,153));
-            }else{
-                nextHolder.llBujuzhong.setVisibility(View.GONE);
-                nextHolder.llJuzhong.setVisibility(View.VISIBLE);
-                nextHolder.tvEnterAmount.setTextColor(Color.rgb(255,38,38));
+            try {
+                Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(nextHolder.ivHeadPortrait);
+                nextHolder.tvNickName.setText(item.getNickName()+"");
+                nextHolder.tvEnterAmount.setText("￥"+item.getEnterAmount());
+                nextHolder.tvEnterAmountTMD.setText("￥"+item.getEnterAmount());
+                nextHolder.tvAddDate.setText("订单时间："+item.getAddDate()+"");
+                nextHolder.tvReturnStatus.setText(item.getReturnStatus()+"");
+                if(item.getReturnStatus().equals("已返还")){
+                    try {
+                        nextHolder.llBujuzhong.setVisibility(View.VISIBLE);
+                        nextHolder.llJuzhong.setVisibility(View.GONE);
+                        nextHolder.tvEnterAmount.setTextColor(Color.rgb(153,153,153));
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
+                }else{
+                    try {
+                        nextHolder.llBujuzhong.setVisibility(View.GONE);
+                        nextHolder.llJuzhong.setVisibility(View.VISIBLE);
+                        nextHolder.tvEnterAmount.setTextColor(Color.rgb(255,38,38));
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
             return view;
         }
 
         class MyOrder02NextHolder {
             ImageView ivHeadPortrait;
-            TextView tvNickName,tvEnterAmount,tvAddDate,tvReturnStatus;
+            TextView tvNickName,tvEnterAmount,tvAddDate,tvReturnStatus,tvEnterAmountTMD;
             LinearLayout llJuzhong,llBujuzhong;
         }
     }
 
     private void setActivityAdapter() {
-        //新建一个线性布局管理器
-        LinearLayoutManager manager=new LinearLayoutManager(this);
-        //设置recyclerview的布局管理器
-        rvShopActivity.setLayoutManager(manager);
-        //设置水平方向
-        manager.setOrientation(OrientationHelper.HORIZONTAL);
-        //新建适配器
-        aAdapter=new ActivityAdapter();
-        //设置recyclerview的适配器
-        rvShopActivity.setAdapter(aAdapter);
+        try {
+            //新建一个线性布局管理器
+            LinearLayoutManager manager=new LinearLayoutManager(this);
+            //设置recyclerview的布局管理器
+            rvShopActivity.setLayoutManager(manager);
+            //设置水平方向
+            manager.setOrientation(OrientationHelper.HORIZONTAL);
+            //新建适配器
+            aAdapter=new ActivityAdapter();
+            //设置recyclerview的适配器
+            rvShopActivity.setAdapter(aAdapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ActivityHolder>{
@@ -311,24 +365,36 @@ public class MyOrder02Activity extends BaseActivity{
 
         @Override
         public void onBindViewHolder(ActivityHolder holder, final int position) {
-            holder.tvActivityName.setText(aList.get(position).getTitle()+"");
+            try {
+                holder.tvActivityName.setText(aList.get(position).getTitle()+"");
+            }catch (Exception e){
+                showToast(someException());
+            }
             holder.tvActivityName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    checkPosition=position;
-                    checkActivityID=aList.get(checkPosition).getShopActivityID();
-                    aAdapter.notifyDataSetChanged();
-                    loadMyOrder02Data();
+                    try {
+                        checkPosition=position;
+                        checkActivityID=aList.get(checkPosition).getShopActivityID();
+                        aAdapter.notifyDataSetChanged();
+                        loadMyOrder02Data();
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                 }
             });
-            if (checkPosition==position){
-                holder.tvLine.setVisibility(View.VISIBLE);
-                holder.tvActivityName.setBackgroundResource(R.drawable.bg_shadowy);
-            }else{
-                holder.tvLine.setVisibility(View.INVISIBLE);
-                holder.tvActivityName.setBackgroundResource(R.drawable.bg_shadow);
+            try {
+                if (checkPosition==position){
+                    holder.tvLine.setVisibility(View.VISIBLE);
+                    holder.tvActivityName.setBackgroundResource(R.drawable.bg_shadowy);
+                }else{
+                    holder.tvLine.setVisibility(View.INVISIBLE);
+                    holder.tvActivityName.setBackgroundResource(R.drawable.bg_shadow);
+                }
+                tvBottom.setText(Html.fromHtml("<font color=\"#0BD28A\">"+"\""+aList.get(checkPosition).getTitle()+"\""+"</font>"+"活动我的订单排行(共"+aList.get(checkPosition).getOrderCount()+"单)"));
+            }catch (Exception e){
+                showToast(someException());
             }
-            tvBottom.setText(Html.fromHtml("<font color=\"#0BD28A\">"+"\""+aList.get(checkPosition).getTitle()+"\""+"</font>"+"活动我的订单排行(共"+aList.get(checkPosition).getOrderCount()+"单)"));
         }
 
         @Override
@@ -361,27 +427,35 @@ public class MyOrder02Activity extends BaseActivity{
     }
 
     private void loadBackData() {
-        Call<MyOrderReturnInfo> call=RetrofitService.getInstance().getMyOrderReturnInfo(token,OrderID);
-        call.enqueue(new Callback<MyOrderReturnInfo>() {
-            @Override
-            public void onResponse(Response<MyOrderReturnInfo> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
+        try {
+            Call<MyOrderReturnInfo> call=RetrofitService.getInstance().getMyOrderReturnInfo(token,OrderID);
+            call.enqueue(new Callback<MyOrderReturnInfo>() {
+                @Override
+                public void onResponse(Response<MyOrderReturnInfo> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+                        try {
+                            infoList=response.body().getList();
+                            setBackAdapter();
+                        }catch (Exception e){
+                            showToast(someException());
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-                if (response.body().getStatus()==0){
-                    infoList=response.body().getList();
-                    setBackAdapter();
-                }else{
-                    showToast(response.body().getMes());
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setBackAdapter() {
@@ -415,6 +489,7 @@ public class MyOrder02Activity extends BaseActivity{
                 nextHolder.ivHeadPortrait = (ImageView) view.findViewById(R.id.ivHeadPortrait);
                 nextHolder.tvNickName = (TextView) view.findViewById(R.id.tvNickName);
                 nextHolder.tvEnterAmount = (TextView) view.findViewById(R.id.tvEnterAmount);
+                nextHolder.tvEnterAmountTMD = (TextView) view.findViewById(R.id.tvEnterAmountTMD);
                 nextHolder.tvAddDate = (TextView) view.findViewById(R.id.tvAddDate);
                 nextHolder.tvReturnStatus = (TextView) view.findViewById(R.id.tvReturnStatus);
                 nextHolder.llJuzhong = (LinearLayout) view.findViewById(R.id.llJuzhong);
@@ -423,26 +498,39 @@ public class MyOrder02Activity extends BaseActivity{
             }
             nextHolder = (MyOrderBackHolder) view.getTag();
             MyOrderReturnInfo.MyOrderReturnInfoList item = getItem(i);
-            Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(nextHolder.ivHeadPortrait);
-            nextHolder.tvNickName.setText(item.getNickName() + "");
-            nextHolder.tvEnterAmount.setText("￥" + item.getEnterAmount());
-            nextHolder.tvAddDate.setText("订单时间：" + item.getAddDate() + "");
-            nextHolder.tvReturnStatus.setText(item.getReturnStatus() + "");
-            if (item.getReturnStatus().equals("已返还")) {
-                nextHolder.llBujuzhong.setVisibility(View.VISIBLE);
-                nextHolder.llJuzhong.setVisibility(View.GONE);
-                nextHolder.tvEnterAmount.setTextColor(Color.rgb(153, 153, 153));
-            } else {
-                nextHolder.llBujuzhong.setVisibility(View.GONE);
-                nextHolder.llJuzhong.setVisibility(View.VISIBLE);
-                nextHolder.tvEnterAmount.setTextColor(Color.rgb(255, 38, 38));
+            try {
+                Glide.with(getApplicationContext()).load(item.getHeadPortrait()).into(nextHolder.ivHeadPortrait);
+                nextHolder.tvNickName.setText(item.getNickName() + "");
+                nextHolder.tvEnterAmount.setText("￥" + item.getEnterAmount());
+                nextHolder.tvEnterAmountTMD.setText("￥" + item.getEnterAmount());
+                nextHolder.tvAddDate.setText("订单时间：" + item.getAddDate() + "");
+                nextHolder.tvReturnStatus.setText(item.getReturnStatus() + "");
+                if (item.getReturnStatus().equals("已返还")) {
+                    try {
+                        nextHolder.llBujuzhong.setVisibility(View.VISIBLE);
+                        nextHolder.llJuzhong.setVisibility(View.GONE);
+                        nextHolder.tvEnterAmount.setTextColor(Color.rgb(153, 153, 153));
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
+                } else {
+                    try {
+                        nextHolder.llBujuzhong.setVisibility(View.GONE);
+                        nextHolder.llJuzhong.setVisibility(View.VISIBLE);
+                        nextHolder.tvEnterAmount.setTextColor(Color.rgb(255, 38, 38));
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
+                }
+            }catch (Exception e){
+                showToast(someException());
             }
             return view;
         }
 
         class MyOrderBackHolder {
             ImageView ivHeadPortrait;
-            TextView tvNickName, tvEnterAmount, tvAddDate, tvReturnStatus;
+            TextView tvNickName, tvEnterAmount, tvAddDate, tvReturnStatus,tvEnterAmountTMD;
             LinearLayout llJuzhong, llBujuzhong;
         }
     }

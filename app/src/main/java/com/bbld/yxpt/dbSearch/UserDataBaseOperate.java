@@ -25,6 +25,10 @@ public class UserDataBaseOperate {
 	public long insertToUser(SearchDBBean searchBean) {
 		ContentValues values = new ContentValues();
 		values.put(UserSQLiteOpenHelper.COL_SHOP_NAME, searchBean.getName());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_ADDR, searchBean.getAddr());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_TYPE, searchBean.getType());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_SHOPX, searchBean.getPointX());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_SHOPY, searchBean.getPointY());
 		return mDB.insert(UserSQLiteOpenHelper.DATABASE_TABLE_USER, null,
 				values);
 	}
@@ -32,6 +36,10 @@ public class UserDataBaseOperate {
 	public long updateName(SearchDBBean searchBean) {
 		ContentValues values = new ContentValues();
 		values.put(UserSQLiteOpenHelper.COL_SHOP_NAME, searchBean.getName());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_ADDR, searchBean.getAddr());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_TYPE, searchBean.getType());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_SHOPX, searchBean.getPointX());
+		values.put(UserSQLiteOpenHelper.COL_SHOP_SHOPY, searchBean.getPointY());
 		return mDB.update(UserSQLiteOpenHelper.DATABASE_TABLE_USER, values,
 				"shopname=?", new String[] { ""+searchBean.getName() });
 	}
@@ -77,6 +85,14 @@ public class UserDataBaseOperate {
 				SearchDBBean searchBean = new SearchDBBean();
 				searchBean.setName(cursor.getString(cursor
 						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_NAME)));
+				searchBean.setAddr(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_ADDR)));
+				searchBean.setType(cursor.getInt(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_TYPE)));
+				searchBean.setPointX(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPX)));
+				searchBean.setPointY(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPY)));
 				searchBeans.add(searchBean);
 			}
 			cursor.close();
@@ -93,6 +109,14 @@ public class UserDataBaseOperate {
 				searchBean = new SearchDBBean();
 				searchBean.setName(cursor.getString(cursor
 						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_NAME)));
+				searchBean.setAddr(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_ADDR)));
+				searchBean.setType(cursor.getInt(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_TYPE)));
+				searchBean.setPointX(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPX)));
+				searchBean.setPointY(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPY)));
 			}
 			cursor.close();
 		}
@@ -123,6 +147,52 @@ public class UserDataBaseOperate {
 				SearchDBBean searchBean = new SearchDBBean();
 				searchBean.setName(cursor.getString(cursor
 						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_NAME)));
+				searchBean.setAddr(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_ADDR)));
+				searchBean.setType(cursor.getInt(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_TYPE)));
+				searchBean.setPointX(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPX)));
+				searchBean.setPointY(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPY)));
+				searchBeans.add(searchBean);
+			}
+			cursor.close();
+		}
+		return searchBeans;
+	}
+	public List<SearchDBBean> findUserByAddr(String shopaddr) {
+
+		List<SearchDBBean> searchBeans = new ArrayList<SearchDBBean>();
+		//模糊查询
+//		Cursor cursor = mDB.query(UserSQLiteOpenHelper.DATABASE_TABLE_USER,
+//				null, UserSQLiteOpenHelper.COL_PRODUCT_ID + " like?",
+//				new String[] {"%"+productId+"%"}, null, null, UserSQLiteOpenHelper.COL_ID
+//				+ " asc");
+
+		Cursor cursor = mDB.query(UserSQLiteOpenHelper.DATABASE_TABLE_USER,
+			null, UserSQLiteOpenHelper.COL_SHOP_ADDR + " =?",
+			new String[] {shopaddr}, null, null, UserSQLiteOpenHelper.COL_ID
+			+ " asc");
+
+		//多个条件查询
+//		Cursor cursor = mDB.query(UserSQLiteOpenHelper.DATABASE_TABLE_USER,
+//				null, UserSQLiteOpenHelper.COL_NAME + " like?"+" and "+UserSQLiteOpenHelper.COL_ID+" >?",
+//				new String[] {"%"+name+"%",2+""}, null, null, UserSQLiteOpenHelper.COL_ID
+//				+ " desc");
+		if (null != cursor) {
+			while (cursor.moveToNext()) {
+				SearchDBBean searchBean = new SearchDBBean();
+				searchBean.setName(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_NAME)));
+				searchBean.setAddr(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_ADDR)));
+				searchBean.setType(cursor.getInt(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_TYPE)));
+				searchBean.setPointX(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPX)));
+				searchBean.setPointY(cursor.getString(cursor
+						.getColumnIndex(UserSQLiteOpenHelper.COL_SHOP_SHOPY)));
 				searchBeans.add(searchBean);
 			}
 			cursor.close();

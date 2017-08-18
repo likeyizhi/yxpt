@@ -92,7 +92,11 @@ public class PersonalNewActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    srl.setRefreshing(false);
+                    try {
+                        srl.setRefreshing(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -108,76 +112,96 @@ public class PersonalNewActivity extends BaseActivity{
         setListeners();
     }
     private  void loadMessage(){
-        Call<GetMessageCount> call= RetrofitService.getInstance().getMessageCount(new MyToken(PersonalNewActivity.this).getToken()+"");
-        call.enqueue(new Callback<GetMessageCount>() {
-            @Override
-            public void onResponse(Response<GetMessageCount> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast("获取数据失败");
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    if(response.body().getCount()==0){
-                        ivRing.setImageResource(R.mipmap.lingdg);
-                    }else{
-                        ivRing.setImageResource(R.mipmap.lingdgdian);
-                    }
-                }else{
-
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
-
-    }
-
-    private void loadBottomData(final boolean isLoadMore) {
-        if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-            //未登录状态
-            lvOrder.setVisibility(View.GONE);
-            WeiboDialogUtils.closeDialog(mWeiboDialog);
-        }else{
-            lvOrder.setVisibility(View.VISIBLE);
-            Call<UserOrderList> call= RetrofitService.getInstance().getUserOrderList(new MyToken(PersonalNewActivity.this).getToken(),pageIndex);
-            call.enqueue(new Callback<UserOrderList>() {
+        try {
+            Call<GetMessageCount> call= RetrofitService.getInstance().getMessageCount(new MyToken(PersonalNewActivity.this).getToken()+"");
+            call.enqueue(new Callback<GetMessageCount>() {
                 @Override
-                public void onResponse(Response<UserOrderList> response, Retrofit retrofit) {
+                public void onResponse(Response<GetMessageCount> response, Retrofit retrofit) {
                     if (response==null){
-                        showToast(responseFail());
+                        showToast("获取数据失败");
                         return;
                     }
                     if (response.body().getStatus()==0){
-//                    showToast(token+","+pageIndex+","+pageSize+","+response.body().getMes());
-                        count=response.body().getCount();
-                        total=response.body().getTotal();
-                        if (isLoadMore){
-                            List<UserOrderList.UserOrderListlist> ordersAdd = response.body().getList();
-                            orders.addAll(ordersAdd);
-                            orderAdapter.notifyDataSetChanged();
+                        if(response.body().getCount()==0){
+                            ivRing.setImageResource(R.mipmap.lingdg);
                         }else{
-                            orders = response.body().getList();
-                            setBottonAdapter();
+                            ivRing.setImageResource(R.mipmap.lingdgdian);
                         }
                     }else{
-                        showToast(response.body().getMes());
+
                     }
-                    WeiboDialogUtils.closeDialog(mWeiboDialog);
                 }
+
                 @Override
                 public void onFailure(Throwable throwable) {
 
                 }
             });
+        }catch (Exception e){
+            showToast(someException());
+        }
+
+    }
+
+    private void loadBottomData(final boolean isLoadMore) {
+        if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+            try {
+                //未登录状态
+                lvOrder.setVisibility(View.GONE);
+                WeiboDialogUtils.closeDialog(mWeiboDialog);
+            }catch (Exception e){
+                showToast(someException());
+            }
+        }else{
+            try {
+                lvOrder.setVisibility(View.VISIBLE);
+                Call<UserOrderList> call= RetrofitService.getInstance().getUserOrderList(new MyToken(PersonalNewActivity.this).getToken(),pageIndex);
+                call.enqueue(new Callback<UserOrderList>() {
+                    @Override
+                    public void onResponse(Response<UserOrderList> response, Retrofit retrofit) {
+                        if (response==null){
+                            showToast(responseFail());
+                            return;
+                        }
+                        if (response.body().getStatus()==0){
+//                    showToast(token+","+pageIndex+","+pageSize+","+response.body().getMes());
+                            try {
+                                count=response.body().getCount();
+                                total=response.body().getTotal();
+                                if (isLoadMore){
+                                    List<UserOrderList.UserOrderListlist> ordersAdd = response.body().getList();
+                                    orders.addAll(ordersAdd);
+                                    orderAdapter.notifyDataSetChanged();
+                                }else{
+                                    orders = response.body().getList();
+                                    setBottonAdapter();
+                                }
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                        }else{
+                            showToast(response.body().getMes());
+                        }
+                        WeiboDialogUtils.closeDialog(mWeiboDialog);
+                    }
+                    @Override
+                    public void onFailure(Throwable throwable) {
+
+                    }
+                });
+            }catch (Exception e){
+                showToast(someException());
+            }
         }
     }
 
     private void setBottonAdapter() {
-        orderAdapter=new OrderAdapter();
-        lvOrder.setAdapter(orderAdapter);
+        try{
+            orderAdapter=new OrderAdapter();
+            lvOrder.setAdapter(orderAdapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class OrderAdapter extends BaseAdapter{
@@ -212,17 +236,21 @@ public class PersonalNewActivity extends BaseActivity{
             }
             UserOrderList.UserOrderListlist order = getItem(i);
             orderHolder= (OrderHolder) view.getTag();
-            orderHolder.tvShopName.setText(order.getShopName()+"");
-            orderHolder.tvDate.setText("消费时间："+order.getAddDate()+"");
-            orderHolder.tvEnterAmount.setText("￥"+order.getEnterAmount()+"");
-            if (order.getReturnStatus().equals("已返还")){
-                orderHolder.ivReturnStatus.setVisibility(View.VISIBLE);
-                orderHolder.tvEnterAmount.setTextColor(Color.rgb(188,188,188));
-            }else{
-                orderHolder.ivReturnStatus.setVisibility(View.GONE);
-                orderHolder.tvEnterAmount.setTextColor(Color.rgb(11,210,138));
+            try{
+                orderHolder.tvShopName.setText(order.getShopName()+"");
+                orderHolder.tvDate.setText("消费时间："+order.getAddDate()+"");
+                orderHolder.tvEnterAmount.setText("￥"+order.getEnterAmount()+"");
+                if (order.getReturnStatus().equals("已返还")){
+                    orderHolder.ivReturnStatus.setVisibility(View.VISIBLE);
+                    orderHolder.tvEnterAmount.setTextColor(Color.rgb(188,188,188));
+                }else{
+                    orderHolder.ivReturnStatus.setVisibility(View.GONE);
+                    orderHolder.tvEnterAmount.setTextColor(Color.rgb(11,210,138));
+                }
+                Glide.with(getApplicationContext()).load(order.getShopImg()).into(orderHolder.ivHead);
+            }catch (Exception e){
+                showToast(someException());
             }
-            Glide.with(getApplicationContext()).load(order.getShopImg()).into(orderHolder.ivHead);
             return view;
         }
 
@@ -232,53 +260,72 @@ public class PersonalNewActivity extends BaseActivity{
         }
     }
 
-    private void setListeners() {
+    private void setListeners(){
         ivShopImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(PersonalDataActivity.class);
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(PersonalDataActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         tvShopName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(PersonalDataActivity.class);
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(PersonalDataActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         tvTiXian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(WithdrawscashActivity.class);
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(WithdrawscashActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                srl.setRefreshing(false);
-                ActivityManagerUtil.getInstance().finishActivity(PersonalNewActivity.this);
+                try {
+                    srl.setRefreshing(false);
+                    ActivityManagerUtil.getInstance().finishActivity(PersonalNewActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
         ivRing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    readyGo(LoginActivity.class);
-                }else{
-                    setMessageRead();
-
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        setMessageRead();
                         readyGo(MessageCenterActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
@@ -304,16 +351,20 @@ public class PersonalNewActivity extends BaseActivity{
             private boolean isBottom;
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-                switch (i) {
-                    case SCROLL_STATE_FLING:
-                        //Log.i("info", "SCROLL_STATE_FLING");
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        if (isBottom) {
-                            pageIndex++;
-                            loadBottomData(true);
-                        }
-                        break;
+                try {
+                    switch (i) {
+                        case SCROLL_STATE_FLING:
+                            //Log.i("info", "SCROLL_STATE_FLING");
+                            break;
+                        case SCROLL_STATE_IDLE:
+                            if (isBottom) {
+                                pageIndex++;
+                                loadBottomData(true);
+                            }
+                            break;
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
 
@@ -331,10 +382,14 @@ public class PersonalNewActivity extends BaseActivity{
         llPerson01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(PayMoneyActivity.class);
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(PayMoneyActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
@@ -342,10 +397,14 @@ public class PersonalNewActivity extends BaseActivity{
         llPerson02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(ReceiveMoneyActivity.class);
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(ReceiveMoneyActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
@@ -353,35 +412,43 @@ public class PersonalNewActivity extends BaseActivity{
         llPerson03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-                    readyGo(LoginActivity.class);
-                }else{
-                    readyGo(HaveToMoneyActivity.class);
+                try {
+                    if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                        readyGo(LoginActivity.class);
+                    }else{
+                        readyGo(HaveToMoneyActivity.class);
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
         });
     }
     private  void  setMessageRead(){
-        Call<SetMessageRead> call= RetrofitService.getInstance().setMessageRead(new MyToken(PersonalNewActivity.this).getToken()+"");
-        call.enqueue(new Callback<SetMessageRead>() {
-            @Override
-            public void onResponse(Response<SetMessageRead> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast("获取数据失败");
-                    return;
+        try {
+            Call<SetMessageRead> call= RetrofitService.getInstance().setMessageRead(new MyToken(PersonalNewActivity.this).getToken()+"");
+            call.enqueue(new Callback<SetMessageRead>() {
+                @Override
+                public void onResponse(Response<SetMessageRead> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast("获取数据失败");
+                        return;
+                    }
+                    if (response.body().getStatus()==0){
+
+                    }else{
+
+                    }
                 }
-                if (response.body().getStatus()==0){
 
-                }else{
+                @Override
+                public void onFailure(Throwable throwable) {
 
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-        });
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void loadToken() {
@@ -404,45 +471,57 @@ public class PersonalNewActivity extends BaseActivity{
     }
 
     private void loadData() {
-        mWeiboDialog = WeiboDialogUtils.createLoadingDialog(PersonalNewActivity.this, "加载中...");
-        Glide.with(getApplicationContext()).load(new MyToken(PersonalNewActivity.this).getSPHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
-        if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
-            Glide.with(getApplicationContext()).load(R.mipmap.head).into(ivShopImg);
-            tvShopName.setText("您还未登录");
-            tvXF.setText("￥0.00");
-            tvJL.setText("￥0.00");
-            tvMyOrder.setText("￥0.00");
-            tvUseCount.setText("");
-        }else{
-            Call<UserInfo> call=RetrofitService.getInstance().getUserInfo(new MyToken(PersonalNewActivity.this).getToken());
-            call.enqueue(new Callback<UserInfo>() {
-                @Override
-                public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
-                    if (response==null){
-                        showToast(responseFail());
-                        return;
+        try {
+            mWeiboDialog = WeiboDialogUtils.createLoadingDialog(PersonalNewActivity.this, "加载中...");
+            Glide.with(getApplicationContext()).load(new MyToken(PersonalNewActivity.this).getSPHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
+            if (new MyToken(PersonalNewActivity.this).getToken()==null || new MyToken(PersonalNewActivity.this).getToken().equals("")){
+                Glide.with(getApplicationContext()).load(R.mipmap.head).into(ivShopImg);
+                tvShopName.setText("您还未登录");
+                tvXF.setText("￥0.00");
+                tvJL.setText("￥0.00");
+                tvMyOrder.setText("￥0.00");
+                tvUseCount.setText("");
+            }else{
+                Call<UserInfo> call=RetrofitService.getInstance().getUserInfo(new MyToken(PersonalNewActivity.this).getToken());
+                call.enqueue(new Callback<UserInfo>() {
+                    @Override
+                    public void onResponse(Response<UserInfo> response, Retrofit retrofit) {
+                        if (response==null){
+                            showToast(responseFail());
+                            return;
+                        }
+                        if (response.body().getStatus()==0){
+                            userInfo=response.body().getUserInfo();
+                            try {
+                                setData();
+                            }catch (Exception e){
+                                showToast(getString(R.string.some_exception));
+                            }
+                        }else{
+                            showToast(response.body().getMes());
+                        }
                     }
-                    if (response.body().getStatus()==0){
-                        userInfo=response.body().getUserInfo();
-                        setData();
-                    }else{
-                        showToast(response.body().getMes());
+                    @Override
+                    public void onFailure(Throwable throwable) {
                     }
-                }
-                @Override
-                public void onFailure(Throwable throwable) {
-                }
-            });
+                });
+            }
+        }catch (Exception e){
+            showToast(someException());
         }
     }
 
     private void setData() {
-        Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
-        tvShopName.setText(userInfo.getMobile()+"");
-        tvXF.setText(""+userInfo.getTotialSale());
-        tvJL.setText(""+userInfo.getRewardTotial());
-        tvMyOrder.setText(userInfo.getWithdrawalPrice()+"");
-        tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用");
+        try {
+            Glide.with(getApplicationContext()).load(userInfo.getHeadPortrait()).error(R.mipmap.head).into(ivShopImg);
+            tvShopName.setText(userInfo.getMobile()+"");
+            tvXF.setText("￥"+userInfo.getTotialSale());
+            tvJL.setText("￥"+userInfo.getRewardTotial());
+            tvMyOrder.setText("￥"+userInfo.getWithdrawalPrice());
+            tvUseCount.setText("已有"+userInfo.getPlatformUserCount()+"人使用");
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     @Override

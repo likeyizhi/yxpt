@@ -58,9 +58,13 @@ public class HaveToMoneyActivity extends BaseActivity{
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    pageIndex=1;
-                    loadData(false);
-                    srl.setRefreshing(false);
+                    try {
+                        pageIndex=1;
+                        loadData(false);
+                        srl.setRefreshing(false);
+                    }catch (Exception e){
+                        showToast(someException());
+                    }
                     break;
                 default:
                     break;
@@ -69,7 +73,11 @@ public class HaveToMoneyActivity extends BaseActivity{
     };
     @Override
     protected void initViewsAndEvents() {
-        token=new MyToken(this).getToken();
+        try {
+            token=new MyToken(this).getToken();
+        }catch (Exception e){
+            showToast(someException());
+        }
         loadData(false);
         setListeners();
     }
@@ -95,16 +103,20 @@ public class HaveToMoneyActivity extends BaseActivity{
             private boolean isBottom;
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-                switch (i) {
-                    case SCROLL_STATE_FLING:
-                        //Log.i("info", "SCROLL_STATE_FLING");
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        if (isBottom) {
-                            pageIndex++;
-                            loadData(true);
-                        }
-                        break;
+                try {
+                    switch (i) {
+                        case SCROLL_STATE_FLING:
+                            //Log.i("info", "SCROLL_STATE_FLING");
+                            break;
+                        case SCROLL_STATE_IDLE:
+                            if (isBottom) {
+                                pageIndex++;
+                                loadData(true);
+                            }
+                            break;
+                    }
+                }catch (Exception e){
+                    showToast(someException());
                 }
             }
 
@@ -121,50 +133,66 @@ public class HaveToMoneyActivity extends BaseActivity{
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityManagerUtil.getInstance().finishActivity(HaveToMoneyActivity.this);
+                try {
+                    ActivityManagerUtil.getInstance().finishActivity(HaveToMoneyActivity.this);
+                }catch (Exception e){
+                    showToast(someException());
+                }
             }
         });
     }
 
     private void loadData(final boolean isLoadMore) {
-        Call<WithdrawalList> call= RetrofitService.getInstance().getWithdrawalList(token, pageIndex);
-        call.enqueue(new Callback<WithdrawalList>() {
-            @Override
-            public void onResponse(Response<WithdrawalList> response, Retrofit retrofit) {
-                if (response==null){
-                    showToast(responseFail());
-                    return;
-                }
-                if (response.body().getStatus()==0){
-                    total=response.body().getTotal();
-                    if (isLoadMore){
-                        List<WithdrawalList.WithdrawalListlist> listAdd = response.body().getList();
-                        list.addAll(listAdd);
-                        haveToAdapter.notifyDataSetChanged();
-                    }else{
-                        list = response.body().getList();
-                        setData();
+        try {
+            Call<WithdrawalList> call= RetrofitService.getInstance().getWithdrawalList(token, pageIndex);
+            call.enqueue(new Callback<WithdrawalList>() {
+                @Override
+                public void onResponse(Response<WithdrawalList> response, Retrofit retrofit) {
+                    if (response==null){
+                        showToast(responseFail());
+                        return;
                     }
-                }else{
-                    showToast(response.body().getMes());
+                    if (response.body().getStatus()==0){
+                        total=response.body().getTotal();
+                        if (isLoadMore){
+                            List<WithdrawalList.WithdrawalListlist> listAdd = response.body().getList();
+                            list.addAll(listAdd);
+                            haveToAdapter.notifyDataSetChanged();
+                        }else{
+                            list = response.body().getList();
+                            setData();
+                        }
+                    }else{
+                        showToast(response.body().getMes());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable throwable) {
+                @Override
+                public void onFailure(Throwable throwable) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setData() {
-        tvMoney.setText(total);
-        setHaveToAdapter();
+        try {
+            tvMoney.setText(total);
+            setHaveToAdapter();
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     private void setHaveToAdapter() {
-        haveToAdapter=new HaveToAdapter();
-        lvOrder.setAdapter(haveToAdapter);
+        try {
+            haveToAdapter=new HaveToAdapter();
+            lvOrder.setAdapter(haveToAdapter);
+        }catch (Exception e){
+            showToast(someException());
+        }
     }
 
     class HaveToAdapter extends BaseAdapter{
@@ -198,10 +226,14 @@ public class HaveToMoneyActivity extends BaseActivity{
             }
             WithdrawalList.WithdrawalListlist item = getItem(i);
             holder= (HaveToHolder) view.getTag();
-            holder.tvActivityTitle.setText("尾号"+item.getCardNo().substring(item.getCardNo().length()-4,item.getCardNo().length())+"("+item.getBankName()+")");
-            holder.tvAddDate.setText("提现时间："+item.getAddDate()+"");
-            holder.tvEnterAmount.setText("￥"+item.getWithdrawalMoney());
-            Glide.with(getApplicationContext()).load(item.getBankLogo()).into(holder.ivHead);
+            try {
+                holder.tvActivityTitle.setText("尾号"+item.getCardNo().substring(item.getCardNo().length()-4,item.getCardNo().length())+"("+item.getBankName()+")");
+                holder.tvAddDate.setText("提现时间："+item.getAddDate()+"");
+                holder.tvEnterAmount.setText("￥"+item.getWithdrawalMoney());
+                Glide.with(getApplicationContext()).load(item.getBankLogo()).into(holder.ivHead);
+            }catch (Exception e){
+                showToast(someException());
+            }
             return view;
         }
 
