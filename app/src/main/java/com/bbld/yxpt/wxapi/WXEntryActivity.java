@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 
+import com.bbld.yxpt.activity.BindActivity;
 import com.bbld.yxpt.activity.LoginActivity;
+import com.bbld.yxpt.activity.MainRegistBindActivity;
 import com.bbld.yxpt.activity.RegisterActivity;
+import com.bbld.yxpt.activity.WithdrawscashActivity;
 import com.bbld.yxpt.bean.JoinLogin;
 import com.bbld.yxpt.bean.WXLoginBackMsg;
 import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
+import com.bbld.yxpt.utils.MyToken;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -28,6 +32,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
+import butterknife.BindView;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -49,6 +54,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private String otherLogin;
     private static final String TOKEN=null;
     private Dialog openWXDialog;
+    public static String subjoinid="";
+    public static String joinid="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,16 +168,36 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                                     LoginActivity.loginActivity.finish();
                                     finish();
                                 }else if(response.body().getStatus()==10){
-                                    Toast.makeText(WXEntryActivity.this,"该微信号暂未注册，请先注册",Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(WXEntryActivity.this, RegisterActivity.class);
-                                    Bundle bundle=new Bundle();
-                                    bundle.putInt("jointype", 1);
-                                    bundle.putString("joinid", wxMsg.getUnionid());
-                                    bundle.putString("nickname", wxMsg.getNickname());
-                                    bundle.putString("faceurl", wxMsg.getHeadimgurl());
-                                    bundle.putString("sex", wxMsg.getSex()==1?"男":"女");
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                                    String wxLogin = new MyToken(WXEntryActivity.this).getWXLogin();
+                                    if (wxLogin.equals("Withdrawscash")){
+                                        WithdrawscashActivity.sendData1(new MyToken(WXEntryActivity.this).getToken(),WXEntryActivity.this,1,wxMsg.getUnionid());
+                                        new MyToken(WXEntryActivity.this).delWXLogin();
+                                        Intent intent=new Intent(WXEntryActivity.this,WithdrawscashActivity.class);
+                                        WithdrawscashActivity.withdrawscashActivity.finish();
+                                        startActivity(intent);
+                                    }else if (wxLogin.equals("Bind")){
+                                        BindActivity.sendData1(new MyToken(WXEntryActivity.this).getToken(),WXEntryActivity.this,1,wxMsg.getUnionid());
+                                        new MyToken(WXEntryActivity.this).delWXLogin();
+                                        Intent intent=new Intent(WXEntryActivity.this,BindActivity.class);
+                                        BindActivity.bindActivity.finish();
+                                        startActivity(intent);
+                                    }else{
+                                        Toast.makeText(WXEntryActivity.this,"该微信号暂未注册，请先注册",Toast.LENGTH_SHORT).show();
+                                        new MyToken(WXEntryActivity.this).delWXLogin();
+                                        Intent intent=new Intent(WXEntryActivity.this, MainRegistBindActivity.class);
+                                        Bundle bundle=new Bundle();
+                                        bundle.putInt("jointype", 1);
+                                        bundle.putString("joinid", wxMsg.getUnionid());
+                                        bundle.putString("nickname", wxMsg.getNickname());
+                                        bundle.putString("faceurl", wxMsg.getHeadimgurl());
+                                        bundle.putString("subjoinid", wxMsg.getOpenid());
+                                        subjoinid=wxMsg.getOpenid();
+                                        joinid=wxMsg.getUnionid();
+                                        bundle.putString("sex", wxMsg.getSex()==1?"男":"女");
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                        LoginActivity.loginActivity.finish();
+                                    }
                                     finish();
                                 }else{//response.body().getStatus()==1
                                     Toast.makeText(WXEntryActivity.this, "数据获取失败，请重试", Toast.LENGTH_LONG).show();

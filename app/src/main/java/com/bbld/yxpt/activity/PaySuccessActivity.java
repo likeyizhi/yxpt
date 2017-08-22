@@ -35,7 +35,7 @@ public class PaySuccessActivity extends BaseActivity{
     @Override
     protected void initViewsAndEvents() {
         try {
-            tvAmount.setText(money+"");
+            tvAmount.setText("￥"+money+"");
             tvShopName.setText(shopName+"");
             Glide.with(getApplicationContext()).load(shopImg).into(ivShopImg);
         }catch (Exception e){

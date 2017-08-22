@@ -16,7 +16,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/dw_top" />
+            android:src="@mipmap/dw_s" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="Name"
-                android:textColor="#373737"
+                android:textColor="#333333"
                 android:layout_marginBottom="5dp"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
             <TextView
                 android:id="@+id/tvPointAddr"
                 android:layout_width="wrap_content"
@@ -37,7 +37,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:text="Addr"
-                android:textColor="#373737"
+                android:singleLine="true"
+                android:textColor="#999999"
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>

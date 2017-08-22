@@ -16,6 +16,7 @@ import com.bbld.yxpt.base.BaseActivity;
 import com.bbld.yxpt.bean.Login;
 import com.bbld.yxpt.bean.Register;
 import com.bbld.yxpt.bean.RegisterMessage;
+import com.bbld.yxpt.bean.SendLoginMessage;
 import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.wuxiaolong.androidutils.library.ActivityManagerUtil;
@@ -147,10 +148,10 @@ public class RegisterActivity extends BaseActivity{
                     tvSend.setClickable(true);
                 }else{
                     mWeiboDialogSend=WeiboDialogUtils.createLoadingDialog(RegisterActivity.this,"发送中...");
-                    Call<RegisterMessage> call=RetrofitService.getInstance().sendRegisterMessage(phone);
-                    call.enqueue(new Callback<RegisterMessage>() {
+                    Call<SendLoginMessage> call=RetrofitService.getInstance().sendLoginMessage(phone);
+                    call.enqueue(new Callback<SendLoginMessage>() {
                         @Override
-                        public void onResponse(Response<RegisterMessage> response, Retrofit retrofit) {
+                        public void onResponse(Response<SendLoginMessage> response, Retrofit retrofit) {
                             if (response==null){
                                 showToast(getResources().getString(R.string.response_fail));
                                 WeiboDialogUtils.closeDialog(mWeiboDialogSend);

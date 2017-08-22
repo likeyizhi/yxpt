@@ -4,12 +4,11 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:background="@drawable/bg_activity_desc_all"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="100dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_centerInParent="true"
+        android:layout_height="280dp">
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
@@ -24,12 +23,13 @@
             android:layout_below="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/linearLayout3">
             <EditText
                 android:id="@+id/etAcc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="30dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="40dp"
                 android:background="@null"
@@ -53,11 +53,11 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_marginTop="5dp"
                 >
                 <EditText
                     android:id="@+id/etCode"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginRight="40dp"
                     android:textColorHint="#999999"
                     android:gravity="center_vertical"
@@ -75,8 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:background="#eeeeee"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:layout_below="@+id/etCode"
                     />
                 <TextView
@@ -84,43 +84,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="  发送  "
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignBottom="@+id/etCode"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/bg_borderyuan40"
-                    android:layout_centerVertical="true"
-                    android:layout_alignEnd="@+id/etCode" />
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/bg_borderyuan0bd28a"
-                android:text="绑定"
-                style="?android:attr/borderlessButtonStyle"
-
-                android:textColor="#ffffff"
-                android:textSize="18sp" />
         </LinearLayout>
-        <RelativeLayout
-            android:id="@+id/rlActivittyDescClose"
+
+        <LinearLayout
+            android:id="@+id/llBottom"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@drawable/bg_activity_desc_bottom"
-            android:layout_alignParentBottom="true">
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/black_cha"/>
-        </RelativeLayout>
-        <TextView
-            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:text="确定"
+                android:layout_weight="1"
+                android:textColor="#0bd28a"
+                android:textSize="14sp"
+                />
+            <View
+                android:id="@+id/view2"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="#f2f2f2"
+                android:layout_marginBottom="7dp"
+                android:layout_marginTop="7dp"
+                />
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:layout_weight="1"
+                android:textColor="#999999"
+                android:textSize="14sp"
+                android:text="关闭"
+                android:layout_alignParentEnd="true" />
+        </LinearLayout>
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_above="@+id/rlActivittyDescClose"
-            android:background="#eeeeee"/>
+            android:layout_marginTop="40dp"
+            android:background="#eeeeee"
+            android:layout_above="@+id/llBottom"
+            />
     </RelativeLayout>
+
 </RelativeLayout>

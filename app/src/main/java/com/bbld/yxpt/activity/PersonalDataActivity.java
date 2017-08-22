@@ -77,7 +77,8 @@ public class PersonalDataActivity extends BaseActivity{
     LinearLayout llNickName;
     @BindView(R.id.llSex)
     LinearLayout llSex;
-
+    @BindView(R.id.tvFuck)
+    TextView tvFuck;
     private UserInfo.UserInfoUserInfo userInfo;
     private Dialog loadDialog;
     private String[] items = new String[]{"选择本地图片", "拍照"};
@@ -117,6 +118,12 @@ public class PersonalDataActivity extends BaseActivity{
     }
 
     private void setListeners() {
+        llChangePwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                readyGo(BindActivity.class);
+            }
+        });
         btnOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,6 +135,7 @@ public class PersonalDataActivity extends BaseActivity{
                     editorAP.putString("YXACC","");
                     editorAP.putString("YXPWD","");
                     editorAP.commit();
+                    PersonalNewActivity.personalNewActivity.finish();
                     ActivityManagerUtil.getInstance().finishActivity(PersonalDataActivity.this);
                 }catch (Exception e){
                     showToast(someException());
@@ -144,18 +152,18 @@ public class PersonalDataActivity extends BaseActivity{
                 }
             }
         });
-        llChangePwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Bundle bundle=new Bundle();
-                    bundle.putString("bandPhone", userInfo.getMobile());
-                    readyGo(UpdatePasswordActivity.class,bundle);
-                }catch (Exception e){
-                    showToast(someException());
-                }
-            }
-        });
+//        llChangePwd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    Bundle bundle=new Bundle();
+//                    bundle.putString("bandPhone", userInfo.getMobile());
+//                    readyGo(UpdatePasswordActivity.class,bundle);
+//                }catch (Exception e){
+//                    showToast(someException());
+//                }
+//            }
+//        });
         ivHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

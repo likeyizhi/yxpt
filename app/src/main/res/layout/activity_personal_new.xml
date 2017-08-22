@@ -181,6 +181,15 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
+    <ImageView
+        android:id="@+id/ivKong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@mipmap/kong_grzx"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl"
         android:scrollbars="none"
@@ -198,7 +207,6 @@
     <TextView
         android:id="@+id/tvUseCount"
         android:paddingTop="5dp"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#cccccc"

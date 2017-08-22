@@ -26,6 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:padding="12dp"
+            android:layout_marginLeft="5dp"
             android:background="@mipmap/fannh"/>
         
         <TextView 
@@ -33,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="#ffffffff"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:text="扫一扫"/>
         
     </RelativeLayout>

@@ -49,6 +49,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="10dp"
             android:text="创建新帐号"
+            android:visibility="gone"
             android:layout_below="@+id/textView"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
@@ -199,7 +200,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:src="@mipmap/qq1"/>
+            android:src="@mipmap/zfb1"/>
         <ImageView
             android:id="@+id/ivWX"
             android:layout_width="wrap_content"

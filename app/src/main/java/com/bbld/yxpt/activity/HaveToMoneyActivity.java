@@ -44,6 +44,8 @@ public class HaveToMoneyActivity extends BaseActivity{
     ListView lvOrder;
     @BindView(R.id.ivBack)
     ImageView ivBack;
+    @BindView(R.id.ivKong)
+    ImageView ivKong;
 
     private String token;
     private int pageIndex=1;
@@ -160,6 +162,9 @@ public class HaveToMoneyActivity extends BaseActivity{
                             haveToAdapter.notifyDataSetChanged();
                         }else{
                             list = response.body().getList();
+                            if (list.size()==0){
+                                ivKong.setVisibility(View.VISIBLE);
+                            }
                             setData();
                         }
                     }else{
@@ -227,7 +232,7 @@ public class HaveToMoneyActivity extends BaseActivity{
             WithdrawalList.WithdrawalListlist item = getItem(i);
             holder= (HaveToHolder) view.getTag();
             try {
-                holder.tvActivityTitle.setText("尾号"+item.getCardNo().substring(item.getCardNo().length()-4,item.getCardNo().length())+"("+item.getBankName()+")");
+                holder.tvActivityTitle.setText(item.getBankName());
                 holder.tvAddDate.setText("提现时间："+item.getAddDate()+"");
                 holder.tvEnterAmount.setText("￥"+item.getWithdrawalMoney());
                 Glide.with(getApplicationContext()).load(item.getBankLogo()).into(holder.ivHead);

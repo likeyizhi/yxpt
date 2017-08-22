@@ -39,6 +39,16 @@
         android:layout_height="1dp"
         android:background="#eeeeee"
         />
+    <ImageView
+        android:id="@+id/ivKong"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:visibility="gone"
+        android:src="@mipmap/kong_dphd"/>
     <ListView
         android:id="@+id/lvMyOrder01"
         android:divider="#eeeeee"

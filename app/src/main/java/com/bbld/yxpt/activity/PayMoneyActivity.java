@@ -45,6 +45,8 @@ public class PayMoneyActivity extends BaseActivity{
     SwipeRefreshLayout srl;
     @BindView(R.id.ivBack)
     ImageView ivBack;
+    @BindView(R.id.ivKong)
+    ImageView ivKong;
 
     private String token;
     private int count;
@@ -165,6 +167,9 @@ public class PayMoneyActivity extends BaseActivity{
                             payAdapter.notifyDataSetChanged();
                         }else{
                             list = response.body().getList();
+                            if (list.size()==0){
+                                ivKong.setVisibility(View.VISIBLE);
+                            }
                             setData();
                         }
                     }else{

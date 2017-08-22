@@ -314,16 +314,16 @@ public class NewOrderActivity extends BaseActivity {
         imgWeixin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imgWeixin.setImageResource(R.drawable.checked);
-                imgZhifubao.setImageResource(R.drawable.unchecked);
+                imgWeixin.setImageResource(R.mipmap.right);
+                imgZhifubao.setImageResource(R.mipmap.circle);
                 payType="wx";
             }
         });
         imgZhifubao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imgWeixin.setImageResource(R.drawable.unchecked);
-                imgZhifubao.setImageResource(R.drawable.checked);
+                imgWeixin.setImageResource(R.mipmap.circle);
+                imgZhifubao.setImageResource(R.mipmap.right);
                 payType="zfb";
             }
         });

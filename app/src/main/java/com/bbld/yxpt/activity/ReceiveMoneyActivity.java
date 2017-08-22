@@ -47,6 +47,8 @@ public class ReceiveMoneyActivity extends BaseActivity{
     SwipeRefreshLayout srl;
     @BindView(R.id.ivBack)
     ImageView ivBack;
+    @BindView(R.id.ivKong)
+    ImageView ivKong;
 
     private String token;
     private int count;
@@ -170,6 +172,9 @@ public class ReceiveMoneyActivity extends BaseActivity{
                             }else{
                                 try {
                                     list = response.body().getList();
+                                    if (list.size()==0){
+                                        ivKong.setVisibility(View.VISIBLE);
+                                    }
                                     setData();
                                 }catch (Exception e){
                                     showToast(someException());

@@ -73,6 +73,8 @@ public class PersonalNewActivity extends BaseActivity{
     LinearLayout llPerson02;
     @BindView(R.id.llPerson03)
     LinearLayout llPerson03;
+    @BindView(R.id.ivKong)
+    ImageView ivKong;
 
 
     private String sacc;
@@ -86,6 +88,7 @@ public class PersonalNewActivity extends BaseActivity{
     private OrderAdapter orderAdapter;
     private Dialog mWeiboDialog;
     private String token;
+    public static PersonalNewActivity personalNewActivity=null;
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -106,6 +109,7 @@ public class PersonalNewActivity extends BaseActivity{
 
     @Override
     protected void initViewsAndEvents() {
+        personalNewActivity=this;
         loadData();
         loadBottomData(false);
         loadMessage();
@@ -148,6 +152,7 @@ public class PersonalNewActivity extends BaseActivity{
             try {
                 //未登录状态
                 lvOrder.setVisibility(View.GONE);
+                ivKong.setVisibility(View.VISIBLE);
                 WeiboDialogUtils.closeDialog(mWeiboDialog);
             }catch (Exception e){
                 showToast(someException());
@@ -155,6 +160,7 @@ public class PersonalNewActivity extends BaseActivity{
         }else{
             try {
                 lvOrder.setVisibility(View.VISIBLE);
+                ivKong.setVisibility(View.GONE);
                 Call<UserOrderList> call= RetrofitService.getInstance().getUserOrderList(new MyToken(PersonalNewActivity.this).getToken(),pageIndex);
                 call.enqueue(new Callback<UserOrderList>() {
                     @Override
@@ -174,6 +180,9 @@ public class PersonalNewActivity extends BaseActivity{
                                     orderAdapter.notifyDataSetChanged();
                                 }else{
                                     orders = response.body().getList();
+                                    if (orders.size()==0){
+                                        ivKong.setVisibility(View.VISIBLE);
+                                    }
                                     setBottonAdapter();
                                 }
                             }catch (Exception e){

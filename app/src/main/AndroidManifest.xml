@@ -371,7 +371,10 @@
             android:name=".activity.MainRegistBindActivity"
             android:theme="@style/myTransparent"
             android:launchMode="singleTop"/>
-
+        <!--第三方绑定-->
+        <activity android:name=".activity.BindActivity"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

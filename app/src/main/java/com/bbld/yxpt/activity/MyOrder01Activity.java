@@ -35,6 +35,8 @@ public class MyOrder01Activity extends BaseActivity{
     ListView lvMyOrder01;
     @BindView(R.id.ivBack)
     ImageView ivBack;
+    @BindView(R.id.ivKong)
+    ImageView ivKong;
 
     private String token;
     private List<BuyShopList.BuyShopListlist> buyShopList;
@@ -72,6 +74,9 @@ public class MyOrder01Activity extends BaseActivity{
                     }
                     if (response.body().getStatus()==0){
                         buyShopList = response.body().getList();
+                        if (buyShopList.size()==0){
+                            ivKong.setVisibility(View.VISIBLE);
+                        }
                         setAdapter();
                     }else{
                         showToast(response.body().getMes());

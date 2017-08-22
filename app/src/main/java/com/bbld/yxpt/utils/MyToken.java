@@ -37,6 +37,14 @@ public class MyToken {
         return headPortrait;
     }
     /**
+     * SharedPreferences保存微信登录入口
+     * */
+    public String getWXLogin(){
+        SharedPreferences shared=mContext.getSharedPreferences("YXToken",mContext.MODE_PRIVATE);
+        String WXLogin = shared.getString("WXLogin", null);
+        return WXLogin;
+    }
+    /**
      * 删除保存的token
      * */
     public void delToken(){
@@ -52,6 +60,15 @@ public class MyToken {
         SharedPreferences shared=mContext.getSharedPreferences("YXToken",mContext.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.remove("HeadPortrait");
+        editor.commit();
+    }
+    /**
+     * 删除保存的WXLogin
+     * */
+    public void delWXLogin(){
+        SharedPreferences shared=mContext.getSharedPreferences("YXToken",mContext.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove("WXLogin");
         editor.commit();
     }
     /**

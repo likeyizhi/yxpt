@@ -14,6 +14,7 @@ import com.bbld.yxpt.bean.Feedback;
 import com.bbld.yxpt.bean.GetAlipayPayParam;
 import com.bbld.yxpt.bean.GetBankCardList;
 import com.bbld.yxpt.bean.GetMessageCount;
+import com.bbld.yxpt.bean.GetUserBindInfo;
 import com.bbld.yxpt.bean.HelpList;
 import com.bbld.yxpt.bean.HotSearchList;
 import com.bbld.yxpt.bean.JoinLogin;
@@ -23,16 +24,20 @@ import com.bbld.yxpt.bean.MyOrderReturnInfo;
 import com.bbld.yxpt.bean.NickName;
 import com.bbld.yxpt.bean.OrderReturnInfo;
 import com.bbld.yxpt.bean.Register;
+import com.bbld.yxpt.bean.RegisterLoginBind;
 import com.bbld.yxpt.bean.RegisterMessage;
 import com.bbld.yxpt.bean.Retrieve;
 import com.bbld.yxpt.bean.RetrieveMessage;
 import com.bbld.yxpt.bean.ScanShop;
+import com.bbld.yxpt.bean.SendLoginMessage;
+import com.bbld.yxpt.bean.ServiceMoney;
 import com.bbld.yxpt.bean.SetMessageRead;
 import com.bbld.yxpt.bean.ShopActivityMyOrderList;
 import com.bbld.yxpt.bean.ShopActivityOrderList;
 import com.bbld.yxpt.bean.ShopInfo;
 import com.bbld.yxpt.bean.ShopList;
 import com.bbld.yxpt.bean.ShopListPage;
+import com.bbld.yxpt.bean.UserBind;
 import com.bbld.yxpt.bean.UserInfo;
 import com.bbld.yxpt.bean.UserOrderList;
 import com.bbld.yxpt.bean.UserReturnOrderList;
@@ -266,4 +271,34 @@ public interface RetrofitInterface {
      */
     @GET("api/User/GetAlipayUserInfo")
     Call<AlipayUserInfo> getAlipayUserInfo(@Query("code") String code);
+    /**
+     *   新验证码
+     */
+    @GET("api/User/SendLoginMessage")
+    Call<SendLoginMessage> sendLoginMessage(@Query("mobile") String mobile);
+    /**
+     *   新注册登录
+     */
+    @GET("api/User/RegisterLoginBind")
+    Call<RegisterLoginBind> registerLoginBind(@Query("mobile") String mobile, @Query("indentiy") int indentiy, @Query("vcode") String vcode, @Query("jointype") int jointype,
+                                              @Query("joinid") String joinid,@Query("subjoinid") String subjoinid,@Query("nickname") String nickname,
+                                              @Query("faceurl") String faceurl,@Query("sex") String sex,@Query("plat") String plat,@Query("pushid") String pushid);
+
+    /**
+     *   绑定验证
+     */
+    @GET("api/User/GetUserBindInfo")
+    Call<GetUserBindInfo> getUserBindInfo(@Query("token") String token);
+    /**
+     *   新绑定
+     */
+    @GET("api/User/UserBind")
+    Call<UserBind> userBind(@Query("token") String token,@Query("jointype") int jointype,
+                            @Query("joinid") String joinid,@Query("subjoinid") String subjoinid);
+    /**
+     *   服务费
+     */
+    @GET("api/User/GetServiceMoney")
+    Call<ServiceMoney> getServiceMoney(@Query("price") String price);
 }
+

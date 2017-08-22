@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -133,7 +134,7 @@ public class SearchMoreActivity extends BaseActivity {
                 if (bean.getType()==IS_NOT_POINT){
                     dbHolder01.tvPointName.setText(bean.getName());
                     dbHolder01.tvPointAddr.setVisibility(View.GONE);
-                    Glide.with(getApplicationContext()).load(R.mipmap.search).into(dbHolder01.ivType);
+                    Glide.with(getApplicationContext()).load(R.mipmap.ss).into(dbHolder01.ivType);
                     if (view!=null){
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -157,7 +158,7 @@ public class SearchMoreActivity extends BaseActivity {
                     dbHolder01.tvPointName.setText(bean.getName());
                     dbHolder01.tvPointAddr.setVisibility(View.VISIBLE);
                     dbHolder01.tvPointAddr.setText(bean.getAddr());
-                    Glide.with(getApplicationContext()).load(R.mipmap.dw_top).into(dbHolder01.ivType);
+                    Glide.with(getApplicationContext()).load(R.mipmap.dw_s).into(dbHolder01.ivType);
                     if (view!=null){
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -346,6 +347,41 @@ public class SearchMoreActivity extends BaseActivity {
                 }
             }
         });
+        lvInputSearch.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private boolean isBottom;
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                try {
+                    switch (i) {
+                        case SCROLL_STATE_FLING:
+                            //Log.i("info", "SCROLL_STATE_FLING");
+                            break;
+                        case SCROLL_STATE_IDLE:
+                            try {
+                                if (isBottom) {
+                                    page++;
+                                    setSearchData(etSearch.getText()+"",true);
+                                }
+                            }catch (Exception e){
+                                showToast(someException());
+                            }
+                            break;
+                    }
+                }catch (Exception e){
+                    showToast(someException());
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(firstVisibleItem+visibleItemCount == totalItemCount){
+                    //Log.i("info", "到底了....");
+                    isBottom = true;
+                }else{
+                    isBottom = false;
+                }
+            }
+        });
     }
 
     private TextWatcher watcher = new TextWatcher() {
@@ -371,7 +407,8 @@ public class SearchMoreActivity extends BaseActivity {
                     lvInputSearch.setVisibility(View.GONE);
                     llInput.setVisibility(View.GONE);
                 }else{
-                    setSearchData(key);
+                    page=1;
+                    setSearchData(key,false);
                     llTSH.setVisibility(View.GONE);
                     llInput.setVisibility(View.VISIBLE);
                     tvInput.setText(key);
@@ -382,9 +419,9 @@ public class SearchMoreActivity extends BaseActivity {
         }
     };
 
-    private void setSearchData(final String key) {
+    private void setSearchData(final String key, final boolean isLoadMore) {
         try {
-            Call<ShopListPage> call= RetrofitService.getInstance().getShopListPage(x+"",y+"",page,size,key);
+            Call<ShopListPage> call= RetrofitService.getInstance().getShopListPage(x+"",y+"",page,5,key);
             call.enqueue(new Callback<ShopListPage>() {
                 @Override
                 public void onResponse(Response<ShopListPage> response, Retrofit retrofit) {
@@ -394,10 +431,18 @@ public class SearchMoreActivity extends BaseActivity {
                     }
                     if (response.body().getStatus()==0){
                         try {
-                            int count = response.body().getCount();
-                            shopList=response.body().getShopList();
-                            if (count>0){
-                                setSearchAdapter();
+                            if (isLoadMore){
+                                if (response.body().getShopList().size()!=0){
+                                    List<ShopListPage.ShopListPageShopList> shopListAdd = response.body().getShopList();
+                                    shopList.addAll(shopListAdd);
+                                    searchAdapter.notifyDataSetChanged();
+                                }
+                            }else{
+                                int count = response.body().getCount();
+                                shopList=response.body().getShopList();
+                                if (count>0){
+                                    setSearchAdapter();
+                                }
                             }
                         }catch (Exception e){
                             showToast(someException());

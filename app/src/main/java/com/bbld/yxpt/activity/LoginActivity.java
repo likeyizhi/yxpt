@@ -26,6 +26,8 @@ import com.bbld.yxpt.bean.AlipayLoginParam;
 import com.bbld.yxpt.bean.AlipayUserInfo;
 import com.bbld.yxpt.bean.JoinLogin;
 import com.bbld.yxpt.bean.Login;
+import com.bbld.yxpt.bean.RegisterLoginBind;
+import com.bbld.yxpt.bean.SendLoginMessage;
 import com.bbld.yxpt.loadingdialog.WeiboDialogUtils;
 import com.bbld.yxpt.network.RetrofitService;
 import com.bbld.yxpt.utils.AuthResult;
@@ -45,6 +47,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import cn.jpush.android.api.JPushInterface;
@@ -77,12 +81,15 @@ public class LoginActivity extends BaseActivity{
     TextView tvCreate;
     @BindView(R.id.ivZFB)
     ImageView ivZFB;
+    @BindView(R.id.tvSend)
+    TextView tvSend;
+    @BindView(R.id.etCode)
+    EditText etCode;
 
     // 微信登录
     private static IWXAPI WXapi;
     private String WX_APP_ID = "wxb32b83a9fe661456";
-    private String jointype;
-    private String joinid;
+
     private String acc;
     private String pwd;
     private static final String TOKEN=null;
@@ -97,6 +104,20 @@ public class LoginActivity extends BaseActivity{
     public static Dialog openWXDialog;
     private Dialog openQQDialog;
     private Dialog openZFBDialog;
+    private int indentiy=0;
+    private int jointype;
+    private String joinid;
+    private String sex;
+    private String phone;
+    private String code;
+    private String plat="android";
+    private String pushid;
+    private String subjoinid="456";
+    private Dialog mWeiboDialogSend;
+    private Timer          timer           = null;
+    private int            time            = 60;
+    private TimerTask timerTask;
+    private boolean isOnTimer;
     /** 支付宝支付业务：入参app_id */
     public static final String APPID = "2017072707921833";
 
@@ -166,7 +187,7 @@ public class LoginActivity extends BaseActivity{
                         // 获取alipay_open_id，调支付时作为参数extern_token 的value
                         // 传入，则支付账户为该授权账户
                         Toast.makeText(LoginActivity.this,
-                                "授权成功\n"/* + String.format("authCode:%s", authResult.getAuthCode())*/, Toast.LENGTH_SHORT)
+                                "授权成功"/* + String.format("authCode:%s", authResult.getAuthCode())*/, Toast.LENGTH_SHORT)
                                 .show();
                         getZFDMsg(authResult.getAuthCode());
                     } else {
@@ -183,6 +204,7 @@ public class LoginActivity extends BaseActivity{
         }
     };
 
+
     private void getZFDMsg(String authCode) {
         Call<AlipayUserInfo> call=RetrofitService.getInstance().getAlipayUserInfo(authCode);
         call.enqueue(new Callback<AlipayUserInfo>() {
@@ -194,6 +216,7 @@ public class LoginActivity extends BaseActivity{
                 }
                 if (response.body().getStatus()==0){
                     userInfoZFB=response.body().getUserInfo();
+                    userInfoZFB.getUser_id();
                     if (userInfoZFB.getGender().equals("m")){
                         zfbGender = "男";
                     }else{
@@ -232,9 +255,83 @@ public class LoginActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 try {
+                    //保存Token
+                    SharedPreferences shared=getSharedPreferences("YXToken",MODE_PRIVATE);
+                    SharedPreferences.Editor editor=shared.edit();
+                    editor.putString("WXLogin","Login");
+                    editor.commit();
                     WXLogin();
                 }catch (Exception e){
                     showToast(someException());
+                }
+            }
+        });
+        //发送验证码
+        tvSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tvSend.setClickable(false);
+                phone = etAcc.getText().toString().trim();
+                if (phone.equals("") || phone == null) {
+                    Toast.makeText(LoginActivity.this, "请输入手机号", Toast.LENGTH_SHORT).show();
+                    tvSend.setClickable(true);
+                } else if (phone.length() != 11) {
+                    Toast.makeText(LoginActivity.this, "请输入正确手机号", Toast.LENGTH_SHORT).show();
+
+                    tvSend.setClickable(true);
+                } else {
+                    mWeiboDialogSend = WeiboDialogUtils.createLoadingDialog(LoginActivity.this, "发送中...");
+                    Call<SendLoginMessage> call = RetrofitService.getInstance().sendLoginMessage(phone);
+                    call.enqueue(new Callback<SendLoginMessage>() {
+                        @Override
+                        public void onResponse(Response<SendLoginMessage> response, Retrofit retrofit) {
+                            if (response == null) {
+                                Toast.makeText(LoginActivity.this, getResources().getString(R.string.response_fail), Toast.LENGTH_SHORT).show();
+                                WeiboDialogUtils.closeDialog(mWeiboDialogSend);
+                                tvSend.setClickable(true);
+                                return;
+                            }
+                            if (response.body().getStatus() == 0) {
+                                Toast.makeText(LoginActivity.this, response.body().getMes(), Toast.LENGTH_SHORT).show();
+
+                                indentiy = response.body().getIdentity();
+                                timer = new Timer();
+                                isOnTimer = true;
+                                timerTask = new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                time--;
+                                                tvSend.setClickable(false);
+                                                tvSend.setText(time + "s");
+                                                if (time < 0) {
+                                                    time = 60;
+                                                    timer.cancel();
+                                                    isOnTimer = false;
+                                                    tvSend.setClickable(true);
+                                                    tvSend.setText("发送");
+                                                }
+                                            }
+                                        });
+                                    }
+                                };
+                                timer.schedule(timerTask, 1000, 1000);
+                                WeiboDialogUtils.closeDialog(mWeiboDialogSend);
+                            } else {
+                                tvSend.setClickable(true);
+                                Toast.makeText(LoginActivity.this, response.body().getMes(), Toast.LENGTH_SHORT).show();
+                                WeiboDialogUtils.closeDialog(mWeiboDialogSend);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            tvSend.setClickable(true);
+                            WeiboDialogUtils.closeDialog(mWeiboDialogSend);
+                        }
+                    });
                 }
             }
         });
@@ -246,11 +343,12 @@ public class LoginActivity extends BaseActivity{
                     loginDialog=WeiboDialogUtils.createLoadingDialog(LoginActivity.this,"登录中...");
                     String rid = JPushInterface.getRegistrationID(getApplicationContext());
                     acc=etAcc.getText().toString().trim();
-                    pwd=etPwd.getText().toString().trim();
-                    Call<Login> call= RetrofitService.getInstance().login(acc,pwd, "android", rid);
-                    call.enqueue(new Callback<Login>() {
+                    code=etCode.getText().toString().trim();
+                    Call<RegisterLoginBind> call= RetrofitService.getInstance().registerLoginBind(phone, indentiy, code, jointype, joinid,subjoinid, nickname, faceurl, sex, plat, pushid);
+
+                    call.enqueue(new Callback<RegisterLoginBind>() {
                         @Override
-                        public void onResponse(Response<Login> response, Retrofit retrofit) {
+                        public void onResponse(Response<RegisterLoginBind> response, Retrofit retrofit) {
                             if (response==null){
                                 showToast(responseFail());
                                 WeiboDialogUtils.closeDialog(loginDialog);
@@ -503,13 +601,15 @@ public class LoginActivity extends BaseActivity{
                     }else if(response.body().getStatus()==10){
                         try {
                             Toast.makeText(LoginActivity.this,"暂未注册，请先注册",Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+//                            Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+                            Intent intent=new Intent(LoginActivity.this, MainRegistBindActivity.class);
                             Bundle bundle=new Bundle();
                             bundle.putInt("jointype", jointype);
                             bundle.putString("joinid", openid);
                             bundle.putString("nickname", nickName);
                             bundle.putString("faceurl", faceurl);
                             bundle.putString("sex", gender);
+                            bundle.putString("subjoinid", "");
                             intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
@@ -620,6 +720,9 @@ public class LoginActivity extends BaseActivity{
         if (tencent != null) {
             //注销登录
             tencent.logout(LoginActivity.this);
+        }
+        if (isOnTimer){
+            timer.cancel();
         }
         super.onDestroy();
     }
